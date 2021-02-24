@@ -1,21 +1,14 @@
 package com.fairventures.treeo.ui
 
-<<<<<<< HEAD
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-=======
-import android.os.Bundle
-import android.view.View
->>>>>>> 0447bec... Add Facebook Auth
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
+import com.facebook.*
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.fairventures.treeo.R
@@ -28,26 +21,23 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
-<<<<<<< HEAD
-=======
+import org.json.JSONException
 import java.util.*
->>>>>>> 0447bec... Add Facebook Auth
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val registerUserViewModel: RegisterUserViewModel by viewModels()
+    val callbackManager = CallbackManager.Factory.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-<<<<<<< HEAD
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -63,17 +53,31 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-=======
-        val callbackManager = CallbackManager.Factory.create()
-        val EMAIL = "email"
-
         val loginButton = login_button as LoginButton
-        loginButton.setPermissions(Arrays.asList(EMAIL))
+        loginButton.setPermissions(Arrays.asList("email", "public_profile"))
 
         // Callback registration
         loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
             override fun onSuccess(loginResult: LoginResult?) {
-                // App code
+                textView1.setText(loginResult?.accessToken?.userId)
+                Log.d("Sign in Details", loginResult?.accessToken.toString())
+
+                // Facebook Email address
+                val request = GraphRequest.newMeRequest(
+                        loginResult?.accessToken
+                ) { jsonObject, response ->
+                    try {
+                        Log.d("Sign In Details", response.jsonObject.getString("email"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+
+                val parameters = Bundle()
+                parameters.putString("fields","email")
+                request.parameters = parameters
+                request.executeAsync()
+
             }
 
             override fun onCancel() {
@@ -81,22 +85,21 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onError(exception: FacebookException) {
-                // App code
+                textView1.setText("Cancelled")
             }
         })
->>>>>>> 0447bec... Add Facebook Auth
 
         register_user_button.setOnClickListener {
             registerUserViewModel.createUser(
-                RegisterUser(
-                    firstname.text.toString(),
-                    lastname.text.toString(),
-                    password.text.toString(),
-                    email.text.toString(),
-                    country.text.toString(),
-                    register_username.text.toString(),
-                    phone.text.toString()
-                )
+                    RegisterUser(
+                            firstname.text.toString(),
+                            lastname.text.toString(),
+                            password.text.toString(),
+                            email.text.toString(),
+                            country.text.toString(),
+                            register_username.text.toString(),
+                            phone.text.toString()
+                    )
             ).observe(this, Observer {
                 textView1.setText(it.toString())
             })
@@ -111,11 +114,20 @@ class MainActivity : AppCompatActivity() {
         //Check if user has signed in before.
 
         val account = GoogleSignIn.getLastSignedInAccount(this)
+
+        val accessToken: AccessToken? = AccessToken.getCurrentAccessToken()
+        val isLoggedIn = accessToken != null && !accessToken.isExpired()
+
         if (account != null){
-            Log.d("Sign In Details",account.idToken!!)
+            Log.d("Sign In Details", account.idToken!!)
             textView1.setText("Signed in as  ${account.displayName}")
             sign_in_button.visibility = View.GONE
         }
+        else if(isLoggedIn){
+            textView1.setText("Signed in as: ${Profile.getCurrentProfile().name}")
+            login_button.visibility = View.GONE
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -124,6 +136,7 @@ class MainActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
+        callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
@@ -136,7 +149,7 @@ class MainActivity : AppCompatActivity() {
 
             }
             else{
-                Log.d("Sign In Details",account.idToken!!)
+                Log.d("Sign In Details", account.idToken!!)
                 textView1.setText("Signed in as  ${account.displayName}")
             }
 
