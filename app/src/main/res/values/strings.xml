@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Treeo</string>
+    <string name="facebook_app_id">915429019225102</string>
+    <string name="fb_login_protocol_scheme">fb915429019225102</string>
 </resources>

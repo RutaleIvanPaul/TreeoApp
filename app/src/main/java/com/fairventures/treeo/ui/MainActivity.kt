@@ -8,6 +8,9 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.facebook.*
+import com.facebook.login.LoginResult
+import com.facebook.login.widget.LoginButton
 import com.fairventures.treeo.R
 import com.fairventures.treeo.models.RegisterUser
 import com.fairventures.treeo.ui.authentication.RegisterUserViewModel
@@ -18,16 +21,18 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import org.json.JSONException
+import java.util.*
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val registerUserViewModel: RegisterUserViewModel by viewModels()
+    val callbackManager = CallbackManager.Factory.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,18 +53,53 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
+        val loginButton = login_button as LoginButton
+        loginButton.setPermissions(Arrays.asList("email", "public_profile"))
+
+        // Callback registration
+        loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
+            override fun onSuccess(loginResult: LoginResult?) {
+                textView1.setText(loginResult?.accessToken?.userId)
+                Log.d("Sign in Details", loginResult?.accessToken.toString())
+
+                // Facebook Email address
+                val request = GraphRequest.newMeRequest(
+                        loginResult?.accessToken
+                ) { jsonObject, response ->
+                    try {
+                        Log.d("Sign In Details", response.jsonObject.getString("email"))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                }
+
+                val parameters = Bundle()
+                parameters.putString("fields","email")
+                request.parameters = parameters
+                request.executeAsync()
+
+            }
+
+            override fun onCancel() {
+                // App code
+            }
+
+            override fun onError(exception: FacebookException) {
+                textView1.setText("Cancelled")
+            }
+        })
 
         register_user_button.setOnClickListener {
             registerUserViewModel.createUser(
-                RegisterUser(
-                    firstname.text.toString(),
-                    lastname.text.toString(),
-                    password.text.toString(),
-                    email.text.toString(),
-                    country.text.toString(),
-                    register_username.text.toString(),
-                    phone.text.toString()
-                )
+                    RegisterUser(
+                            firstname.text.toString(),
+                            lastname.text.toString(),
+                            password.text.toString(),
+                            email.text.toString(),
+                            country.text.toString(),
+                            register_username.text.toString(),
+                            phone.text.toString()
+                    )
             ).observe(this, Observer {
                 textView1.setText(it.toString())
             })
@@ -74,11 +114,20 @@ class MainActivity : AppCompatActivity() {
         //Check if user has signed in before.
 
         val account = GoogleSignIn.getLastSignedInAccount(this)
+
+        val accessToken: AccessToken? = AccessToken.getCurrentAccessToken()
+        val isLoggedIn = accessToken != null && !accessToken.isExpired()
+
         if (account != null){
-            Log.d("Sign In Details",account.idToken!!)
+            Log.d("Sign In Details", account.idToken!!)
             textView1.setText("Signed in as  ${account.displayName}")
             sign_in_button.visibility = View.GONE
         }
+        else if(isLoggedIn){
+            textView1.setText("Signed in as: ${Profile.getCurrentProfile().name}")
+            login_button.visibility = View.GONE
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -87,6 +136,7 @@ class MainActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
+        callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
@@ -99,7 +149,7 @@ class MainActivity : AppCompatActivity() {
 
             }
             else{
-                Log.d("Sign In Details",account.idToken!!)
+                Log.d("Sign In Details", account.idToken!!)
                 textView1.setText("Signed in as  ${account.displayName}")
             }
 
