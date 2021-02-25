@@ -1,0 +1,51 @@
+name: Deploy to Playstore(Alpha) from Develop
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Run Tests
+        run: ./gradlew test
+
+      - name: Clean Project
+        run: ./gradlew clean
+
+      - name: Build Project
+        run: ./gradlew assemble
+
+      - name: Assemble Release Bundle
+        run: ./gradlew bundleRelease
+
+      - name: Sign Release
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: app/build/outputs/bundle/release
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Create service_account.json
+        run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
+
+      - name: Deploy to Alpha
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: service_account.json
+          packageName: com.fairventures.treeo
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          track: alpha
+#          whatsNewDirectory: distribution/
+
