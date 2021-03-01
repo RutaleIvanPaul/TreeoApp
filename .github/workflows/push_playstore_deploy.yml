@@ -1,9 +1,6 @@
-name: Deploy to Playstore(Internal) from Pull Request to Develop
+name: Deploy to Playstore(Internal) from Push
 
-on:
-  pull_request:
-  branches:
-      - develop
+on: push
 
 jobs:
   build:
@@ -40,7 +37,7 @@ jobs:
       - name: Create service_account.json
         run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
 
-      - name: Deploy to Alpha
+      - name: Deploy to Internal Track
         uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service_account.json
