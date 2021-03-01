@@ -12,10 +12,10 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.fairventures.treeo"
+        applicationId "org.fairventures.treeo"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 5
+        versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

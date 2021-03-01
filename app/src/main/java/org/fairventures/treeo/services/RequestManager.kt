@@ -1,9 +1,9 @@
-package com.fairventures.treeo.services
+package org.fairventures.treeo.services
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.fairventures.treeo.models.NewRegisteredUser
-import com.fairventures.treeo.models.RegisterUser
+import org.fairventures.treeo.models.NewRegisteredUser
+import org.fairventures.treeo.models.RegisterUser
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers

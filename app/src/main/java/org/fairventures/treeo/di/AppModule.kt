@@ -1,6 +1,6 @@
-package com.fairventures.treeo.di
+package org.fairventures.treeo.di
 
-import com.fairventures.treeo.services.RequestManager
+import org.fairventures.treeo.services.RequestManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -1,9 +1,9 @@
-package com.fairventures.treeo.ui.authentication
+package org.fairventures.treeo.ui.authentication
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
-import com.fairventures.treeo.models.RegisterUser
-import com.fairventures.treeo.repository.MainRepository
+import org.fairventures.treeo.models.RegisterUser
+import org.fairventures.treeo.repository.MainRepository
 
 
 class RegisterUserViewModel @ViewModelInject constructor(

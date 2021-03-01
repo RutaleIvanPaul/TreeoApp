@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.fairventures.treeo">
+    package="org.fairventures.treeo">
 
 
 
@@ -14,7 +14,7 @@
     <!--remove cleartext-->
 
     <application
-        android:name=".TreeoApplication"
+        android:name="org.fairventures.treeo.TreeoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -31,7 +31,7 @@
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
 
-        <activity android:name=".ui.MainActivity">
+        <activity android:name="org.fairventures.treeo.ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

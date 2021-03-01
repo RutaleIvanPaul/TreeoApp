@@ -1,4 +1,4 @@
-package com.fairventures.treeo
+package org.fairventures.treeo
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

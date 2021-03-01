@@ -1,4 +1,4 @@
-package com.fairventures.treeo.models
+package org.fairventures.treeo.models
 
 data class NewRegisteredUser(
     val email: String,

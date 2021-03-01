@@ -1,7 +1,7 @@
-package com.fairventures.treeo.services
+package org.fairventures.treeo.services
 
-import com.fairventures.treeo.models.NewRegisteredUser
-import com.fairventures.treeo.models.RegisterUser
+import org.fairventures.treeo.models.NewRegisteredUser
+import org.fairventures.treeo.models.RegisterUser
 import io.reactivex.Observable
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -18,7 +18,7 @@ interface ApiService {
     ): Observable<NewRegisteredUser>
 
     companion object{
-        fun create(): ApiService{
+        fun create(): ApiService {
             val retrofit = Retrofit.Builder()
                 .addCallAdapterFactory(
                     RxJava2CallAdapterFactory.create()
