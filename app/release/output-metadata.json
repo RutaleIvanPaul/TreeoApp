@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.fairventures.treeo",
+  "applicationId": "org.fairventures.treeo",
   "variantName": "processReleaseResources",
   "elements": [
     {
