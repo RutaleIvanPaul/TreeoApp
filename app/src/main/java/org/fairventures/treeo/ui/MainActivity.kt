@@ -1,4 +1,4 @@
-package com.fairventures.treeo.ui
+package org.fairventures.treeo.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,11 +11,11 @@ import androidx.lifecycle.Observer
 import com.facebook.*
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
-import com.fairventures.treeo.R
-import com.fairventures.treeo.models.RegisterUser
-import com.fairventures.treeo.ui.authentication.RegisterUserViewModel
-import com.fairventures.treeo.util.GOOGLE_CLIENT_ID
-import com.fairventures.treeo.util.RC_SIGN_IN
+import org.fairventures.treeo.R
+import org.fairventures.treeo.models.RegisterUser
+import org.fairventures.treeo.ui.authentication.RegisterUserViewModel
+import org.fairventures.treeo.util.GOOGLE_CLIENT_ID
+import org.fairventures.treeo.util.RC_SIGN_IN
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity() {
         // Callback registration
         loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
             override fun onSuccess(loginResult: LoginResult?) {
-                textView1.setText(loginResult?.accessToken?.userId)
                 Log.d("Sign in Details", loginResult?.accessToken.toString())
 
                 // Facebook Email address
@@ -69,6 +68,7 @@ class MainActivity : AppCompatActivity() {
                 ) { jsonObject, response ->
                     try {
                         Log.d("Sign In Details", response.jsonObject.getString("email"))
+                        textView1.setText(response.jsonObject.getString("email"))
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
@@ -121,11 +121,11 @@ class MainActivity : AppCompatActivity() {
 
         if (account != null){
             Log.d("Sign In Details", account.idToken!!)
-            textView1.setText("Signed in as  ${account.displayName}")
+            textView1.setText("Google Signed in as  ${account.displayName}")
             sign_in_button.visibility = View.GONE
         }
         else if(isLoggedIn){
-            textView1.setText("Signed in as: ${Profile.getCurrentProfile().name}")
+            textView1.setText("Facebook Signed in as: ${Profile.getCurrentProfile().name}")
             login_button.visibility = View.GONE
         }
 

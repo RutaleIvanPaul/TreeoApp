@@ -1,7 +1,7 @@
-package com.fairventures.treeo.repository
+package org.fairventures.treeo.repository
 
-import com.fairventures.treeo.models.RegisterUser
-import com.fairventures.treeo.services.RequestManager
+import org.fairventures.treeo.models.RegisterUser
+import org.fairventures.treeo.services.RequestManager
 import retrofit2.http.Field
 import javax.inject.Inject
 

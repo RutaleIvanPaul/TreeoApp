@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:231302299324:android:4c402f03fd327ead8adab9",
+        "mobilesdk_app_id": "1:231302299324:android:6fa12d45d79d78128adab9",
         "android_client_info": {
-          "package_name": "com.fairventures.treeo"
+          "package_name": "org.fairventures.treeo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "231302299324-lu6bj4c06es32lmq72t1n1ep5avr8lll.apps.googleusercontent.com",
+          "client_id": "231302299324-8oerv8dv69vbngskgkji2vp6dggrrouj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.fairventures.treeo",
+            "package_name": "org.fairventures.treeo",
             "certificate_hash": "a1c189f7a0d6e6ab1cf614ff3647b0ed33494e09"
           }
         },

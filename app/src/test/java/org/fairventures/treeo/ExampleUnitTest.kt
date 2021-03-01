@@ -1,4 +1,4 @@
-package com.fairventures.treeo
+package org.fairventures.treeo
 
 import org.junit.Test
 
