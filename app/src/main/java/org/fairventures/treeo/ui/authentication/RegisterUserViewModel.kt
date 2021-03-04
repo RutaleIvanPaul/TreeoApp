@@ -11,4 +11,10 @@ class RegisterUserViewModel @ViewModelInject constructor(
 ): ViewModel() {
     fun createUser(registerUser: RegisterUser)
             = mainRepository.createUser(registerUser)
+
+    fun googleSignUp(googleAuthToken: String)
+            =mainRepository.googleSignUp(googleAuthToken)
+
+    fun facebookSignUp(access_token: String)
+            = mainRepository.faceBookSignUp(access_token)
 }
