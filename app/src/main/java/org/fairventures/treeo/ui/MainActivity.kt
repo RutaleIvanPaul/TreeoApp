@@ -1,12 +1,14 @@
 package org.fairventures.treeo.ui
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
 import androidx.lifecycle.Observer
 import com.facebook.*
 import com.facebook.login.LoginResult
@@ -14,7 +16,6 @@ import com.facebook.login.widget.LoginButton
 import org.fairventures.treeo.R
 import org.fairventures.treeo.models.RegisterUser
 import org.fairventures.treeo.ui.authentication.RegisterUserViewModel
-import org.fairventures.treeo.util.GOOGLE_CLIENT_ID
 import org.fairventures.treeo.util.RC_SIGN_IN
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -24,29 +25,32 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
-import org.json.JSONException
+import org.fairventures.treeo.ui.Home.HomeActivity
+import org.fairventures.treeo.ui.authentication.LoginLogoutUserViewModel
 import java.util.*
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val registerUserViewModel: RegisterUserViewModel by viewModels()
+    private val loginLogoutUserViewModel: LoginLogoutUserViewModel by viewModels()
     val callbackManager = CallbackManager.Factory.create()
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
+
+    @Inject
+    lateinit var googleSignInOptions: GoogleSignInOptions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(GOOGLE_CLIENT_ID)
-                .requestEmail()
-                .requestProfile()
-                .build()
+
         // Build a GoogleSignInClient with the options specified by gso.
-        val mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
+        val mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
 
         sign_in_button.setSize(SignInButton.SIZE_STANDARD)
         sign_in_button.setOnClickListener{
@@ -54,30 +58,41 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
 
-        val loginButton = login_button as LoginButton
+        val loginButton = login_button_facebook as LoginButton
         loginButton.setPermissions(Arrays.asList("email", "public_profile"))
 
         // Callback registration
         loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
             override fun onSuccess(loginResult: LoginResult?) {
-                Log.d("Sign in Details", loginResult?.accessToken.toString())
+                Log.d("FB Token", loginResult?.accessToken?.token!!)
+                registerUserViewModel.facebookSignUp(loginResult?.accessToken?.token!!).observe(
+                    this@MainActivity,
+                    Observer {facebookReturn ->
+                        Log.d("Facebook Return", facebookReturn.toString())
+                        saveUserDetails(
+                            facebookReturn.token,
+                            getString(R.string.facebook))
+                        openHome(
+                            facebookReturn.firstName
+                        )
+                    }
+                )
 
                 // Facebook Email address
-                val request = GraphRequest.newMeRequest(
-                        loginResult?.accessToken
-                ) { jsonObject, response ->
-                    try {
-                        Log.d("Sign In Details", response.jsonObject.getString("email"))
-                        textView1.setText(response.jsonObject.getString("email"))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
-                }
-
-                val parameters = Bundle()
-                parameters.putString("fields","email")
-                request.parameters = parameters
-                request.executeAsync()
+//                val request = GraphRequest.newMeRequest(
+//                        loginResult?.accessToken
+//                ) { jsonObject, response ->
+//                    try {
+//                        Log.d("Sign In Details", response.jsonObject.getString("email"))
+//                    } catch (e: JSONException) {
+//                        e.printStackTrace()
+//                    }
+//                }
+//
+//                val parameters = Bundle()
+//                parameters.putString("fields","email")
+//                request.parameters = parameters
+//                request.executeAsync()
 
             }
 
@@ -101,12 +116,48 @@ class MainActivity : AppCompatActivity() {
                             register_username.text.toString(),
                             phone.text.toString()
                     )
-            ).observe(this, Observer {
-                textView1.setText(it.toString())
+            ).observe(this, Observer {registeredUser ->
+                toggleLoginUI(loginButton)
+                email.setText(registeredUser.email)
+                password.text.clear()
             })
 
         }
 
+        login_logout_toggle.setOnClickListener {
+            toggleLoginUI(loginButton)
+        }
+
+        login_button_email_password.setOnClickListener {
+            loginEmailPassword(email.text.toString(),password.text.toString())
+        }
+
+    }
+
+    private fun toggleLoginUI(loginButton: LoginButton) {
+        if (firstname.isInvisible) {
+            login_logout_toggle.setText(R.string.already_account_login)
+            login_button_email_password.visibility = View.GONE
+            loginButton.visibility = View.VISIBLE
+            register_user_button.visibility = View.VISIBLE
+            sign_in_button.visibility = View.VISIBLE
+            firstname.visibility = View.VISIBLE
+            lastname.visibility = View.VISIBLE
+            country.visibility = View.VISIBLE
+            register_username.visibility = View.VISIBLE
+            phone.visibility = View.VISIBLE
+        } else if (firstname.isShown) {
+            login_logout_toggle.setText(R.string.no_account_sign_up)
+            login_button_email_password.visibility = View.VISIBLE
+            loginButton.visibility = View.INVISIBLE
+            register_user_button.visibility = View.INVISIBLE
+            sign_in_button.visibility = View.INVISIBLE
+            firstname.visibility = View.INVISIBLE
+            lastname.visibility = View.INVISIBLE
+            country.visibility = View.INVISIBLE
+            register_username.visibility = View.INVISIBLE
+            phone.visibility = View.INVISIBLE
+        }
     }
 
     override fun onStart() {
@@ -119,15 +170,22 @@ class MainActivity : AppCompatActivity() {
         val accessToken: AccessToken? = AccessToken.getCurrentAccessToken()
         val isLoggedIn = accessToken != null && !accessToken.isExpired()
 
-        if (account != null){
-            Log.d("Sign In Details", account.idToken!!)
-            textView1.setText("Google Signed in as  ${account.displayName}")
-            sign_in_button.visibility = View.GONE
+
+        val user_token = sharedPref.getString(getString(R.string.user_token), "")
+
+        if(!sharedPref.getString(getString(R.string.loginManager),null).isNullOrEmpty()){
+            if (account != null){
+                Log.d("Sign In Details", account.idToken!!)
+                openHome(account.displayName!!)
+            }
+            else if(isLoggedIn){
+                openHome(Profile.getCurrentProfile().name)
+            }
+            else if (!user_token.isNullOrBlank()){
+                openHome(user_token)
+            }
         }
-        else if(isLoggedIn){
-            textView1.setText("Facebook Signed in as: ${Profile.getCurrentProfile().name}")
-            login_button.visibility = View.GONE
-        }
+
 
     }
 
@@ -151,12 +209,38 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 Log.d("Sign In Details", account.idToken!!)
-                textView1.setText("Signed in as  ${account.displayName}")
+                registerUserViewModel.googleSignUp(account.idToken!!).observe(this, Observer {googleUser ->
+                    Log.d("Google Connect", googleUser.userName)
+                    saveUserDetails(googleUser.token, getString(R.string.google))
+                    openHome(googleUser.userName)
+                })
             }
 
         } catch (e: ApiException) {
             Log.d("TAG", "signInResult:failed code=" + e.statusCode)
         }
+    }
+
+    private fun saveUserDetails(token: String, loginManager: String){
+        with (sharedPref.edit()) {
+            putString(getString(R.string.user_token), token)
+            putString(getString(R.string.loginManager), loginManager)
+            apply()
+        }
+    }
+
+    private fun openHome(extra:String){
+        val intent = Intent(this, HomeActivity::class.java).apply {
+            putExtra("username", extra)
+        }
+        startActivity(intent)
+    }
+
+    private fun loginEmailPassword(email: String, password: String){
+        loginLogoutUserViewModel.login(email,password).observe(this, Observer { loginToken ->
+            saveUserDetails(loginToken.token, getString(R.string.email_password))
+            openHome(loginToken.token)
+        })
     }
 
 }

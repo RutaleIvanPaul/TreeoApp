@@ -8,6 +8,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        Release {
+            storeFile file('/Users/ivanpaul/DATA/treeo2-mobile-app/Keystore')
+            storePassword 'RIp0772466608*'
+            keyAlias 'key0'
+            keyPassword 'RIp0772466608*'
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
@@ -15,7 +23,7 @@ android {
         applicationId "org.fairventures.treeo"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 3
+        versionCode 6
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -104,6 +112,9 @@ dependencies {
         exclude module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
+
+    //HttpLoggingInterceptor
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
 
 
 }
