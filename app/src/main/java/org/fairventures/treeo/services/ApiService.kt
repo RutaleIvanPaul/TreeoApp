@@ -39,6 +39,14 @@ interface ApiService {
     ): Observable<LogoutResponse>
 
     companion object{
+
+        init {
+            System.loadLibrary("native-lib")
+        }
+
+
+        external fun baseUrlFromJNI(): String
+
         fun create(): ApiService {
 
 
