@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Treeo</string>
     <string name="facebook_app_id">915429019225102</string>
-    <string name="fb_login_protocol_scheme">fb915429019225102</string>
     <string name="already_account_login">Already Have an Account? Log In</string>
     <string name="no_account_sign_up">No Account? Sign Up</string>
     <string name="login_button_text">Log In</string>
