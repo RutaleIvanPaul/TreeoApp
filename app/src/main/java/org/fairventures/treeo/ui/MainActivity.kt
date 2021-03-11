@@ -27,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import org.fairventures.treeo.ui.Home.HomeActivity
 import org.fairventures.treeo.ui.authentication.LoginLogoutUserViewModel
+import org.fairventures.treeo.util.errors
 import java.util.*
 import javax.inject.Inject
 
@@ -78,22 +79,6 @@ class MainActivity : AppCompatActivity() {
                     }
                 )
 
-                // Facebook Email address
-//                val request = GraphRequest.newMeRequest(
-//                        loginResult?.accessToken
-//                ) { jsonObject, response ->
-//                    try {
-//                        Log.d("Sign In Details", response.jsonObject.getString("email"))
-//                    } catch (e: JSONException) {
-//                        e.printStackTrace()
-//                    }
-//                }
-//
-//                val parameters = Bundle()
-//                parameters.putString("fields","email")
-//                request.parameters = parameters
-//                request.executeAsync()
-
             }
 
             override fun onCancel() {
@@ -131,6 +116,10 @@ class MainActivity : AppCompatActivity() {
         login_button_email_password.setOnClickListener {
             loginEmailPassword(email.text.toString(),password.text.toString())
         }
+
+        errors.observe(this, Observer {
+            textView1.setText(it)
+        })
 
     }
 
@@ -204,7 +193,7 @@ class MainActivity : AppCompatActivity() {
 
             if(account == null){
                 Log.d("Sign In Details", "Could Not Sign In")
-                Toast.makeText(this, "Could Not Sign In", Toast.LENGTH_LONG).show()
+                textView1.setText("Could not sign in")
 
             }
             else{
@@ -218,6 +207,7 @@ class MainActivity : AppCompatActivity() {
 
         } catch (e: ApiException) {
             Log.d("TAG", "signInResult:failed code=" + e.statusCode)
+            textView1.setText("signInResult:failed code = ${ e.statusCode}")
         }
     }
 

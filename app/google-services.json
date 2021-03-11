@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "231302299324-b7sih6ki1834av5rkteba75mkg9p2tnm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.fairventures.treeo",
+            "certificate_hash": "7e36b989cdce0fbb4ae77e7b4f8d413b7a7650a0"
+          }
+        },
+        {
           "client_id": "231302299324-6o6k40uo32g8ijmhkbhh1r2mg4eci45k.apps.googleusercontent.com",
           "client_type": 3
         }
