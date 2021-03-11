@@ -42,6 +42,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -102,19 +105,27 @@ dependencies {
     implementation 'com.facebook.android:facebook-login:[8,9)'
 
 
-
     //Test Rule
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
 
     //Espresso Contrib
-    androidTestImplementation ('com.android.support.test.espresso:espresso-contrib:3.0.1') {
+    androidTestImplementation('com.android.support.test.espresso:espresso-contrib:3.0.1') {
         exclude module: 'support-annotations'
         exclude module: 'support-v4'
         exclude module: 'recyclerview-v7'
     }
 
+    //MockWebServer
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.0'
+
     //HttpLoggingInterceptor
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
+
+    // Truth assertion library
+    testImplementation "com.google.truth:truth:1.0.1"
+
+    // Instant task executor rules
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
 
 
 }
