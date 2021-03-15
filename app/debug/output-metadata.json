@@ -4,13 +4,13 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.fairventures.treeo",
+  "applicationId": "org.fairventures.treeo",
   "variantName": "processDebugResources",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 1,
+      "versionCode": 7,
       "versionName": "1.0",
       "outputFile": "app-debug.apk"
     }

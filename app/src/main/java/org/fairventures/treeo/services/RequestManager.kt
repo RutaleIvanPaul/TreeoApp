@@ -6,6 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import org.fairventures.treeo.models.*
+import org.fairventures.treeo.util.errors
 
 class RequestManager {
     private var disposable: Disposable? = null
@@ -29,6 +30,7 @@ class RequestManager {
                 },
                 { error ->
                     Log.d("API ERROR", "API Fetch Error: ${error.message} ")
+                    errors.postValue(error.message)
                 }
             )
         return items
@@ -49,6 +51,7 @@ class RequestManager {
                         },
                         { error ->
                             Log.d("API ERROR", "API Fetch Error: ${error.message} ")
+                            errors.postValue(error.message)
                         }
                 )
         return items
@@ -69,6 +72,7 @@ class RequestManager {
                 },
                 { error ->
                     Log.d("API ERROR", "API Fetch Error: ${error.message} ")
+                    errors.postValue(error.message)
                 }
             )
         return items
@@ -88,6 +92,7 @@ class RequestManager {
                 },
                 { error ->
                     Log.d("API ERROR", "API Fetch Error: ${error.message} ")
+                    errors.postValue(error.message)
                 }
             )
         return items
@@ -107,6 +112,7 @@ class RequestManager {
                 },
                 { error ->
                     Log.d("API ERROR", "API Fetch Error: ${error.message} ")
+                    errors.postValue(error.message)
                 }
             )
         return items

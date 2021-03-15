@@ -1,9 +1,9 @@
-name: Deploy to Firebase App Distribution from Develop
+name: Deploy to Firebase App Distribution from Push to Develop
 
 on:
   push:
     branches:
-     - develop
+      - develop
 
 jobs:
   build:
