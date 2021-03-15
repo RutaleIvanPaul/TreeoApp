@@ -3,6 +3,7 @@ package org.fairventures.treeo.ui.Home
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -35,6 +36,8 @@ class HomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_home)
 
         welcomeMessage.setText("Welcome ${intent.getStringExtra("username")}")
+
+        getDeviceInformation()
 
         logout_button.setOnClickListener {
             logoutUser()
