@@ -1,6 +1,9 @@
 name: Deploy to Firebase App Distribution from Push to Develop
 
-on: push
+on:
+  push:
+    branches:
+      - develop
 
 jobs:
   build:
@@ -30,6 +33,12 @@ jobs:
       - name: Run Tests
         run: ./gradlew test
 
+      - name: Debug value
+        run: |-
+            echo ${{ secrets.SIGNING_KEY }}
+            echo ${{ secrets.ALIAS }}
+            echo ${{steps.sign_app.outputs.signedReleaseFile}}
+            ls -la app/build/outputs/apk/debug/
 
 #      - name: Build Project
 #        run: ./gradlew assemble
