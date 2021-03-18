@@ -233,7 +233,7 @@ class MainActivity : AppCompatActivity() {
         loginLogoutUserViewModel.login(email, password).observe(this, Observer { loginToken ->
             if (loginToken != null) {
                 saveUserDetails(loginToken.token, getString(R.string.email_password))
-                openHome(loginToken.token)
+                openHome(loginToken.userName)
             }
         })
     }

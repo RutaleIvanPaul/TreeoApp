@@ -1,9 +1,12 @@
 package org.fairventures.treeo.ui.Home
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Bundle
-import android.util.Log
+import android.hardware.SensorManager
+import android.hardware.camera2.CameraManager
+import android.os.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -17,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_home.*
 import org.fairventures.treeo.R
 import org.fairventures.treeo.ui.MainActivity
 import org.fairventures.treeo.ui.authentication.LoginLogoutUserViewModel
+import org.fairventures.treeo.util.DeviceInfoUtils
 import javax.inject.Inject
 
 
@@ -37,7 +41,17 @@ class HomeActivity : AppCompatActivity() {
 
         welcomeMessage.setText("Welcome ${intent.getStringExtra("username")}")
 
-        getDeviceInformation()
+        val deviceInfoUtils = DeviceInfoUtils(applicationContext)
+
+        loginLogoutUserViewModel.postDeviceData(
+            deviceInfoUtils.getDeviceInformation(
+            getSystemService(ACTIVITY_SERVICE) as ActivityManager,
+            getSystemService(Context.SENSOR_SERVICE) as SensorManager,
+            packageManager,
+            getSystemService(CAMERA_SERVICE) as CameraManager
+        ),
+            getUserToken()
+        )
 
         logout_button.setOnClickListener {
             logoutUser()
@@ -95,5 +109,15 @@ class HomeActivity : AppCompatActivity() {
                     logoutFromBackend()
                 }
             })
+    }
+
+    private fun getUserToken():String{
+        with(sharedPref.edit()){
+            val token = sharedPref.getString(getString(R.string.user_token), null)
+            if (!token.isNullOrEmpty()) {
+                return "Bearer $token"
+            }
+        }
+        return ""
     }
 }

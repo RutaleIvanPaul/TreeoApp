@@ -128,5 +128,11 @@ dependencies {
 
     // Instant task executor rules
     testImplementation "androidx.arch.core:core-testing:2.1.0"
+    //Ads Identifier
+    implementation 'androidx.ads:ads-identifier:1.0.0-alpha01'
+
+    // Guava Used for the calls to addCallback()
+    implementation 'com.google.guava:guava:28.0-android'
+
 
 }

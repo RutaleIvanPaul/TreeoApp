@@ -19,7 +19,12 @@ interface ApiService {
     @POST("auth/jwt")
     suspend fun login(@Body loginDetails: LoginDetails): Response<LoginToken>
 
-    @GET("/auth/logout")
+    @GET("auth/logout")
     suspend fun logOut(@Header("Token") token: String): Response<LogoutResponse>
+
+    @POST("device-info")
+    suspend fun postDeviceInfo(
+        @Body deviceInformation: DeviceInformation,
+        @Header("Authorization") token: String): Response<Any>
 
 }
