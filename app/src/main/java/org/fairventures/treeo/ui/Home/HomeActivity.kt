@@ -43,14 +43,12 @@ class HomeActivity : AppCompatActivity() {
 
     private fun logoutUser() {
         val loginManager = sharedPref.getString(getString(R.string.loginManager), "")
-        if (loginManager.equals(getString(R.string.google))){
+        if (loginManager.equals(getString(R.string.google))) {
             signOutGoogle()
-        }
-        else if (loginManager.equals(getString(R.string.facebook))){
+        } else if (loginManager.equals(getString(R.string.facebook))) {
             LoginManager.getInstance().logOut()
             logoutFromBackend()
-        }
-        else{
+        } else {
             logoutFromBackend()
         }
     }
@@ -60,15 +58,17 @@ class HomeActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun logoutFromBackend(){
-        with(sharedPref.edit()){
+    private fun logoutFromBackend() {
+        with(sharedPref.edit()) {
             val token = sharedPref.getString(getString(R.string.user_token), null)
-            if(!token.isNullOrEmpty()){
+            if (!token.isNullOrEmpty()) {
                 loginLogoutUserViewModel.logout(token).observe(
                     this@HomeActivity,
                     Observer {
-                        deleteUserDetailsfromSharePref()
-                        backToMain()
+                        if (it != null) {
+                            deleteUserDetailsfromSharePref()
+                            backToMain()
+                        }
                     }
                 )
             }
