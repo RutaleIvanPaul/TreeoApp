@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
@@ -13,10 +12,6 @@ import androidx.lifecycle.Observer
 import com.facebook.*
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
-import org.fairventures.treeo.R
-import org.fairventures.treeo.models.RegisterUser
-import org.fairventures.treeo.ui.authentication.RegisterUserViewModel
-import org.fairventures.treeo.util.RC_SIGN_IN
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -25,8 +20,12 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import org.fairventures.treeo.R
+import org.fairventures.treeo.models.RegisterUser
 import org.fairventures.treeo.ui.Home.HomeActivity
 import org.fairventures.treeo.ui.authentication.LoginLogoutUserViewModel
+import org.fairventures.treeo.ui.authentication.RegisterUserViewModel
+import org.fairventures.treeo.util.RC_SIGN_IN
 import org.fairventures.treeo.util.errors
 import java.util.*
 import javax.inject.Inject
@@ -54,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         val mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
 
         sign_in_button.setSize(SignInButton.SIZE_STANDARD)
-        sign_in_button.setOnClickListener{
+        sign_in_button.setOnClickListener {
             val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
@@ -68,17 +67,19 @@ class MainActivity : AppCompatActivity() {
                 Log.d("FB Token", loginResult?.accessToken?.token!!)
                 registerUserViewModel.facebookSignUp(loginResult?.accessToken?.token!!).observe(
                     this@MainActivity,
-                    Observer {facebookReturn ->
-                        Log.d("Facebook Return", facebookReturn.toString())
-                        saveUserDetails(
-                            facebookReturn.token,
-                            getString(R.string.facebook))
-                        openHome(
-                            facebookReturn.firstName
-                        )
+                    Observer { facebookReturn ->
+                        if (facebookReturn != null) {
+                            Log.d("Facebook Return", facebookReturn.toString())
+                            saveUserDetails(
+                                facebookReturn.token,
+                                getString(R.string.facebook)
+                            )
+                            openHome(
+                                facebookReturn.firstName
+                            )
+                        }
                     }
                 )
-
             }
 
             override fun onCancel() {
@@ -92,19 +93,21 @@ class MainActivity : AppCompatActivity() {
 
         register_user_button.setOnClickListener {
             registerUserViewModel.createUser(
-                    RegisterUser(
-                            firstname.text.toString(),
-                            lastname.text.toString(),
-                            password.text.toString(),
-                            email.text.toString(),
-                            country.text.toString(),
-                            register_username.text.toString(),
-                            phone.text.toString()
-                    )
-            ).observe(this, Observer {registeredUser ->
-                toggleLoginUI(loginButton)
-                email.setText(registeredUser.email)
-                password.text.clear()
+                RegisterUser(
+                    firstname.text.toString(),
+                    lastname.text.toString(),
+                    password.text.toString(),
+                    email.text.toString(),
+                    country.text.toString(),
+                    register_username.text.toString(),
+                    phone.text.toString()
+                )
+            ).observe(this, Observer { registeredUser ->
+                if (registeredUser != null) {
+                    toggleLoginUI(loginButton)
+                    email.setText(registeredUser.email)
+                    password.text.clear()
+                }
             })
 
         }
@@ -114,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         login_button_email_password.setOnClickListener {
-            loginEmailPassword(email.text.toString(),password.text.toString())
+            loginEmailPassword(email.text.toString(), password.text.toString())
         }
 
         errors.observe(this, Observer {
@@ -162,15 +165,13 @@ class MainActivity : AppCompatActivity() {
 
         val user_token = sharedPref.getString(getString(R.string.user_token), "")
 
-        if(!sharedPref.getString(getString(R.string.loginManager),null).isNullOrEmpty()){
-            if (account != null){
+        if (!sharedPref.getString(getString(R.string.loginManager), null).isNullOrEmpty()) {
+            if (account != null) {
                 Log.d("Sign In Details", account.idToken!!)
                 openHome(account.displayName!!)
-            }
-            else if(isLoggedIn){
+            } else if (isLoggedIn) {
                 openHome(Profile.getCurrentProfile().name)
-            }
-            else if (!user_token.isNullOrBlank()){
+            } else if (!user_token.isNullOrBlank()) {
                 openHome(user_token)
             }
         }
@@ -191,46 +192,49 @@ class MainActivity : AppCompatActivity() {
         try {
             val account = completedTask.getResult(ApiException::class.java)
 
-            if(account == null){
+            if (account == null) {
                 Log.d("Sign In Details", "Could Not Sign In")
                 textView1.setText("Could not sign in")
 
-            }
-            else{
+            } else {
                 Log.d("Sign In Details", account.idToken!!)
-                registerUserViewModel.googleSignUp(account.idToken!!).observe(this, Observer {googleUser ->
-                    Log.d("Google Connect", googleUser.userName)
-                    saveUserDetails(googleUser.token, getString(R.string.google))
-                    openHome(googleUser.userName)
-                })
+                registerUserViewModel.googleSignUp(account.idToken!!)
+                    .observe(this, Observer { googleUser ->
+                        if (googleUser != null) {
+                            Log.d("Google Connect", googleUser.userName)
+                            saveUserDetails(googleUser.token, getString(R.string.google))
+                            openHome(googleUser.userName)
+                        }
+                    })
             }
 
         } catch (e: ApiException) {
             Log.d("TAG", "signInResult:failed code=" + e.statusCode)
-            textView1.setText("signInResult:failed code = ${ e.statusCode}")
+            textView1.setText("signInResult:failed code = ${e.statusCode}")
         }
     }
 
-    private fun saveUserDetails(token: String, loginManager: String){
-        with (sharedPref.edit()) {
+    private fun saveUserDetails(token: String, loginManager: String) {
+        with(sharedPref.edit()) {
             putString(getString(R.string.user_token), token)
             putString(getString(R.string.loginManager), loginManager)
             apply()
         }
     }
 
-    private fun openHome(extra:String){
+    private fun openHome(extra: String) {
         val intent = Intent(this, HomeActivity::class.java).apply {
             putExtra("username", extra)
         }
         startActivity(intent)
     }
 
-    private fun loginEmailPassword(email: String, password: String){
-        loginLogoutUserViewModel.login(email,password).observe(this, Observer { loginToken ->
-            saveUserDetails(loginToken.token, getString(R.string.email_password))
-            openHome(loginToken.token)
+    private fun loginEmailPassword(email: String, password: String) {
+        loginLogoutUserViewModel.login(email, password).observe(this, Observer { loginToken ->
+            if (loginToken != null) {
+                saveUserDetails(loginToken.token, getString(R.string.email_password))
+                openHome(loginToken.token)
+            }
         })
     }
-
 }

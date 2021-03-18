@@ -1,16 +1,32 @@
 package org.fairventures.treeo.ui.authentication
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.fairventures.treeo.models.LoginDetails
+import org.fairventures.treeo.models.LoginToken
+import org.fairventures.treeo.models.LogoutResponse
 import org.fairventures.treeo.repository.MainRepository
 
 class LoginLogoutUserViewModel @ViewModelInject constructor(
     private val mainRepository: MainRepository
-): ViewModel() {
-    fun login(email: String, password: String)
-            = mainRepository.login(LoginDetails(email,password))
+) : ViewModel() {
+    fun login(email: String, password: String): MutableLiveData<LoginToken> {
+        val loginToken = MutableLiveData<LoginToken>()
+        viewModelScope.launch(Dispatchers.IO) {
+            loginToken.postValue(mainRepository.login(LoginDetails(email, password)).value)
+        }
+        return loginToken
+    }
 
-    fun logout(token: String)
-            = mainRepository.logout(token)
+    fun logout(token: String): MutableLiveData<LogoutResponse> {
+        val logoutResponse = MutableLiveData<LogoutResponse>()
+        viewModelScope.launch(Dispatchers.IO) {
+            logoutResponse.postValue(mainRepository.logout(token).value)
+        }
+        return logoutResponse
+    }
 }
