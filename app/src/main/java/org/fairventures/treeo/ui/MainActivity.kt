@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
             override fun onSuccess(loginResult: LoginResult?) {
                 Log.d("FB Token", loginResult?.accessToken?.token!!)
-                registerUserViewModel.facebookSignUp(loginResult?.accessToken?.token!!).observe(
+                registerUserViewModel.facebookSignUp(loginResult.accessToken?.token!!).observe(
                     this@MainActivity,
                     Observer { facebookReturn ->
                         if (facebookReturn != null) {

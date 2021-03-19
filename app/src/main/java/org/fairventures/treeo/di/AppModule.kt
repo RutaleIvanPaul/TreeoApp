@@ -11,12 +11,11 @@ import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.fairventures.treeo.repository.IMainRepository
+import org.fairventures.treeo.repository.MainRepository
 import org.fairventures.treeo.services.ApiService
 import org.fairventures.treeo.services.RequestManager
-import org.fairventures.treeo.util.BASE_URL
-import org.fairventures.treeo.util.DefaultDispatcherProvider
-import org.fairventures.treeo.util.GOOGLE_CLIENT_ID
-import org.fairventures.treeo.util.SHARED_PREFERENCES_NAME
+import org.fairventures.treeo.util.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -27,9 +26,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesDispatcherProvider(): DefaultDispatcherProvider {
-        return DefaultDispatcherProvider()
-    }
+    fun providesDispatcherProvider() = DefaultDispatcherProvider() as IDispatcherProvider
+
 
     @Singleton
     @Provides
@@ -54,6 +52,11 @@ object AppModule {
             .build()
         return retrofit.create(ApiService::class.java)
     }
+
+    @Singleton
+    @Provides
+    fun providesMainRepository(requestManager: RequestManager) =
+        MainRepository(requestManager) as IMainRepository
 
     @Singleton
     @Provides

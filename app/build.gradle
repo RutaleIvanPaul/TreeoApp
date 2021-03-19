@@ -123,5 +123,10 @@ dependencies {
     // Arch core testing (Instant task executor rule)
     testImplementation "androidx.arch.core:core-testing:2.1.0"
 
+    // Truth assertion library
+    testImplementation "com.google.truth:truth:1.0.1"
+
+    // Instant task executor rules
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
 
 }
