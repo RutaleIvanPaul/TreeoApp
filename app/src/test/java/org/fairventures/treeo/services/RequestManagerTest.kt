@@ -51,7 +51,7 @@ class RequestManagerTest {
     }
 
     @Test
-    fun ` test create user endpoint success`() = runBlocking {
+    fun ` test create user success`() = runBlocking {
         val user = RegisterUser(
             "test-first",
             "test-last",
@@ -59,7 +59,7 @@ class RequestManagerTest {
             "test@gmail.com",
             "country",
             "test-name",
-            "0759111222"
+            "999"
         )
 
         val response = requestManager.createUser(user)

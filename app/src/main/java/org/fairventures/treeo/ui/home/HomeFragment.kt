@@ -1,8 +1,10 @@
-package org.fairventures.treeo.ui.Home
+package org.fairventures.treeo.ui.home
 
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.content.Context.ACTIVITY_SERVICE
+import android.content.Context.CAMERA_SERVICE
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.SharedPreferences
@@ -14,23 +16,23 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
 import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.fairventures.treeo.R
-import org.fairventures.treeo.ui.MainActivity
 import org.fairventures.treeo.ui.authentication.LoginLogoutUserViewModel
 import org.fairventures.treeo.util.DeviceInfoUtils
 import org.fairventures.treeo.util.ExifUtil
@@ -43,13 +45,14 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() {
+class HomeFragment : Fragment() {
 
     @Inject
     lateinit var sharedPref: SharedPreferences
 
     @Inject
     lateinit var googleSignInOptions: GoogleSignInOptions
+
 
     @Inject
     lateinit var deviceInfoUtils: DeviceInfoUtils
@@ -62,16 +65,21 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var photoFile: File
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_home, container, false)
+    }
 
-        welcomeMessage.text = "Welcome ${intent.getStringExtra("username")}"
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        welcomeMessage.text = arguments?.getString("username")
 
         getDeviceInformation()
 
         logout_button.setOnClickListener {
-            homeprogressBar.visibility = View.VISIBLE
             logoutUser()
         }
 
@@ -80,9 +88,9 @@ class HomeActivity : AppCompatActivity() {
             photoFile = getPhotoFile(FILE_NAME)
 
             val fileProvider = FileProvider
-                .getUriForFile(this, "org.fairventures.treeo.fileprovider", photoFile)
+                .getUriForFile(requireContext(), "org.fairventures.treeo.fileprovider", photoFile)
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
-            if (takePictureIntent.resolveActivity(this.packageManager) != null) {
+            if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
                 startActivityForResult(takePictureIntent, 1)
 
             } else {
@@ -90,17 +98,15 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        homeprogressBar.visibility = View.GONE
         setObservers()
     }
 
     private fun setObservers() {
         loginLogoutUserViewModel.logoutResponse.observe(
-            this,
+            viewLifecycleOwner,
             Observer { logoutResponse ->
-                Log.d("logRes", logoutResponse.toString())
                 if (logoutResponse != null) {
-                    deleteUserDetailsfromSharePref()
+                    deleteUserDetailsFromSharePref()
                     backToMain()
                 } else {
                     Log.d("Logout", "Logout Response is null")
@@ -109,15 +115,14 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
-
     private fun getDeviceInformation() {
         GlobalScope.launch(dispatcher.main()) {
             loginLogoutUserViewModel.postDeviceData(
                 deviceInfoUtils.getDeviceInformation(
-                    getSystemService(ACTIVITY_SERVICE) as ActivityManager,
-                    getSystemService(Context.SENSOR_SERVICE) as SensorManager,
-                    packageManager,
-                    getSystemService(CAMERA_SERVICE) as CameraManager
+                    requireActivity().getSystemService(ACTIVITY_SERVICE) as ActivityManager,
+                    requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager,
+                    requireActivity().packageManager,
+                    requireActivity().getSystemService(CAMERA_SERVICE) as CameraManager
                 ),
                 getUserToken()
             )
@@ -125,15 +130,15 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun getPhotoFile(fileName: String): File {
-        //access package specific directories
-        val storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        //acess package specific directories
+        val storageDirectory =
+            requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
         return File.createTempFile(fileName, ".jpg", storageDirectory)
-
     }
 
-    fun saveToFile(bitmap: Bitmap) {
-        val contextWrapper = ContextWrapper(applicationContext)
+    private fun saveToFile(bitmap: Bitmap) {
+        val contextWrapper = ContextWrapper(requireActivity().applicationContext)
         val directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE)
         val file = File(directory, System.currentTimeMillis().toString() + ".jpg")
         if (!file.exists()) {
@@ -156,7 +161,6 @@ class HomeActivity : AppCompatActivity() {
         if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             val takenImage = BitmapFactory.decodeFile(photoFile.absolutePath)
             saveToFile(takenImage)
-//            val scaledImage = Bitmap.createScaledBitmap(takenImage, 720, 1280, true)
             val rotatedImage = ExifUtil.rotateBitmap(photoFile.absolutePath, takenImage)
             imageView.setImageBitmap(rotatedImage)
         } else {
@@ -166,19 +170,23 @@ class HomeActivity : AppCompatActivity() {
 
     private fun logoutUser() {
         val loginManager = sharedPref.getString(getString(R.string.loginManager), "")
-        if (loginManager.equals(getString(R.string.google))) {
-            signOutGoogle()
-        } else if (loginManager.equals(getString(R.string.facebook))) {
-            LoginManager.getInstance().logOut()
-            logoutFromBackend()
-        } else {
-            logoutFromBackend()
+        when {
+            loginManager.equals(getString(R.string.google)) -> {
+                signOutGoogle()
+            }
+            loginManager.equals(getString(R.string.facebook)) -> {
+                LoginManager.getInstance().logOut()
+                logoutFromBackend()
+            }
+            else -> {
+                logoutFromBackend()
+            }
         }
     }
 
     private fun backToMain() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        this.findNavController()
+            .navigate(R.id.action_homeFragment_to_registrationFragment)
     }
 
     private fun logoutFromBackend() {
@@ -190,23 +198,13 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun deleteUserDetailsfromSharePref() {
-        with(sharedPref.edit()) {
-            remove(getString(R.string.user_token))
-            remove(getString(R.string.loginManager))
-            apply()
-        }
-    }
-
     private fun signOutGoogle() {
-        // Build a GoogleSignInClient with the options specified by gso.
-        val mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions)
+        val mGoogleSignInClient =
+            GoogleSignIn.getClient(requireActivity(), googleSignInOptions)
         mGoogleSignInClient.signOut()
-            .addOnCompleteListener(this, object : OnCompleteListener<Void?> {
-                override fun onComplete(task: Task<Void?>) {
-                    logoutFromBackend()
-                }
-            })
+            .addOnCompleteListener(requireActivity()) {
+                logoutFromBackend()
+            }
     }
 
     private fun getUserToken(): String {
@@ -217,5 +215,18 @@ class HomeActivity : AppCompatActivity() {
             }
         }
         return ""
+    }
+
+    private fun deleteUserDetailsFromSharePref() {
+        with(sharedPref.edit()) {
+            remove(getString(R.string.user_token))
+            remove(getString(R.string.loginManager))
+            apply()
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance() = HomeFragment()
     }
 }

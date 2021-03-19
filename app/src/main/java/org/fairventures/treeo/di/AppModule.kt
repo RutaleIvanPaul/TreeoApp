@@ -81,5 +81,4 @@ object AppModule {
             .requestEmail()
             .requestProfile()
             .build()
-
 }

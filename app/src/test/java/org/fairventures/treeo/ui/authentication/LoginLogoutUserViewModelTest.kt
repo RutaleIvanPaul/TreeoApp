@@ -5,7 +5,6 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.fairventures.treeo.MainCoroutineRule
-import org.fairventures.treeo.getOrAwaitValue
 import org.fairventures.treeo.models.LoginDetails
 import org.fairventures.treeo.models.LogoutResponse
 import org.fairventures.treeo.repository.FakeMainRepository

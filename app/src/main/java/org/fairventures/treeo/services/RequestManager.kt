@@ -43,7 +43,7 @@ class RequestManager @Inject constructor(
 
         if (response.isSuccessful) {
             items = response.body()
-            Log.d("Facebook API", response.toString())
+            Log.d("fbLog", response.toString())
         } else {
             Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
             errors.postValue(response.message())
@@ -51,8 +51,8 @@ class RequestManager @Inject constructor(
         return items
     }
 
-    suspend fun login(loginDetails: LoginDetails): LoginToken? {
-        var items: LoginToken? = null
+    suspend fun login(loginDetails: LoginDetails): LoginResponse? {
+        var items: LoginResponse? = null
 
         val response = apiService.login(loginDetails)
 
@@ -81,8 +81,10 @@ class RequestManager @Inject constructor(
     }
 
     suspend fun postDeviceData(deviceInformation: DeviceInformation, userToken: String) {
-        val response = apiService.postDeviceInfo(deviceInformation, userToken)
         Log.d("devData", deviceInformation.toString())
+
+        val response = apiService.postDeviceInfo(deviceInformation, userToken)
+
         if (response.isSuccessful) {
             Log.d("Device Data", "Successfully Added Device Information")
         } else {

@@ -5,7 +5,6 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.fairventures.treeo.MainCoroutineRule
-import org.fairventures.treeo.getOrAwaitValue
 import org.fairventures.treeo.models.FacebookUser
 import org.fairventures.treeo.models.GoogleUser
 import org.fairventures.treeo.models.NewRegisteredUser
@@ -44,7 +43,7 @@ class RegisterUserViewModelTest {
                 "test@gmail.com",
                 "Uganda",
                 "test-user",
-                "0759111222"
+                "99999"
             )
 
             val expectedUser = NewRegisteredUser(
