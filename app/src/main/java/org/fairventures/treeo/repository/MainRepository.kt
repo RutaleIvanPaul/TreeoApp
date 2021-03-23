@@ -1,5 +1,6 @@
 package org.fairventures.treeo.repository
 
+import org.fairventures.treeo.models.DeviceInformation
 import org.fairventures.treeo.models.LoginDetails
 import org.fairventures.treeo.models.RegisterUser
 import org.fairventures.treeo.services.RequestManager
@@ -17,7 +18,12 @@ class MainRepository @Inject constructor(
     override suspend fun faceBookSignUp(accessToken: String) =
         requestManager.facebookSignUp(accessToken)
 
-    override suspend fun login(loginDetails: LoginDetails) = requestManager.login(loginDetails)
+    override suspend fun login(loginDetails: LoginDetails) =
+        requestManager.login(loginDetails)
 
-    override suspend fun logout(token: String) = requestManager.logout(token)
+    override suspend fun logout(token: String) =
+        requestManager.logout(token)
+
+    override suspend fun postDeviceData(deviceInformation: DeviceInformation, userToken: String) =
+        requestManager.postDeviceData(deviceInformation, userToken)
 }

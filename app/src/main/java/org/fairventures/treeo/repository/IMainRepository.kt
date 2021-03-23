@@ -9,4 +9,5 @@ interface IMainRepository {
     suspend fun faceBookSignUp(accessToken: String): MutableLiveData<FacebookUser>
     suspend fun login(loginDetails: LoginDetails): MutableLiveData<LoginToken>
     suspend fun logout(token: String): MutableLiveData<LogoutResponse>
+    suspend fun postDeviceData(deviceInformation: DeviceInformation, userToken: String)
 }

@@ -79,4 +79,15 @@ class RequestManager @Inject constructor(
         }
         return items
     }
+
+    suspend fun postDeviceData(deviceInformation: DeviceInformation, userToken: String){
+        val response  = apiService.postDeviceInfo(deviceInformation, userToken)
+
+        if (response.isSuccessful){
+            Log.d("Device Data","Successfully Added Device Information")
+        }else {
+            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
+            errors.postValue(response.message())
+        }
+    }
 }

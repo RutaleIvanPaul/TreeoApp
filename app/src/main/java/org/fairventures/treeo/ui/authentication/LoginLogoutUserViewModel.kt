@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import org.fairventures.treeo.models.DeviceInformation
 import org.fairventures.treeo.models.LoginDetails
 import org.fairventures.treeo.models.LoginToken
 import org.fairventures.treeo.models.LogoutResponse
@@ -29,5 +30,11 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
             logoutResponse.postValue(mainRepository.logout(token).value)
         }
         return logoutResponse
+    }
+
+    fun postDeviceData(deviceInformation: DeviceInformation, userToken: String){
+        viewModelScope.launch(dispatcher.io()) {
+            mainRepository.postDeviceData(deviceInformation, userToken)
+        }
     }
 }
