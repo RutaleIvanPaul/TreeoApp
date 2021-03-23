@@ -66,7 +66,7 @@ class DeviceInfoUtils(var context: Context) : AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                 internalTotal =
                     internalStatFs.blockCountLong * internalStatFs.blockSizeLong / (converter)
-                if (isSdCardOnDevice(this)) {
+                if (isSdCardOnDevice(context)) {
                     externalTotal =
                         externalStatFs.blockCountLong * externalStatFs.blockSizeLong / (converter)
                 }
@@ -74,7 +74,7 @@ class DeviceInfoUtils(var context: Context) : AppCompatActivity() {
                 internalTotal =
                     internalStatFs.blockCount.toLong() * internalStatFs.blockSize.toLong() / (converter)
 
-                if (isSdCardOnDevice(this)) {
+                if (isSdCardOnDevice(context)) {
                     externalTotal =
                         externalStatFs.blockCount.toLong() * externalStatFs.blockSize.toLong() / (converter)
 

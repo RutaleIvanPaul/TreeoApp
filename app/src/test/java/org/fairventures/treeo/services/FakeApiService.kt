@@ -39,12 +39,18 @@ class FakeApiService(private val delegate: BehaviorDelegate<ApiService>) : ApiSe
     }
 
     override suspend fun login(loginDetails: LoginDetails): Response<LoginToken> {
-        val loginToken = LoginToken("thisisatesttoken")
+        val loginToken = LoginToken(
+                "thisisatestusername",
+                "email","thisisatesttoken",200)
         return delegate.returningResponse(loginToken).login(loginDetails)
     }
 
     override suspend fun logOut(token: String): Response<LogoutResponse> {
         val logoutResponse = LogoutResponse("logout success", 200)
         return delegate.returningResponse(logoutResponse).logOut(token)
+    }
+
+    override suspend fun postDeviceInfo(deviceInformation: DeviceInformation, token: String): Response<Any> {
+        TODO("Not yet implemented")
     }
 }

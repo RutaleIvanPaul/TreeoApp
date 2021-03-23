@@ -99,7 +99,7 @@ class HomeActivity : AppCompatActivity() {
     fun saveToFile(bitmap:Bitmap) {
         val contextWrapper = ContextWrapper(applicationContext)
         val directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE)
-        val file = File(directory, "UniqueFileName" + ".jpg")
+        val file = File(directory, System.currentTimeMillis().toString() + ".jpg")
         if (!file.exists()) {
             Log.d("path", file.toString())
             var fos: FileOutputStream? = null
@@ -150,10 +150,12 @@ class HomeActivity : AppCompatActivity() {
             if (!token.isNullOrEmpty()) {
                 loginLogoutUserViewModel.logout(token).observe(
                     this@HomeActivity,
-                    Observer {
-                        if (it != null) {
+                    Observer { logoutResponse ->
+                        if (logoutResponse != null) {
                             deleteUserDetailsfromSharePref()
                             backToMain()
+                        }else{
+                            Log.d("Logout","Logout Response is null")
                         }
                     }
                 )
