@@ -55,7 +55,9 @@ class FakeMainRepository : IMainRepository {
     }
 
     private fun returnFakeLoginToken(loginDetails: LoginDetails): MutableLiveData<LoginToken> {
-        val loginToken = LoginToken("thisisanauthtoken")
+        val loginToken = LoginToken(
+                "thisisatestusername",
+                "email","thisisanauthtoken",200)
         val tokenLiveData = MutableLiveData<LoginToken>()
         tokenLiveData.value = loginToken
         return tokenLiveData
@@ -74,5 +76,9 @@ class FakeMainRepository : IMainRepository {
 
     override suspend fun logout(token: String): MutableLiveData<LogoutResponse> {
         return returnFakeLogoutResponse(token)
+    }
+
+    override suspend fun postDeviceData(deviceInformation: DeviceInformation, userToken: String) {
+        TODO("Not yet implemented")
     }
 }
