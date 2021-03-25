@@ -29,6 +29,7 @@ import org.fairventures.treeo.R
 import org.fairventures.treeo.ui.MainActivity
 import org.fairventures.treeo.ui.authentication.LoginLogoutUserViewModel
 import org.fairventures.treeo.util.DeviceInfoUtils
+import org.fairventures.treeo.util.ExifUtil
 import org.fairventures.treeo.util.FILE_NAME
 import java.io.File
 import java.io.FileOutputStream
@@ -137,7 +138,9 @@ class HomeActivity : AppCompatActivity() {
         if (requestCode == 1 && resultCode == Activity.RESULT_OK){
             val takenImage = BitmapFactory.decodeFile(photoFile.absolutePath)
             saveToFile(takenImage)
-            imageView.setImageBitmap(takenImage)
+//            val scaledImage = Bitmap.createScaledBitmap(takenImage, 720, 1280, true)
+            val rotatedImage = ExifUtil.rotateBitmap(photoFile.absolutePath,takenImage)
+            imageView.setImageBitmap(rotatedImage)
         }else {
             super.onActivityResult(requestCode, resultCode, data)
         }
