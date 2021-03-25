@@ -64,21 +64,7 @@ class MainActivity : AppCompatActivity() {
         loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
             override fun onSuccess(loginResult: LoginResult?) {
                 Log.d("FB Token", loginResult?.accessToken?.token!!)
-                registerUserViewModel.facebookSignUp(loginResult.accessToken?.token!!).observe(
-                    this@MainActivity,
-                    Observer { facebookReturn ->
-                        if (facebookReturn != null) {
-                            Log.d("Facebook Return", facebookReturn.toString())
-                            saveUserDetails(
-                                facebookReturn.token,
-                                getString(R.string.facebook)
-                            )
-                            openHome(
-                                facebookReturn.firstName
-                            )
-                        }
-                    }
-                )
+                registerUserViewModel.facebookSignUp(loginResult.accessToken?.token!!)
             }
 
             override fun onCancel() {
@@ -101,14 +87,7 @@ class MainActivity : AppCompatActivity() {
                     register_username.text.toString(),
                     phone.text.toString()
                 )
-            ).observe(this, Observer { registeredUser ->
-                if (registeredUser != null) {
-                    toggleLoginUI(loginButton)
-                    email.setText(registeredUser.email)
-                    password.text.clear()
-                }
-            })
-
+            )
         }
 
         login_logout_toggle.setOnClickListener {
@@ -122,6 +101,58 @@ class MainActivity : AppCompatActivity() {
         errors.observe(this, Observer {
             textView1.setText(it)
         })
+
+        setObservers(loginButton)
+
+    }
+
+    private fun setObservers(loginButton: LoginButton) {
+
+        registerUserViewModel.googleUser.observe(this, Observer { googleUser ->
+            Log.d("Google Observer", "Now in Google Observer!!!!")
+            if (googleUser != null) {
+                Log.d("Google Connect", googleUser.userName)
+                saveUserDetails(googleUser.token, getString(R.string.google))
+                openHome(googleUser.userName)
+            } else {
+                Log.d("Google Connect", "Google object is null.")
+            }
+        })
+
+
+        registerUserViewModel.newUser.observe(this, Observer { registeredUser ->
+            if (registeredUser != null) {
+                toggleLoginUI(loginButton)
+                email.setText(registeredUser.email)
+                password.text.clear()
+            }
+        })
+
+        registerUserViewModel.facebookUser.observe(
+                this,
+                Observer { facebookReturn ->
+                    if (facebookReturn != null) {
+                        saveUserDetails(
+                                facebookReturn.token,
+                                getString(R.string.facebook)
+                        )
+                        openHome(
+                                facebookReturn.firstName
+                        )
+                    }
+                }
+        )
+
+        loginLogoutUserViewModel.loginToken.observe(this, Observer { loginToken ->
+                    if (loginToken != null) {
+                        saveUserDetails(loginToken.token, getString(R.string.email_password))
+                        openHome(loginToken.userName)
+                    }
+                    else{
+                        Log.d("Login Token","Login token is null!!!")
+                    }
+                })
+
 
     }
 
@@ -198,13 +229,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Log.d("Sign In Details", account.idToken!!)
                 registerUserViewModel.googleSignUp(account.idToken!!)
-                    .observe(this, Observer { googleUser ->
-                        if (googleUser != null) {
-                            Log.d("Google Connect", googleUser.userName)
-                            saveUserDetails(googleUser.token, getString(R.string.google))
-                            openHome(googleUser.userName)
-                        }
-                    })
             }
 
         } catch (e: ApiException) {
@@ -229,11 +253,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loginEmailPassword(email: String, password: String) {
-        loginLogoutUserViewModel.login(email, password).observe(this, Observer { loginToken ->
-            if (loginToken != null) {
-                saveUserDetails(loginToken.token, getString(R.string.email_password))
-                openHome(loginToken.userName)
-            }
-        })
+        loginLogoutUserViewModel.login(email, password)
     }
 }

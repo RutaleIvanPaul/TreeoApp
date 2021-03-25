@@ -36,15 +36,14 @@ class LoginLogoutUserViewModelTest {
     fun `test login`() = mainCoroutineRule.testDispatcher.runBlockingTest {
         val loginDetails = LoginDetails("test@gmail.com", "secret")
         val expectedToken = "thisisanauthtoken"
-        val value = viewModel.login(loginDetails.email, loginDetails.password).getOrAwaitValue()
-        assertThat(value.token).isEqualTo(expectedToken)
+        viewModel.login(loginDetails.email, loginDetails.password)
+        assertThat(viewModel.loginToken.value?.token).isEqualTo(expectedToken)
     }
 
     @Test
     fun `test logout`() = mainCoroutineRule.testDispatcher.runBlockingTest {
         val expectedResponse = LogoutResponse("user logged out", 200)
-        val value = viewModel.logout("thisisanauthtoken").getOrAwaitValue()
-        assertThat(value.message).isEqualTo(expectedResponse.message)
-        assertThat(value.status).isEqualTo(expectedResponse.status)
+        viewModel.logout("thisisanauthtoken")
+        assertThat(viewModel.logoutResponse.value?.message).isEqualTo(expectedResponse.message)
     }
 }

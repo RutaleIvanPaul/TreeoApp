@@ -4,39 +4,35 @@ import androidx.lifecycle.MutableLiveData
 import org.fairventures.treeo.models.*
 
 class FakeMainRepository : IMainRepository {
-    private fun returnFakeUser(registerUser: RegisterUser): MutableLiveData<NewRegisteredUser> {
+    private fun returnFakeUser(registerUser: RegisterUser): NewRegisteredUser {
         val user = NewRegisteredUser(
             registerUser.email,
             registerUser.firstName,
             false,
             registerUser.lastName
         )
-        val userLiveData = MutableLiveData<NewRegisteredUser>()
-        userLiveData.value = user
-        return userLiveData
+        return user
     }
 
-    override suspend fun createUser(registerUser: RegisterUser): MutableLiveData<NewRegisteredUser> {
+    override suspend fun createUser(registerUser: RegisterUser): NewRegisteredUser? {
         return returnFakeUser(registerUser)
     }
 
-    private fun returnFakeGoogleUser(googleAuthToken: String): MutableLiveData<GoogleUser> {
+    private fun returnFakeGoogleUser(googleAuthToken: String): GoogleUser {
         val googleUser = GoogleUser(
+                "username",
             "googleuser@gmail.com",
-            0,
-            googleAuthToken,
-            "username"
+                googleAuthToken,
+            200
         )
-        val userLiveData = MutableLiveData<GoogleUser>()
-        userLiveData.value = googleUser
-        return userLiveData
+        return googleUser
     }
 
-    override suspend fun googleSignUp(googleAuthToken: String): MutableLiveData<GoogleUser> {
+    override suspend fun googleSignUp(googleAuthToken: String): GoogleUser? {
         return returnFakeGoogleUser(googleAuthToken)
     }
 
-    private fun returnFakeFacebookUser(accessToken: String): MutableLiveData<FacebookUser> {
+    private fun returnFakeFacebookUser(accessToken: String):FacebookUser {
         val facebookUser = FacebookUser(
             "face@gmail.com",
             "firstName",
@@ -45,36 +41,30 @@ class FakeMainRepository : IMainRepository {
             accessToken,
             "username"
         )
-        val userLiveData = MutableLiveData<FacebookUser>()
-        userLiveData.value = facebookUser
-        return userLiveData
+        return facebookUser
     }
 
-    override suspend fun faceBookSignUp(accessToken: String): MutableLiveData<FacebookUser> {
+    override suspend fun faceBookSignUp(accessToken: String): FacebookUser? {
         return returnFakeFacebookUser(accessToken)
     }
 
-    private fun returnFakeLoginToken(loginDetails: LoginDetails): MutableLiveData<LoginToken> {
+    private fun returnFakeLoginToken(loginDetails: LoginDetails): LoginToken {
         val loginToken = LoginToken(
                 "thisisatestusername",
                 "email","thisisanauthtoken",200)
-        val tokenLiveData = MutableLiveData<LoginToken>()
-        tokenLiveData.value = loginToken
-        return tokenLiveData
+        return loginToken
     }
 
-    override suspend fun login(loginDetails: LoginDetails): MutableLiveData<LoginToken> {
+    override suspend fun login(loginDetails: LoginDetails): LoginToken {
         return returnFakeLoginToken(loginDetails)
     }
 
-    private fun returnFakeLogoutResponse(token: String): MutableLiveData<LogoutResponse> {
+    private fun returnFakeLogoutResponse(token: String): LogoutResponse {
         val logoutResponse = LogoutResponse("user logged out", 200)
-        val logoutLiveData = MutableLiveData<LogoutResponse>()
-        logoutLiveData.value = logoutResponse
-        return logoutLiveData
+        return logoutResponse
     }
 
-    override suspend fun logout(token: String): MutableLiveData<LogoutResponse> {
+    override suspend fun logout(token: String): LogoutResponse? {
         return returnFakeLogoutResponse(token)
     }
 

@@ -1,8 +1,8 @@
 package org.fairventures.treeo.models
 
 data class GoogleUser(
+    val userName: String,
     val email: String,
-    val status: Int,
     val token: String,
-    val userName: String
+    val status: Int
 )

@@ -86,6 +86,22 @@ class HomeActivity : AppCompatActivity() {
                 Log.d("Camera Error", "Could not open Camera")
             }
         }
+
+        setObservers()
+    }
+
+    private fun setObservers() {
+        loginLogoutUserViewModel.logoutResponse.observe(
+                this,
+                Observer { logoutResponse ->
+                    if (logoutResponse != null) {
+                        deleteUserDetailsfromSharePref()
+                        backToMain()
+                    }else{
+                        Log.d("Logout","Logout Response is null")
+                    }
+                }
+        )
     }
 
     private fun getPhotoFile(fileName: String): File {
@@ -148,17 +164,7 @@ class HomeActivity : AppCompatActivity() {
         with(sharedPref.edit()) {
             val token = sharedPref.getString(getString(R.string.user_token), null)
             if (!token.isNullOrEmpty()) {
-                loginLogoutUserViewModel.logout(token).observe(
-                    this@HomeActivity,
-                    Observer { logoutResponse ->
-                        if (logoutResponse != null) {
-                            deleteUserDetailsfromSharePref()
-                            backToMain()
-                        }else{
-                            Log.d("Logout","Logout Response is null")
-                        }
-                    }
-                )
+                loginLogoutUserViewModel.logout(token)
             }
         }
     }

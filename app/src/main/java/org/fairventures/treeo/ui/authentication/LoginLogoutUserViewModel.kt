@@ -1,6 +1,7 @@
 package org.fairventures.treeo.ui.authentication
 
 import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,20 +17,23 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
     private val mainRepository: IMainRepository,
     private val dispatcher: IDispatcherProvider
 ) : ViewModel() {
-    fun login(email: String, password: String): MutableLiveData<LoginToken> {
-        val loginToken = MutableLiveData<LoginToken>()
+
+    private val _loginToken = MutableLiveData<LoginToken>()
+    val loginToken: LiveData<LoginToken> get() = _loginToken
+
+    private val _logoutResponse = MutableLiveData<LogoutResponse>()
+    val logoutResponse: LiveData<LogoutResponse> get() = _logoutResponse
+
+    fun login(email: String, password: String) {
         viewModelScope.launch(dispatcher.io()) {
-            loginToken.postValue(mainRepository.login(LoginDetails(email, password)).value)
+            _loginToken.postValue(mainRepository.login(LoginDetails(email, password)))
         }
-        return loginToken
     }
 
-    fun logout(token: String): MutableLiveData<LogoutResponse> {
-        val logoutResponse = MutableLiveData<LogoutResponse>()
+    fun logout(token: String){
         viewModelScope.launch(dispatcher.io()) {
-            logoutResponse.postValue(mainRepository.logout(token).value)
+            _logoutResponse.postValue(mainRepository.logout(token))
         }
-        return logoutResponse
     }
 
     fun postDeviceData(deviceInformation: DeviceInformation, userToken: String){
