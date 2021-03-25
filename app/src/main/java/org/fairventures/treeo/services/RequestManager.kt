@@ -9,13 +9,13 @@ import javax.inject.Inject
 class RequestManager @Inject constructor(
     private val apiService: ApiService
 ) {
-    suspend fun createUser(registerUser: RegisterUser): MutableLiveData<NewRegisteredUser> {
-        val items = MutableLiveData<NewRegisteredUser>()
+    suspend fun createUser(registerUser: RegisterUser): NewRegisteredUser? {
+        var items: NewRegisteredUser? = null
 
         val response = apiService.createUser(registerUser)
 
         if (response.isSuccessful) {
-            items.postValue(response.body())
+            items = response.body()
         } else {
             Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
             errors.postValue(response.message())
@@ -23,13 +23,13 @@ class RequestManager @Inject constructor(
         return items
     }
 
-    suspend fun googleSignUp(googleAuthToken: String): MutableLiveData<GoogleUser> {
-        val items = MutableLiveData<GoogleUser>()
+    suspend fun googleSignUp(googleAuthToken: String): GoogleUser? {
+        var items: GoogleUser? = null
 
         val response = apiService.googleSignUp(GoogleToken(googleAuthToken, "mobile"))
 
         if (response.isSuccessful) {
-            items.postValue(response.body())
+            items = response.body()
         } else {
             Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
             errors.postValue(response.message())
@@ -37,13 +37,13 @@ class RequestManager @Inject constructor(
         return items
     }
 
-    suspend fun facebookSignUp(access_token: String): MutableLiveData<FacebookUser> {
-        val items = MutableLiveData<FacebookUser>()
+    suspend fun facebookSignUp(access_token: String): FacebookUser? {
+        var items :FacebookUser? = null
 
         val response = apiService.facebookSignUp(access_token)
 
         if (response.isSuccessful) {
-            items.postValue(response.body())
+            items = response.body()
             Log.d("Facebook API", response.toString())
         } else {
             Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
@@ -52,13 +52,13 @@ class RequestManager @Inject constructor(
         return items
     }
 
-    suspend fun login(loginDetails: LoginDetails): MutableLiveData<LoginToken> {
-        val items = MutableLiveData<LoginToken>()
+    suspend fun login(loginDetails: LoginDetails): LoginToken? {
+        var items :LoginToken? = null
 
         val response = apiService.login(loginDetails)
 
         if (response.isSuccessful) {
-            items.postValue(response.body())
+            items = response.body()
         } else {
             Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
             errors.postValue(response.message())
@@ -66,13 +66,13 @@ class RequestManager @Inject constructor(
         return items
     }
 
-    suspend fun logout(token: String): MutableLiveData<LogoutResponse> {
-        val items = MutableLiveData<LogoutResponse>()
+    suspend fun logout(token: String): LogoutResponse? {
+        var items :LogoutResponse? = null
 
         val response = apiService.logOut(token)
 
         if (response.isSuccessful) {
-            items.postValue(response.body())
+            items = response.body()
         } else {
             Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
             errors.postValue(response.message())

@@ -62,39 +62,39 @@ class RequestManagerTest {
             "0759111222"
         )
 
-        val response = requestManager.createUser(user).getOrAwaitValue()
-        assertThat(response.email).isEqualTo(user.email)
+        val response = requestManager.createUser(user)
+        assertThat(response?.email).isEqualTo(user.email)
     }
 
     @Test
     fun `test google signup success`() = runBlocking {
         val testToken = "thisisatesttoken"
 
-        val response = requestManager.googleSignUp(testToken).getOrAwaitValue()
-        assertThat(response.email).isEqualTo("test@gmail.com")
+        val response = requestManager.googleSignUp(testToken)
+        assertThat(response?.email).isEqualTo("test@gmail.com")
     }
 
     @Test
     fun `test facebook signup success`() = runBlocking {
         val accessToken = "thisisatesttoken"
 
-        val response = requestManager.facebookSignUp(accessToken).getOrAwaitValue()
-        assertThat(response.email).isEqualTo("test@gmail.com")
+        val response = requestManager.facebookSignUp(accessToken)
+        assertThat(response?.email).isEqualTo("test@gmail.com")
     }
 
     @Test
     fun `test login success`() = runBlocking {
         val loginDetails = LoginDetails("test@gmail.com", "secret")
 
-        val response = requestManager.login(loginDetails).getOrAwaitValue()
-        assertThat(response.token).isEqualTo("thisisatesttoken")
+        val response = requestManager.login(loginDetails)
+        assertThat(response?.token).isEqualTo("thisisatesttoken")
     }
 
     @Test
     fun `test logout success`() = runBlocking {
         val accessToken = "thisisatesttoken"
 
-        val response = requestManager.logout(accessToken).getOrAwaitValue()
-        assertThat(response.message).isEqualTo("logout success")
+        val response = requestManager.logout(accessToken)
+        assertThat(response?.message).isEqualTo("logout success")
     }
 }

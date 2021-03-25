@@ -54,10 +54,8 @@ class RegisterUserViewModelTest {
                 "lastName"
             )
 
-            val value = viewModel.createUser(user).getOrAwaitValue()
-            assertThat(value.email).isEqualTo(expectedUser.email)
-            assertThat(value.firstName).isEqualTo(expectedUser.firstName)
-            assertThat(value.lastName).isEqualTo(expectedUser.lastName)
+            viewModel.createUser(user)
+            assertThat(viewModel.newUser.value?.email).isEqualTo(expectedUser.email)
         }
 
     @Test
@@ -65,15 +63,13 @@ class RegisterUserViewModelTest {
         mainCoroutineRule.testDispatcher.runBlockingTest {
             val testToken = "thisisafaketesttoken"
             val expectedUser = GoogleUser(
-                "googleuser@gmail.com",
-                0,
-                "thisisanotherfaketoken",
-                "username"
+                    "username",
+                    "googleuser@gmail.com",
+                    "thisisanotherfaketoken",
+                    0
             )
-            val value = viewModel.googleSignUp(testToken).getOrAwaitValue()
-            assertThat(value.email).isEqualTo(expectedUser.email)
-            assertThat(value.status).isEqualTo(expectedUser.status)
-            assertThat(value.userName).isEqualTo(expectedUser.userName)
+            viewModel.googleSignUp(testToken)
+            assertThat(viewModel.googleUser.value?.email).isEqualTo(expectedUser.email)
         }
 
     @Test
@@ -88,11 +84,7 @@ class RegisterUserViewModelTest {
                 "thisisanotherfaketoken",
                 "username"
             )
-            val value = viewModel.facebookSignUp(testToken).getOrAwaitValue()
-            assertThat(value.email).isEqualTo(expectedUser.email)
-            assertThat(value.firstName).isEqualTo(expectedUser.firstName)
-            assertThat(value.lastName).isEqualTo(expectedUser.lastName)
-            assertThat(value.statusCode).isEqualTo(expectedUser.statusCode)
-            assertThat(value.username).isEqualTo(expectedUser.username)
+            viewModel.facebookSignUp(testToken)
+            assertThat(viewModel.facebookUser.value?.email).isEqualTo(expectedUser.email)
         }
 }

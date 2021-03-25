@@ -18,10 +18,10 @@ class FakeApiService(private val delegate: BehaviorDelegate<ApiService>) : ApiSe
 
     override suspend fun googleSignUp(googleAuthToken: GoogleToken): Response<GoogleUser> {
         val googleUser = GoogleUser(
+                "tester",
             "test@gmail.com",
-            200,
             "thisisatesttoken",
-            "tester"
+                200
         )
         return delegate.returningResponse(googleUser).googleSignUp(googleAuthToken)
     }
