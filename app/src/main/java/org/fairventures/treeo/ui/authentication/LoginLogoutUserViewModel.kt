@@ -36,7 +36,7 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
         }
     }
 
-    fun postDeviceData(deviceInformation: DeviceInformation, userToken: String){
+    fun postDeviceData(deviceInformation: DeviceInformation, userToken: String) {
         viewModelScope.launch(dispatcher.io()) {
             mainRepository.postDeviceData(deviceInformation, userToken)
         }

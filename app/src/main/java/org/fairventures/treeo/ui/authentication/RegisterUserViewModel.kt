@@ -1,6 +1,5 @@
 package org.fairventures.treeo.ui.authentication
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,24 +19,23 @@ class RegisterUserViewModel @ViewModelInject constructor(
     private val dispatcher: IDispatcherProvider
 ) :
     ViewModel() {
-
     private val _googleUser = MutableLiveData<GoogleUser>()
     val googleUser: LiveData<GoogleUser> get() = _googleUser
 
-    private val _newUser =  MutableLiveData<NewRegisteredUser>()
-    val newUser:  LiveData<NewRegisteredUser> get() = _newUser
+    private val _newUser = MutableLiveData<NewRegisteredUser>()
+    val newUser: LiveData<NewRegisteredUser> get() = _newUser
 
     private val _facebookUser = MutableLiveData<FacebookUser>()
     val facebookUser: LiveData<FacebookUser> get() = _facebookUser
 
 
-    fun createUser(registerUser: RegisterUser){
+    fun createUser(registerUser: RegisterUser) {
         viewModelScope.launch(dispatcher.io()) {
             _newUser.postValue(mainRepository.createUser(registerUser))
         }
     }
 
-    fun googleSignUp(googleAuthToken: String){
+    fun googleSignUp(googleAuthToken: String) {
         viewModelScope.launch(dispatcher.io()) {
             _googleUser.postValue(mainRepository.googleSignUp(googleAuthToken))
         }

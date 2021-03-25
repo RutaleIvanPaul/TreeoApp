@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
         sign_in_button.setOnClickListener {
             val signInIntent: Intent = mGoogleSignInClient.getSignInIntent()
             startActivityForResult(signInIntent, RC_SIGN_IN)
+            showProgressBar()
         }
 
         val loginButton = login_button_facebook as LoginButton
@@ -90,6 +91,7 @@ class MainActivity : AppCompatActivity() {
                     phone.text.toString()
                 )
             )
+            showProgressBar()
         }
 
         login_logout_toggle.setOnClickListener {
@@ -98,6 +100,7 @@ class MainActivity : AppCompatActivity() {
 
         login_button_email_password.setOnClickListener {
             loginEmailPassword(email.text.toString(), password.text.toString())
+            showProgressBar()
         }
 
         errors.observe(this, Observer {
@@ -111,7 +114,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setObservers(loginButton: LoginButton) {
-
         registerUserViewModel.googleUser.observe(this, Observer { googleUser ->
             Log.d("Google Observer", "Now in Google Observer!!!!")
             if (googleUser != null) {
@@ -133,29 +135,28 @@ class MainActivity : AppCompatActivity() {
         })
 
         registerUserViewModel.facebookUser.observe(
-                this,
-                Observer { facebookReturn ->
-                    if (facebookReturn != null) {
-                        saveUserDetails(
-                                facebookReturn.token,
-                                getString(R.string.facebook)
-                        )
-                        openHome(
-                                facebookReturn.firstName
-                        )
-                    }
+            this,
+            Observer { facebookReturn ->
+                if (facebookReturn != null) {
+                    saveUserDetails(
+                        facebookReturn.token,
+                        getString(R.string.facebook)
+                    )
+                    openHome(
+                        facebookReturn.firstName
+                    )
                 }
+            }
         )
 
         loginLogoutUserViewModel.loginToken.observe(this, Observer { loginToken ->
-                    if (loginToken != null) {
-                        saveUserDetails(loginToken.token, getString(R.string.email_password))
-                        openHome(loginToken.userName)
-                    }
-                    else{
-                        Log.d("Login Token","Login token is null!!!")
-                    }
-                })
+            if (loginToken != null) {
+                saveUserDetails(loginToken.token, getString(R.string.email_password))
+                openHome(loginToken.userName)
+            } else {
+                Log.d("Login Token", "Login token is null!!!")
+            }
+        })
 
 
     }
@@ -251,6 +252,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openHome(extra: String) {
+        hideProgressBar()
         val intent = Intent(this, HomeActivity::class.java).apply {
             putExtra("username", extra)
         }
@@ -260,5 +262,14 @@ class MainActivity : AppCompatActivity() {
     private fun loginEmailPassword(email: String, password: String) {
         loginprogressBar.visibility = View.VISIBLE
         loginLogoutUserViewModel.login(email, password)
+        showProgressBar()
+    }
+
+    private fun showProgressBar() {
+        progress_bar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        progress_bar.visibility = View.GONE
     }
 }
