@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -70,6 +71,7 @@ class HomeActivity : AppCompatActivity() {
         )
 
         logout_button.setOnClickListener {
+            homeprogressBar.visibility = View.VISIBLE
             logoutUser()
         }
 
@@ -88,6 +90,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        homeprogressBar.visibility = View.GONE
         setObservers()
     }
 
