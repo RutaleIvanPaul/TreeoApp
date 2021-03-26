@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         loginButton.registerCallback(callbackManager, object : FacebookCallback<LoginResult?> {
             override fun onSuccess(loginResult: LoginResult?) {
                 Log.d("FB Token", loginResult?.accessToken?.token!!)
+                loginprogressBar.visibility = View.VISIBLE
                 registerUserViewModel.facebookSignUp(loginResult.accessToken?.token!!)
             }
 
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         register_user_button.setOnClickListener {
+            loginprogressBar.visibility = View.VISIBLE
             registerUserViewModel.createUser(
                 RegisterUser(
                     firstname.text.toString(),
@@ -101,6 +103,8 @@ class MainActivity : AppCompatActivity() {
         errors.observe(this, Observer {
             textView1.setText(it)
         })
+
+        loginprogressBar.visibility = View.GONE
 
         setObservers(loginButton)
 
@@ -228,6 +232,7 @@ class MainActivity : AppCompatActivity() {
 
             } else {
                 Log.d("Sign In Details", account.idToken!!)
+                loginprogressBar.visibility = View.VISIBLE
                 registerUserViewModel.googleSignUp(account.idToken!!)
             }
 
@@ -253,6 +258,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loginEmailPassword(email: String, password: String) {
+        loginprogressBar.visibility = View.VISIBLE
         loginLogoutUserViewModel.login(email, password)
     }
 }

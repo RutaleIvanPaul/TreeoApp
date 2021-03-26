@@ -45,7 +45,7 @@ class DeviceInfoUtils(var context: Context) : AppCompatActivity() {
 
         model = android.os.Build.MODEL
         manufacturer = android.os.Build.MANUFACTURER
-        androidVersion = android.os.Build.VERSION.CODENAME
+        androidVersion = android.os.Build.VERSION.RELEASE
 
         val converter = 0x100000L
         val mi = ActivityManager.MemoryInfo()
@@ -53,8 +53,8 @@ class DeviceInfoUtils(var context: Context) : AppCompatActivity() {
         val availableMegs: Long = mi.availMem / converter
         val totalMegs: Long = mi.totalMem / converter
 
-        freeRAM = availableMegs.toString()
-        totalRAM = totalMegs.toString()
+        freeRAM = "${availableMegs}MB"
+        totalRAM = "${totalMegs}MB"
 
         val internalStatFs = StatFs(Environment.getRootDirectory().getAbsolutePath())
         var internalTotal = 0L
@@ -80,13 +80,16 @@ class DeviceInfoUtils(var context: Context) : AppCompatActivity() {
 
                 }
             }
+
+            storage = "${internalTotal}MB"
+            card = "${externalTotal}MB"
+
         } else {
+            storage = "protected"
+            card = "protected"
             Log.d("Device Data", "Android OS Q and above is protected")
         }
 
-
-        storage = internalTotal.toString()
-        card = externalTotal.toString()
 
         val deviceSensors = sensorManager.getSensorList(Sensor.TYPE_ALL)
 
@@ -154,6 +157,7 @@ class DeviceInfoUtils(var context: Context) : AppCompatActivity() {
                     id = advertisingIdInfo.id
 
                 } else {
+                    id = "Limit Ad Tracking Enabled"
                     Log.d("Device Advertising", "Limit Ad Tracking is Enabled")
                 }
             } catch (e: IOException) {
