@@ -1,17 +1,15 @@
 package org.fairventures.treeo.repository
 
-import androidx.lifecycle.MutableLiveData
 import org.fairventures.treeo.models.*
 
 class FakeMainRepository : IMainRepository {
     private fun returnFakeUser(registerUser: RegisterUser): NewRegisteredUser {
-        val user = NewRegisteredUser(
+        return NewRegisteredUser(
             registerUser.email,
             registerUser.firstName,
             false,
             registerUser.lastName
         )
-        return user
     }
 
     override suspend fun createUser(registerUser: RegisterUser): NewRegisteredUser? {
@@ -19,21 +17,20 @@ class FakeMainRepository : IMainRepository {
     }
 
     private fun returnFakeGoogleUser(googleAuthToken: String): GoogleUser {
-        val googleUser = GoogleUser(
-                "username",
+        return GoogleUser(
+            "username",
             "googleuser@gmail.com",
-                googleAuthToken,
+            googleAuthToken,
             200
         )
-        return googleUser
     }
 
     override suspend fun googleSignUp(googleAuthToken: String): GoogleUser? {
         return returnFakeGoogleUser(googleAuthToken)
     }
 
-    private fun returnFakeFacebookUser(accessToken: String):FacebookUser {
-        val facebookUser = FacebookUser(
+    private fun returnFakeFacebookUser(accessToken: String): FacebookUser {
+        return FacebookUser(
             "face@gmail.com",
             "firstName",
             "lastName",
@@ -41,27 +38,27 @@ class FakeMainRepository : IMainRepository {
             accessToken,
             "username"
         )
-        return facebookUser
     }
 
     override suspend fun faceBookSignUp(accessToken: String): FacebookUser? {
         return returnFakeFacebookUser(accessToken)
     }
 
-    private fun returnFakeLoginToken(loginDetails: LoginDetails): LoginToken {
-        val loginToken = LoginToken(
-                "thisisatestusername",
-                "email","thisisanauthtoken",200)
-        return loginToken
+    private fun returnFakeLoginResponse(loginDetails: LoginDetails): LoginResponse {
+        return LoginResponse(
+            "username",
+            loginDetails.email,
+            "thisisanauthtoken",
+            200
+        )
     }
 
-    override suspend fun login(loginDetails: LoginDetails): LoginToken {
-        return returnFakeLoginToken(loginDetails)
+    override suspend fun login(loginDetails: LoginDetails): LoginResponse {
+        return returnFakeLoginResponse(loginDetails)
     }
 
     private fun returnFakeLogoutResponse(token: String): LogoutResponse {
-        val logoutResponse = LogoutResponse("user logged out", 200)
-        return logoutResponse
+        return LogoutResponse("user logged out", 200)
     }
 
     override suspend fun logout(token: String): LogoutResponse? {

@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.fairventures.treeo.models.DeviceInformation
 import org.fairventures.treeo.models.LoginDetails
-import org.fairventures.treeo.models.LoginToken
+import org.fairventures.treeo.models.LoginResponse
 import org.fairventures.treeo.models.LogoutResponse
 import org.fairventures.treeo.repository.IMainRepository
 import org.fairventures.treeo.util.IDispatcherProvider
@@ -18,8 +18,8 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
     private val dispatcher: IDispatcherProvider
 ) : ViewModel() {
 
-    private val _loginToken = MutableLiveData<LoginToken>()
-    val loginToken: LiveData<LoginToken> get() = _loginToken
+    private val _loginToken = MutableLiveData<LoginResponse>()
+    val loginToken: LiveData<LoginResponse> get() = _loginToken
 
     private val _logoutResponse = MutableLiveData<LogoutResponse>()
     val logoutResponse: LiveData<LogoutResponse> get() = _logoutResponse
@@ -30,7 +30,7 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
         }
     }
 
-    fun logout(token: String){
+    fun logout(token: String) {
         viewModelScope.launch(dispatcher.io()) {
             _logoutResponse.postValue(mainRepository.logout(token))
         }

@@ -18,10 +18,10 @@ class FakeApiService(private val delegate: BehaviorDelegate<ApiService>) : ApiSe
 
     override suspend fun googleSignUp(googleAuthToken: GoogleToken): Response<GoogleUser> {
         val googleUser = GoogleUser(
-                "tester",
+            "tester",
             "test@gmail.com",
             "thisisatesttoken",
-                200
+            200
         )
         return delegate.returningResponse(googleUser).googleSignUp(googleAuthToken)
     }
@@ -38,11 +38,14 @@ class FakeApiService(private val delegate: BehaviorDelegate<ApiService>) : ApiSe
         return delegate.returningResponse(facebookUser).facebookSignUp(access_token)
     }
 
-    override suspend fun login(loginDetails: LoginDetails): Response<LoginToken> {
-        val loginToken = LoginToken(
-                "thisisatestusername",
-                "email","thisisatesttoken",200)
-        return delegate.returningResponse(loginToken).login(loginDetails)
+    override suspend fun login(loginDetails: LoginDetails): Response<LoginResponse> {
+        val loginResponse = LoginResponse(
+            "username",
+            "test@gmail.com",
+            "thisisatesttoken",
+            200
+        )
+        return delegate.returningResponse(loginResponse).login(loginDetails)
     }
 
     override suspend fun logOut(token: String): Response<LogoutResponse> {
@@ -50,7 +53,10 @@ class FakeApiService(private val delegate: BehaviorDelegate<ApiService>) : ApiSe
         return delegate.returningResponse(logoutResponse).logOut(token)
     }
 
-    override suspend fun postDeviceInfo(deviceInformation: DeviceInformation, token: String): Response<Any> {
+    override suspend fun postDeviceInfo(
+        deviceInformation: DeviceInformation,
+        token: String
+    ): Response<Any> {
         TODO("Not yet implemented")
     }
 }
