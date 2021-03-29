@@ -1,15 +1,15 @@
 package org.fairventures.treeo.ui.Home
 
+import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.SharedPreferences
-import android.hardware.SensorManager
-import android.hardware.camera2.CameraManager
-import android.app.Activity
-import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.hardware.SensorManager
+import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -26,18 +26,22 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.fairventures.treeo.R
 import org.fairventures.treeo.ui.MainActivity
 import org.fairventures.treeo.ui.authentication.LoginLogoutUserViewModel
 import org.fairventures.treeo.util.DeviceInfoUtils
 import org.fairventures.treeo.util.ExifUtil
 import org.fairventures.treeo.util.FILE_NAME
+import org.fairventures.treeo.util.IDispatcherProvider
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import javax.inject.Inject
 
-
+@ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
@@ -46,6 +50,12 @@ class HomeActivity : AppCompatActivity() {
 
     @Inject
     lateinit var googleSignInOptions: GoogleSignInOptions
+
+    @Inject
+    lateinit var deviceInfoUtils: DeviceInfoUtils
+
+    @Inject
+    lateinit var dispatcher: IDispatcherProvider
 
     private val loginLogoutUserViewModel: LoginLogoutUserViewModel by viewModels()
 
@@ -56,19 +66,9 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        welcomeMessage.setText("Welcome ${intent.getStringExtra("username")}")
+        welcomeMessage.text = "Welcome ${intent.getStringExtra("username")}"
 
-        val deviceInfoUtils = DeviceInfoUtils(applicationContext)
-
-        loginLogoutUserViewModel.postDeviceData(
-            deviceInfoUtils.getDeviceInformation(
-            getSystemService(ACTIVITY_SERVICE) as ActivityManager,
-            getSystemService(Context.SENSOR_SERVICE) as SensorManager,
-            packageManager,
-            getSystemService(CAMERA_SERVICE) as CameraManager
-        ),
-            getUserToken()
-        )
+        getDeviceInformation()
 
         logout_button.setOnClickListener {
             homeprogressBar.visibility = View.VISIBLE
@@ -82,10 +82,10 @@ class HomeActivity : AppCompatActivity() {
             val fileProvider = FileProvider
                 .getUriForFile(this, "org.fairventures.treeo.fileprovider", photoFile)
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider)
-            if(takePictureIntent.resolveActivity(this.packageManager) != null) {
+            if (takePictureIntent.resolveActivity(this.packageManager) != null) {
                 startActivityForResult(takePictureIntent, 1)
 
-            }else{
+            } else {
                 Log.d("Camera Error", "Could not open Camera")
             }
         }
@@ -96,27 +96,43 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setObservers() {
         loginLogoutUserViewModel.logoutResponse.observe(
-                this,
-                Observer { logoutResponse ->
-                    if (logoutResponse != null) {
-                        deleteUserDetailsfromSharePref()
-                        backToMain()
-                    }else{
-                        Log.d("Logout","Logout Response is null")
-                    }
+            this,
+            Observer { logoutResponse ->
+                Log.d("logRes", logoutResponse.toString())
+                if (logoutResponse != null) {
+                    deleteUserDetailsfromSharePref()
+                    backToMain()
+                } else {
+                    Log.d("Logout", "Logout Response is null")
                 }
+            }
         )
     }
 
+
+    private fun getDeviceInformation() {
+        GlobalScope.launch(dispatcher.main()) {
+            loginLogoutUserViewModel.postDeviceData(
+                deviceInfoUtils.getDeviceInformation(
+                    getSystemService(ACTIVITY_SERVICE) as ActivityManager,
+                    getSystemService(Context.SENSOR_SERVICE) as SensorManager,
+                    packageManager,
+                    getSystemService(CAMERA_SERVICE) as CameraManager
+                ),
+                getUserToken()
+            )
+        }
+    }
+
     private fun getPhotoFile(fileName: String): File {
-        //acess package specific directories
+        //access package specific directories
         val storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
         return File.createTempFile(fileName, ".jpg", storageDirectory)
 
     }
 
-    fun saveToFile(bitmap:Bitmap) {
+    fun saveToFile(bitmap: Bitmap) {
         val contextWrapper = ContextWrapper(applicationContext)
         val directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE)
         val file = File(directory, System.currentTimeMillis().toString() + ".jpg")
@@ -131,20 +147,19 @@ class HomeActivity : AppCompatActivity() {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-        }
-        else{
+        } else {
             Log.d("path", "File Already Exists")
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK){
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
             val takenImage = BitmapFactory.decodeFile(photoFile.absolutePath)
             saveToFile(takenImage)
 //            val scaledImage = Bitmap.createScaledBitmap(takenImage, 720, 1280, true)
-            val rotatedImage = ExifUtil.rotateBitmap(photoFile.absolutePath,takenImage)
+            val rotatedImage = ExifUtil.rotateBitmap(photoFile.absolutePath, takenImage)
             imageView.setImageBitmap(rotatedImage)
-        }else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }
@@ -194,8 +209,8 @@ class HomeActivity : AppCompatActivity() {
             })
     }
 
-    private fun getUserToken():String{
-        with(sharedPref.edit()){
+    private fun getUserToken(): String {
+        with(sharedPref.edit()) {
             val token = sharedPref.getString(getString(R.string.user_token), null)
             if (!token.isNullOrEmpty()) {
                 return "Bearer $token"

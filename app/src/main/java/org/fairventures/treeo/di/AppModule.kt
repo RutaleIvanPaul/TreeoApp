@@ -26,6 +26,13 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun providesDeviceInfoUtils(
+        @ApplicationContext context: Context,
+        dispatcher: IDispatcherProvider
+    ) = DeviceInfoUtils(context, dispatcher)
+
+    @Singleton
+    @Provides
     fun providesDispatcherProvider() = DefaultDispatcherProvider() as IDispatcherProvider
 
 

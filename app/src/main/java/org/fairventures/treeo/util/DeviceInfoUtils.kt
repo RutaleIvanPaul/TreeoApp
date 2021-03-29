@@ -11,24 +11,30 @@ import android.hardware.SensorManager
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
-import android.os.*
+import android.os.Build
+import android.os.Environment
+import android.os.StatFs
 import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import org.fairventures.treeo.models.DeviceInformation
 import java.io.File
 import java.io.IOException
 
-class DeviceInfoUtils(var context: Context) : AppCompatActivity() {
+@ExperimentalCoroutinesApi
+class DeviceInfoUtils(var context: Context, var dispactcher: IDispatcherProvider) {
 
-    fun getDeviceInformation(
+
+    suspend fun getDeviceInformation(
         activityManager: ActivityManager,
         sensorManager: SensorManager,
         packageManager: PackageManager,
-        cameraManager: CameraManager): DeviceInformation {
+        cameraManager: CameraManager
+    ): DeviceInformation {
 
         var advertisingID: String
         var androidVersion: String
@@ -101,7 +107,7 @@ class DeviceInfoUtils(var context: Context) : AppCompatActivity() {
 
         val installedApplications = packageManager.getInstalledApplications(0)
         val applicationsMutable = mutableListOf<String>()
-        installedApplications.forEach {applicationInfo ->
+        installedApplications.forEach { applicationInfo ->
             applicationsMutable.add(applicationInfo.loadLabel(packageManager).toString())
         }
 
@@ -132,9 +138,10 @@ class DeviceInfoUtils(var context: Context) : AppCompatActivity() {
     }
 
     fun isSdCardOnDevice(context: Context): Boolean {
-        val storages: Array<File?> = ContextCompat.getExternalFilesDirs(context, null)
+        val storages: Array<File?> = context.getExternalFilesDirs(null)
         return if (storages.size > 1 && storages[0] != null && storages[1] != null) true else false
     }
+
 
     private fun isSystemPackage(appInfo: ApplicationInfo): Boolean {
         return appInfo.flags and ApplicationInfo.FLAG_SYSTEM !== 0
@@ -146,31 +153,25 @@ class DeviceInfoUtils(var context: Context) : AppCompatActivity() {
                 ",${Resources.getSystem().getDisplayMetrics().heightPixels}}"
     }
 
-    private fun determineAdvertisingInfo(): String {
+    private suspend fun determineAdvertisingInfo() = CoroutineScope(dispactcher.io()).async {
         var id = ""
-        //Change this to use coroutines
-        AsyncTask.execute(Runnable {
-            try {
-                val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(context)
-                // Check this in case the user disabled it from settings
-                if (!advertisingIdInfo.isLimitAdTrackingEnabled) {
-                    id = advertisingIdInfo.id
-
-                } else {
-                    id = "Limit Ad Tracking Enabled"
-                    Log.d("Device Advertising", "Limit Ad Tracking is Enabled")
-                }
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: GooglePlayServicesNotAvailableException) {
-                e.printStackTrace()
-            } catch (e: GooglePlayServicesRepairableException) {
-                e.printStackTrace()
+        try {
+            val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(context)
+            // Check this in case the user disabled it from settings
+            if (!advertisingIdInfo.isLimitAdTrackingEnabled) {
+                id = advertisingIdInfo.id
+            } else {
+                Log.d("Device Advertising", "Limit Ad Tracking is Enabled")
             }
-        })
-
-        return id
-    }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: GooglePlayServicesNotAvailableException) {
+            e.printStackTrace()
+        } catch (e: GooglePlayServicesRepairableException) {
+            e.printStackTrace()
+        }
+        return@async id
+    }.await()
 
     private fun getCameraResolution(cameraManager: CameraManager): String {
         var maxWidth = 0

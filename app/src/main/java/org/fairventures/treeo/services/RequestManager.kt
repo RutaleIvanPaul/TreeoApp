@@ -1,7 +1,6 @@
 package org.fairventures.treeo.services
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import org.fairventures.treeo.models.*
 import org.fairventures.treeo.util.errors
 import javax.inject.Inject
@@ -38,7 +37,7 @@ class RequestManager @Inject constructor(
     }
 
     suspend fun facebookSignUp(access_token: String): FacebookUser? {
-        var items :FacebookUser? = null
+        var items: FacebookUser? = null
 
         val response = apiService.facebookSignUp(access_token)
 
@@ -53,7 +52,7 @@ class RequestManager @Inject constructor(
     }
 
     suspend fun login(loginDetails: LoginDetails): LoginToken? {
-        var items :LoginToken? = null
+        var items: LoginToken? = null
 
         val response = apiService.login(loginDetails)
 
@@ -67,25 +66,26 @@ class RequestManager @Inject constructor(
     }
 
     suspend fun logout(token: String): LogoutResponse? {
-        var items :LogoutResponse? = null
+        var items: LogoutResponse? = null
 
         val response = apiService.logOut(token)
 
         if (response.isSuccessful) {
             items = response.body()
+            Log.d("resBody", response.body().toString())
         } else {
-            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
+            Log.e("resErr", "API Fetch Error: ${response.message()} ")
             errors.postValue(response.message())
         }
         return items
     }
 
-    suspend fun postDeviceData(deviceInformation: DeviceInformation, userToken: String){
-        val response  = apiService.postDeviceInfo(deviceInformation, userToken)
-
-        if (response.isSuccessful){
-            Log.d("Device Data","Successfully Added Device Information")
-        }else {
+    suspend fun postDeviceData(deviceInformation: DeviceInformation, userToken: String) {
+        val response = apiService.postDeviceInfo(deviceInformation, userToken)
+        Log.d("devData", deviceInformation.toString())
+        if (response.isSuccessful) {
+            Log.d("Device Data", "Successfully Added Device Information")
+        } else {
             Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
             errors.postValue(response.message())
         }
