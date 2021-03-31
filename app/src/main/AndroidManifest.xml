@@ -4,11 +4,9 @@
     package="org.fairventures.treeo">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
         tools:node="remove" />
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -19,19 +17,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Treeo">
+        <activity android:name=".ui.authentication.PhoneNumberLoginActivity"></activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="org.fairventures.treeo.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fileprovider">
-
-            </meta-data>
-
+                android:resource="@xml/fileprovider"></meta-data>
         </provider>
 
         <meta-data
@@ -49,6 +44,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".util.SMSBroadcastReceiver" android:exported="true"
+            android:permission="com.google.android.gms.auth.api.phone.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
