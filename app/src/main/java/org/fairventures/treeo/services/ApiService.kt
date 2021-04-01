@@ -16,8 +16,8 @@ interface ApiService {
     @GET("auth/facebook")
     suspend fun facebookSignUp(@Query("access_token") access_token: String): Response<FacebookUser>
 
-    @POST("auth/jwt")
-    suspend fun login(@Body loginDetails: LoginDetails): Response<LoginResponse>
+    @POST("auth/login")
+    suspend fun login(@Body loginDetails: LoginDetails): Response<BaseResponse<LoginResponse>>
 
     @GET("auth/logout")
     suspend fun logOut(@Header("Token") token: String): Response<LogoutResponse>
@@ -25,6 +25,7 @@ interface ApiService {
     @POST("device-info")
     suspend fun postDeviceInfo(
         @Body deviceInformation: DeviceInformation,
-        @Header("Authorization") token: String): Response<Any>
+        @Header("Authorization") token: String
+    ): Response<Any>
 
 }

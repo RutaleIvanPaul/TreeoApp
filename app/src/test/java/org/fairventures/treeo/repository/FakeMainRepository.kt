@@ -48,8 +48,8 @@ class FakeMainRepository : IMainRepository {
         return LoginResponse(
             "username",
             loginDetails.email,
-            "thisisanauthtoken",
-            200
+            1,
+            "thisisatesttoken"
         )
     }
 

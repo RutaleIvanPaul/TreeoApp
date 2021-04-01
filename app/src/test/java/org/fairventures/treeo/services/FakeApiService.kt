@@ -38,14 +38,15 @@ class FakeApiService(private val delegate: BehaviorDelegate<ApiService>) : ApiSe
         return delegate.returningResponse(facebookUser).facebookSignUp(access_token)
     }
 
-    override suspend fun login(loginDetails: LoginDetails): Response<LoginResponse> {
+    override suspend fun login(loginDetails: LoginDetails): Response<BaseResponse<LoginResponse>> {
         val loginResponse = LoginResponse(
             "username",
             "test@gmail.com",
-            "thisisatesttoken",
-            200
+            1,
+            "thisisatesttoken"
         )
-        return delegate.returningResponse(loginResponse).login(loginDetails)
+        val baseResponse = BaseResponse(loginResponse, "success")
+        return delegate.returningResponse(baseResponse).login(loginDetails)
     }
 
     override suspend fun logOut(token: String): Response<LogoutResponse> {
