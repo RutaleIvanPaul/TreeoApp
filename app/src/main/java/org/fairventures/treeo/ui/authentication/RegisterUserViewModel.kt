@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import org.fairventures.treeo.models.FacebookUser
-import org.fairventures.treeo.models.GoogleUser
-import org.fairventures.treeo.models.NewRegisteredUser
-import org.fairventures.treeo.models.RegisterUser
+import org.fairventures.treeo.models.*
 import org.fairventures.treeo.repository.IMainRepository
 import org.fairventures.treeo.util.IDispatcherProvider
 
@@ -27,6 +24,16 @@ class RegisterUserViewModel @ViewModelInject constructor(
 
     private val _facebookUser = MutableLiveData<FacebookUser>()
     val facebookUser: LiveData<FacebookUser> get() = _facebookUser
+
+    private val _phoneNumberValidationResponse = MutableLiveData<ValidateResponseData>()
+    val phoneNumberValidationResponse: LiveData<ValidateResponseData> get() = _phoneNumberValidationResponse
+
+    private val _registeredMobileUser = MutableLiveData<RegisteredMobileUser>()
+    val registeredMobileUser: LiveData<RegisteredMobileUser> get() = _registeredMobileUser
+
+    private val _validateOTPRegistrationResponse = MutableLiveData<ValidateOTPRegistrationResponse>()
+    val validateOTPRegistrationResponse: LiveData<ValidateOTPRegistrationResponse> get() =
+        _validateOTPRegistrationResponse
 
 
     fun createUser(registerUser: RegisterUser) {
@@ -46,4 +53,26 @@ class RegisterUserViewModel @ViewModelInject constructor(
             _facebookUser.postValue(mainRepository.faceBookSignUp(access_token))
         }
     }
+
+    fun validatePhoneNumber(phoneNumber: String){
+        viewModelScope.launch(dispatcher.io()) {
+            _phoneNumberValidationResponse.postValue(mainRepository.validatePhoneNumber(phoneNumber))
+        }
+    }
+
+    fun registerMobileUser(mobileUser: RegisterMobileUser){
+        viewModelScope.launch (dispatcher.io()){
+            _registeredMobileUser.postValue((mainRepository.registerMobileUser(mobileUser)))
+        }
+    }
+
+    fun validateOTPRegistration(validateOTPRegistration: ValidateOTPRegistration){
+        viewModelScope.launch(dispatcher.io()) {
+            _validateOTPRegistrationResponse.postValue(mainRepository.validateOTPRegistration(
+                    validateOTPRegistration
+            ))
+        }
+    }
+
+
 }

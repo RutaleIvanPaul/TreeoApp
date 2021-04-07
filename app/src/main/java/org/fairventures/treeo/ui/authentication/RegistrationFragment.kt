@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -16,6 +17,9 @@ import androidx.navigation.fragment.findNavController
 import com.facebook.*
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
+import com.google.android.gms.auth.api.credentials.Credential
+import com.google.android.gms.auth.api.credentials.Credentials
+import com.google.android.gms.auth.api.credentials.HintRequest
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -27,6 +31,7 @@ import kotlinx.android.synthetic.main.fragment_registration.*
 import org.fairventures.treeo.R
 import org.fairventures.treeo.models.RegisterUser
 import org.fairventures.treeo.util.RC_SIGN_IN
+import org.fairventures.treeo.util.RESOLVE_HINT
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -60,6 +65,11 @@ class RegistrationFragment : Fragment() {
         login_screen_link.setOnClickListener {
             openLogin("")
         }
+
+        phoneNumberLogin.setOnClickListener {
+            openSMSValidationPage()
+        }
+
     }
 
     private fun setObservers() {
@@ -90,6 +100,7 @@ class RegistrationFragment : Fragment() {
             }
         )
     }
+
 
     override fun onStart() {
         super.onStart()
@@ -198,6 +209,13 @@ class RegistrationFragment : Fragment() {
             putString(getString(R.string.loginManager), loginManager)
             apply()
         }
+    }
+
+    private fun openSMSValidationPage() {
+        showProgressBar()
+        this.findNavController().navigate(
+            R.id.action_registrationFragment_to_SMSCodeFragment
+        )
     }
 
     private fun openHome(extra: String) {

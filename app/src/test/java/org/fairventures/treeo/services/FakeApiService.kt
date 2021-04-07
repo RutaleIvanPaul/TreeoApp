@@ -60,4 +60,48 @@ class FakeApiService(private val delegate: BehaviorDelegate<ApiService>) : ApiSe
     ): Response<Any> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun validatePhoneNumber(phoneNumber: String): Response<BaseResponse<ValidateResponseData>> {
+        val validateResponseData = ValidateResponseData(
+            errorStatus = "not found",
+            phoneNumber = "123",
+            valid = false
+        )
+
+        val baseResponse = BaseResponse(
+            validateResponseData,
+            "not found"
+        )
+
+        return delegate.returningResponse(baseResponse).validatePhoneNumber(phoneNumber)
+    }
+
+    override suspend fun requestOTP(phoneNumber: String): Response<PhoneNumberOTPResponse> {
+        val phoneNumberOTPResponse = PhoneNumberOTPResponse(
+            phoneNumber = "123",
+            status = "true"
+        )
+        return delegate.returningResponse(phoneNumberOTPResponse).requestOTP(phoneNumber)
+    }
+
+    override suspend fun registerMobileUser(mobileUser: RegisterMobileUser): Response<RegisteredMobileUser> {
+        val registeredMobileUser = RegisteredMobileUser(
+                email = "",
+                firstName = "firstname",
+                id = 2,
+                isActive = true,
+                lastName = "lastname"
+        )
+
+        return delegate.returningResponse(registeredMobileUser).registerMobileUser(mobileUser)
+    }
+
+    override suspend fun validateOTPRegistration(validateOTPRegistration: ValidateOTPRegistration): Response<ValidateOTPRegistrationResponse> {
+        val validateOTPRegistrationResponse = ValidateOTPRegistrationResponse(
+                data = "",
+                message = "User Active"
+        )
+
+        return delegate.returningResponse(validateOTPRegistrationResponse).validateOTPRegistration(validateOTPRegistration)
+    }
 }

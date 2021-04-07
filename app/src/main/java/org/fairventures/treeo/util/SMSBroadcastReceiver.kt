@@ -17,8 +17,11 @@ class SMSBroadcastReceiver: BroadcastReceiver() {
             val status: Status? = extras?.get(SmsRetriever.EXTRA_STATUS) as Status?
             var  message: String?
             when (status?.getStatusCode()) {
-                CommonStatusCodes.SUCCESS ->           // Get SMS message contents
+                CommonStatusCodes.SUCCESS -> {
+                    // Get SMS message contents
                     message = extras?.get(SmsRetriever.EXTRA_SMS_MESSAGE) as String?
+                    Log.d("MESSAGE", message!!)
+                }
                 CommonStatusCodes.TIMEOUT -> {
                     Log.d("MESSAGE", "Message Wait timed out.")
                 }

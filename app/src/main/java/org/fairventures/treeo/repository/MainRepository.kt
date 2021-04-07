@@ -1,8 +1,6 @@
 package org.fairventures.treeo.repository
 
-import org.fairventures.treeo.models.DeviceInformation
-import org.fairventures.treeo.models.LoginDetails
-import org.fairventures.treeo.models.RegisterUser
+import org.fairventures.treeo.models.*
 import org.fairventures.treeo.services.RequestManager
 import javax.inject.Inject
 
@@ -26,4 +24,20 @@ class MainRepository @Inject constructor(
 
     override suspend fun postDeviceData(deviceInformation: DeviceInformation, userToken: String) =
         requestManager.postDeviceData(deviceInformation, userToken)
+
+    override suspend fun validatePhoneNumber(phoneNumber: String)=
+        requestManager.validatePhoneNumber(phoneNumber)
+
+    override suspend fun requestOTP(phoneNumber: String): PhoneNumberOTPResponse? =
+        requestManager.requestOTP(phoneNumber)
+
+    override suspend fun registerMobileUser(mobileUser: RegisterMobileUser) =
+        requestManager.registerMobileUser(mobileUser)
+
+    override suspend fun validateOTPRegistration(validateOTPRegistration: ValidateOTPRegistration) =
+            requestManager.validateOTPRegistration(
+                    validateOTPRegistration
+            )
+
+
 }

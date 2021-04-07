@@ -93,4 +93,77 @@ class RequestManager @Inject constructor(
             errors.postValue(response.message())
         }
     }
+
+    suspend fun validatePhoneNumber(phoneNumber: String): ValidateResponseData? {
+        var items: ValidateResponseData? = null
+
+        val response = apiService.validatePhoneNumber(phoneNumber)
+
+        if (response.isSuccessful) {
+            items = response.body()?.data
+        }
+        else {
+            if (response.code() == 404){
+                items = ValidateResponseData(
+                    errorStatus = "",
+                    phoneNumber = "",
+                    valid = false
+                )
+            }
+            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
+            errors.postValue(response.message())
+        }
+
+        return items
+    }
+
+    suspend fun requestOTP(phoneNumber: String): PhoneNumberOTPResponse? {
+        var items: PhoneNumberOTPResponse? = null
+
+        val response = apiService.requestOTP(phoneNumber)
+
+        if (response.isSuccessful) {
+            items = response.body()
+        } else {
+            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
+            errors.postValue(response.message())
+        }
+
+        return items
+    }
+
+
+    suspend fun registerMobileUser(mobileUser: RegisterMobileUser):RegisteredMobileUser?{
+        var items: RegisteredMobileUser? = null
+
+        val response = apiService.registerMobileUser(mobileUser)
+
+        if (response.isSuccessful) {
+            items = response.body()
+        } else {
+            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
+            errors.postValue(response.message())
+        }
+
+        return items
+    }
+
+    suspend fun validateOTPRegistration(
+            validateOTPRegistration: ValidateOTPRegistration
+    ):ValidateOTPRegistrationResponse?{
+        var items: ValidateOTPRegistrationResponse? = null
+
+        val response =
+                apiService.validateOTPRegistration(validateOTPRegistration)
+
+        if (response.isSuccessful) {
+            items = response.body()
+        } else {
+            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
+            errors.postValue(response.message())
+        }
+
+        return items
+    }
+
 }
