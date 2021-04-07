@@ -6,8 +6,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.fairventures.treeo.getOrAwaitValue
-import org.fairventures.treeo.models.LoginDetails
-import org.fairventures.treeo.models.RegisterUser
+import org.fairventures.treeo.models.*
 import org.fairventures.treeo.util.BASE_URL
 import org.junit.Before
 import org.junit.Rule
@@ -97,4 +96,35 @@ class RequestManagerTest {
         val response = requestManager.logout(accessToken)
         assertThat(response?.message).isEqualTo("logout success")
     }
+
+    @Test
+    fun `test validatePhoneNumber failure`() = runBlocking {
+        val response = requestManager.validatePhoneNumber("123")
+        assertThat(response?.valid).isFalse()
+    }
+
+    @Test
+    fun `test registerMobileUser success`() = runBlocking {
+        val mobileUser = RegisterMobileUser(
+                firstName = "firstname",
+                lastName = "lastname"  ,
+                country = "Uganda",
+                password = "password",
+                phoneNumber = "123",
+                username = "username"
+        )
+        val response =  requestManager.registerMobileUser(mobileUser)
+        assertThat(response?.firstName).isEqualTo(mobileUser.firstName)
+    }
+
+    @Test
+    fun `test validateOTPRegistration success`() = runBlocking {
+        val validateOTPRegistration = ValidateOTPRegistration(
+                code =  "123",
+                phoneNumber = "123"
+        )
+        val response = requestManager.validateOTPRegistration(validateOTPRegistration)
+        assertThat(response?.message).isEqualTo("User Active")
+    }
+
 }

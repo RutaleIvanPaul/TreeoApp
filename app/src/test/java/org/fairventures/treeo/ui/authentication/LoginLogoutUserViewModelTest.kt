@@ -45,4 +45,5 @@ class LoginLogoutUserViewModelTest {
         viewModel.logout("thisisanauthtoken")
         assertThat(viewModel.logoutResponse.value?.message).isEqualTo(expectedResponse.message)
     }
+
 }

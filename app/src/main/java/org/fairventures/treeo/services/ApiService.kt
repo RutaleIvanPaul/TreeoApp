@@ -28,4 +28,24 @@ interface ApiService {
         @Header("Authorization") token: String
     ): Response<Any>
 
+    @GET("auth/validate-phonenumber/{phoneNumber}")
+    suspend fun validatePhoneNumber(
+        @Path(value = "phoneNumber", encoded = true)phoneNumber: String
+    ): Response<BaseResponse<ValidateResponseData>>
+
+    @POST("auth/request-OTP")
+    suspend fun requestOTP(
+        @Body phoneNumber: String
+    ): Response<PhoneNumberOTPResponse>
+
+    @POST("users/mobile/register")
+    suspend fun registerMobileUser(
+            @Body mobileUser: RegisterMobileUser
+    ):Response<RegisteredMobileUser>
+
+    @POST("/auth/validate-mobile-user")
+    suspend fun validateOTPRegistration(
+            @Body validateOTPRegistration: ValidateOTPRegistration
+    ): Response<ValidateOTPRegistrationResponse>
+
 }

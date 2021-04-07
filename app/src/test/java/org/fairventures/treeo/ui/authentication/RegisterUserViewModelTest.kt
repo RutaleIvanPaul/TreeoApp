@@ -5,10 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.fairventures.treeo.MainCoroutineRule
-import org.fairventures.treeo.models.FacebookUser
-import org.fairventures.treeo.models.GoogleUser
-import org.fairventures.treeo.models.NewRegisteredUser
-import org.fairventures.treeo.models.RegisterUser
+import org.fairventures.treeo.models.*
 import org.fairventures.treeo.repository.FakeMainRepository
 import org.junit.Before
 import org.junit.Rule
@@ -86,4 +83,46 @@ class RegisterUserViewModelTest {
             viewModel.facebookSignUp(testToken)
             assertThat(viewModel.facebookUser.value?.email).isEqualTo(expectedUser.email)
         }
+
+    @Test
+    fun `test validatePhoneNumber returns ValidateResponseData`() =
+        mainCoroutineRule.testDispatcher.runBlockingTest {
+            val expectedNumber = "111"
+            viewModel.validatePhoneNumber(expectedNumber)
+            assertThat(viewModel.phoneNumberValidationResponse.value?.phoneNumber)
+                    .isEqualTo(expectedNumber)
+        }
+
+    @Test
+    fun `test registerMobileUser returns RegisteredMobileUser` () =
+            mainCoroutineRule.testDispatcher.runBlockingTest {
+                val mobileUser = RegisterMobileUser(
+                        firstName = "firstname",
+                        lastName = "lastname",
+                        country = "Uganda",
+                        password = "password",
+                        phoneNumber = "123",
+                        username = "username"
+                )
+                viewModel.registerMobileUser(
+                        mobileUser
+                )
+                assertThat(viewModel.registeredMobileUser.value?.firstName)
+                        .isEqualTo(mobileUser.firstName)
+            }
+
+    @Test
+    fun `test validateOTPRegistration returns ValidateOTPRegistrationResponse`() =
+            mainCoroutineRule.testDispatcher.runBlockingTest {
+                val validateOTPRegistration = ValidateOTPRegistration(
+                        code = "123",
+                        phoneNumber = "123"
+                )
+                viewModel.validateOTPRegistration(
+                        validateOTPRegistration
+                )
+                assertThat(viewModel.validateOTPRegistrationResponse.value?.message)
+                        .isEqualTo("User Active")
+            }
 }
+

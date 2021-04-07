@@ -140,6 +140,10 @@ dependencies {
     // Guava Used for the calls to addCallback()
     implementation 'com.google.guava:guava:28.0-android'
 
+    //Play Services auth component for SMS Retriever
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.google.android.gms:play-services-auth-api-phone:17.4.0'
+
 
     // Navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.4"

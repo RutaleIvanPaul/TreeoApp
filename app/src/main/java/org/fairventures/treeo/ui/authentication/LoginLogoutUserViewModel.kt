@@ -6,10 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import org.fairventures.treeo.models.DeviceInformation
-import org.fairventures.treeo.models.LoginDetails
-import org.fairventures.treeo.models.LoginResponse
-import org.fairventures.treeo.models.LogoutResponse
+import org.fairventures.treeo.models.*
 import org.fairventures.treeo.repository.IMainRepository
 import org.fairventures.treeo.util.IDispatcherProvider
 
@@ -23,6 +20,9 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
 
     private val _logoutResponse = MutableLiveData<LogoutResponse>()
     val logoutResponse: LiveData<LogoutResponse> get() = _logoutResponse
+
+    private val _phonenumberOTPResponse = MutableLiveData<PhoneNumberOTPResponse>()
+    val phoneNumberOTPResponse: LiveData<PhoneNumberOTPResponse> get() = _phonenumberOTPResponse
 
     fun login(email: String, password: String) {
         viewModelScope.launch(dispatcher.io()) {
@@ -39,6 +39,12 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
     fun postDeviceData(deviceInformation: DeviceInformation, userToken: String) {
         viewModelScope.launch(dispatcher.io()) {
             mainRepository.postDeviceData(deviceInformation, userToken)
+        }
+    }
+
+    fun requestOTP(phoneNumber: String) {
+        viewModelScope.launch(dispatcher.io()) {
+            _phonenumberOTPResponse.postValue(mainRepository.requestOTP(phoneNumber))
         }
     }
 }
