@@ -27,6 +27,7 @@ import androidx.navigation.fragment.findNavController
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -64,6 +65,11 @@ class HomeFragment : Fragment() {
 
     private lateinit var photoFile: File
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        FirebaseCrashlytics.getInstance().setUserId(getUserId().toString())
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -99,6 +105,7 @@ class HomeFragment : Fragment() {
         }
 
         setObservers()
+        simulateCrash()
     }
 
     private fun setObservers() {
@@ -224,6 +231,25 @@ class HomeFragment : Fragment() {
             apply()
         }
     }
+
+    private fun getUserId(): Int {
+        with(sharedPref.edit()) {
+            val id =
+                sharedPref.getInt(resources.getString(org.fairventures.treeo.R.string.user_id), 0)
+            if (id != 0) {
+                return id
+            }
+            apply()
+        }
+        return 0
+    }
+
+    private fun simulateCrash() {
+        crash_button.setOnClickListener {
+            throw RuntimeException("Test Crash")
+        }
+    }
+
 
     companion object {
         @JvmStatic

@@ -57,7 +57,8 @@ class RequestManager @Inject constructor(
         val response = apiService.login(loginDetails)
 
         if (response.isSuccessful) {
-            items = response.body()
+            items = response.body()!!.data
+            Log.d("logRes", response.body()!!.data.toString())
         } else {
             Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
             errors.postValue(response.message())

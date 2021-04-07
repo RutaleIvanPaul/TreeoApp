@@ -6,6 +6,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -67,8 +68,11 @@ dependencies {
     //Firebase Bom
     implementation platform('com.google.firebase:firebase-bom:26.4.0')
 
-    //Google Analytics
+    //Firebase Analytics
     implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // Firebase Crashlytics
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 
     // Room
     implementation "androidx.room:room-runtime:2.2.5"

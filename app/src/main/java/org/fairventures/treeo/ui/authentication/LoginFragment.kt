@@ -52,7 +52,7 @@ class LoginFragment : Fragment() {
     private fun setObservers() {
         loginLogoutUserViewModel.loginToken.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                saveUserDetails(it.token, getString(R.string.email_password))
+                saveUserDetails(it.token, getString(R.string.email_password), it.userId)
                 openHome(it.token)
             }
         })
@@ -62,10 +62,11 @@ class LoginFragment : Fragment() {
         loginLogoutUserViewModel.login(email, password)
     }
 
-    private fun saveUserDetails(token: String, loginManager: String) {
+    private fun saveUserDetails(token: String, loginManager: String, userId: Int) {
         with(sharedPref.edit()) {
             putString(getString(R.string.user_token), token)
             putString(getString(R.string.loginManager), loginManager)
+            putInt(getString(R.string.user_id), userId)
             apply()
         }
     }

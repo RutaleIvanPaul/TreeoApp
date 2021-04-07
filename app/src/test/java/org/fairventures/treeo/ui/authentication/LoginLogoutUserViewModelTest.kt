@@ -34,7 +34,7 @@ class LoginLogoutUserViewModelTest {
     @Test
     fun `test login`() = mainCoroutineRule.testDispatcher.runBlockingTest {
         val loginDetails = LoginDetails("test@gmail.com", "secret")
-        val expectedToken = "thisisanauthtoken"
+        val expectedToken = "thisisatesttoken"
         viewModel.login(loginDetails.email, loginDetails.password)
         assertThat(viewModel.loginToken.value?.token).isEqualTo(expectedToken)
     }

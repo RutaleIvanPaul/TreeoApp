@@ -1,8 +1,8 @@
 package org.fairventures.treeo.models
 
 data class LoginResponse(
-    val userName: String,
+    val username: String,
     val email: String,
+    val userId: Int,
     val token: String,
-    val status: Int
 )
