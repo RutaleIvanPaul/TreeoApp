@@ -4,12 +4,12 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -58,23 +58,22 @@ class SMSCodeFragment : Fragment() {
     }
 
     private fun setupUI() {
-        smsProgressBar.visibility = View.GONE
         login_phoneNumber_button.setOnClickListener {
-            smsProgressBar.visibility = View.VISIBLE
+            showProgressBar()
             validatePhoneNumber(login_phonenumber_text.text.toString())
         }
 
         signup_sms.setOnClickListener {
-            smsProgressBar.visibility = View.VISIBLE
+            showProgressBar()
             registerUserViewModel.registerMobileUser(
-                    RegisterMobileUser(
-                            firstName = firstname_sms.text.toString(),
-                            lastName = lastname_sms.text.toString(),
-                            phoneNumber = phone_sms.text.toString(),
-                            country = country_sms.text.toString(),
-                            password = password_sms.text.toString(),
-                            username = username_sms.text.toString()
-                    )
+                RegisterMobileUser(
+                    firstName = firstname_sms.text.toString(),
+                    lastName = lastname_sms.text.toString(),
+                    phoneNumber = phone_sms.text.toString(),
+                    country = country_sms.text.toString(),
+                    password = password_sms.text.toString(),
+                    username = username_sms.text.toString()
+                )
             )
 
             saveMobileUserDetails(username_sms.text.toString())
@@ -82,12 +81,11 @@ class SMSCodeFragment : Fragment() {
         }
 
         validate_OTP.setOnClickListener {
-            smsProgressBar.visibility = View.VISIBLE
             registerUserViewModel.validateOTPRegistration(
-                    ValidateOTPRegistration(
-                            phoneNumber = phone_sms.text.toString(),
-                            code = editText_validateCode.text.toString()
-                    )
+                ValidateOTPRegistration(
+                    phoneNumber = phone_sms.text.toString(),
+                    code = editText_validateCode.text.toString()
+                )
             )
         }
     }
@@ -95,7 +93,7 @@ class SMSCodeFragment : Fragment() {
     private fun setupObservers() {
         loginLogoutUserViewModel.phoneNumberOTPResponse.observe(
             viewLifecycleOwner,
-            Observer {phoneNumberLoginResponse ->
+            Observer { phoneNumberLoginResponse ->
                 Log.d("PhoneNumberResponse", phoneNumberLoginResponse.toString())
             }
         )
@@ -103,13 +101,13 @@ class SMSCodeFragment : Fragment() {
         registerUserViewModel.phoneNumberValidationResponse.observe(
             viewLifecycleOwner,
             Observer { validatePhoneNumberResponse ->
-                if (validatePhoneNumberResponse != null){
-                    if (validatePhoneNumberResponse.valid){
+                if (validatePhoneNumberResponse != null) {
+                    hideProgressBar()
+                    if (validatePhoneNumberResponse.valid) {
                         //requestOTP
                         requestOTP(validatePhoneNumberResponse.phoneNumber)
                         startSMSListener()
-                    }
-                    else{
+                    } else {
                         openRegistrationPage()
                     }
                     Log.d("Phone Number Response", validatePhoneNumberResponse.toString())
@@ -118,35 +116,36 @@ class SMSCodeFragment : Fragment() {
         )
 
         registerUserViewModel.registeredMobileUser.observe(
-                viewLifecycleOwner,
-                Observer {registeredMobileUser ->
-                    if(registeredMobileUser != null){
-                        smsProgressBar.visibility = View.GONE
-                        smsCode.setText("Success")
-                    }
+            viewLifecycleOwner,
+            Observer { registeredMobileUser ->
+                if (registeredMobileUser != null) {
+                    hideProgressBar()
+                    smsCode.text = "Success"
                 }
+            }
         )
 
         errors.observe(
-                viewLifecycleOwner,
-                Observer {
-                    smsCode.setText(it)
-                }
+            viewLifecycleOwner,
+            Observer {
+                hideProgressBar()
+                smsCode.text = it
+            }
         )
 
         registerUserViewModel.validateOTPRegistrationResponse.observe(
-                viewLifecycleOwner,
-                {validateOTPRegistrationResponse ->
-                    if (validateOTPRegistrationResponse != null){
-                        smsCode.setText(validateOTPRegistrationResponse.message)
-                        if(validateOTPRegistrationResponse.message.contains("activ",true)){
-                            login_phoneNumber_button.visibility = View.VISIBLE
-                            login_phonenumber_text.visibility = View.VISIBLE
-                            smsProgressBar.visibility = View.GONE
-                        }
+            viewLifecycleOwner,
+            { validateOTPRegistrationResponse ->
+                if (validateOTPRegistrationResponse != null) {
+                    hideProgressBar()
+                    smsCode.setText(validateOTPRegistrationResponse.message)
+                    if (validateOTPRegistrationResponse.message.contains("activ", true)) {
+                        login_phoneNumber_button.visibility = View.VISIBLE
+                        login_phonenumber_text.visibility = View.VISIBLE
+                        smsProgressBar.visibility = View.GONE
                     }
-
                 }
+            }
         )
 
     }
@@ -154,10 +153,10 @@ class SMSCodeFragment : Fragment() {
     private fun openHomePage() {
         val username = with(sharedPref.edit()) {
             sharedPref.getString(getString(R.string.mobile_username), null)
-        }?:username_sms.text.toString()
+        } ?: username_sms.text.toString()
         this.findNavController().navigate(
-                R.id.action_SMSCodeFragment_to_homeFragment,
-                bundleOf(username to "username")
+            R.id.action_SMSCodeFragment_to_homeFragment,
+            bundleOf(username to "username")
         )
     }
 
@@ -167,9 +166,9 @@ class SMSCodeFragment : Fragment() {
         )
     }
 
-    private fun saveMobileUserDetails(username: String){
+    private fun saveMobileUserDetails(username: String) {
         with(sharedPref.edit()) {
-            putString(getString(org.fairventures.treeo.R.string.mobile_username),username )
+            putString(getString(org.fairventures.treeo.R.string.mobile_username), username)
             apply()
         }
     }
@@ -203,24 +202,32 @@ class SMSCodeFragment : Fragment() {
         val intent = Credentials.getClient(requireActivity()).getHintPickerIntent(hintRequest)
         startIntentSenderForResult(
             intent.intentSender,
-            RESOLVE_HINT, null, 0, 0, 0,null
+            RESOLVE_HINT, null, 0, 0, 0, null
         )
     }
 
-    private fun startSMSListener(){
+    private fun startSMSListener() {
         val client = SmsRetriever.getClient(requireActivity())
         val task: Task<Void> = client.startSmsRetriever()
 
         task.addOnSuccessListener(OnSuccessListener<Void?> {
             // Successfully started retriever, expect broadcast intent
-            Log.d("MESSAGE","Successfully started retriever, expect broadcast intent")
+            Log.d("MESSAGE", "Successfully started retriever, expect broadcast intent")
         })
 
         task.addOnFailureListener(OnFailureListener {
-            smsProgressBar.visibility = View.GONE
+            hideProgressBar()
             // Failed to start retriever, inspect Exception for more details
-            Log.d("MESSAGE","Failed to start retriever, inspect Exception for more details")
+            Log.d("MESSAGE", "Failed to start retriever, inspect Exception for more details")
         })
+    }
+
+    private fun showProgressBar() {
+        smsProgressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        smsProgressBar.visibility = View.GONE
     }
 
     companion object {
