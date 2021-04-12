@@ -25,8 +25,9 @@ class RegisterUserViewModel @ViewModelInject constructor(
     private val _facebookUser = MutableLiveData<FacebookUser>()
     val facebookUser: LiveData<FacebookUser> get() = _facebookUser
 
-    private val _phoneNumberValidationResponse = MutableLiveData<ValidateResponseData>()
-    val phoneNumberValidationResponse: LiveData<ValidateResponseData> get() = _phoneNumberValidationResponse
+    private val _phoneNumberValidationResponse_registration = MutableLiveData<ValidateResponseData>()
+    val phoneNumberValidationResponse_registration: LiveData<ValidateResponseData> get() =
+        _phoneNumberValidationResponse_registration
 
     private val _registeredMobileUser = MutableLiveData<RegisteredMobileUser>()
     val registeredMobileUser: LiveData<RegisteredMobileUser> get() = _registeredMobileUser
@@ -54,9 +55,9 @@ class RegisterUserViewModel @ViewModelInject constructor(
         }
     }
 
-    fun validatePhoneNumber(phoneNumber: String){
+    fun validatePhoneNumber_Registration(phoneNumber: String){
         viewModelScope.launch(dispatcher.io()) {
-            _phoneNumberValidationResponse.postValue(mainRepository.validatePhoneNumber(phoneNumber))
+            _phoneNumberValidationResponse_registration.postValue(mainRepository.validatePhoneNumber(phoneNumber))
         }
     }
 

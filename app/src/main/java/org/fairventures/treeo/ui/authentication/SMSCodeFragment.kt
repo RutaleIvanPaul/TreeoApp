@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.Task
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_s_m_s_code.*
 import org.fairventures.treeo.R
+import org.fairventures.treeo.models.LoginWithOTP
 import org.fairventures.treeo.models.RegisterMobileUser
 import org.fairventures.treeo.models.ValidateOTPRegistration
 import org.fairventures.treeo.util.RESOLVE_HINT
@@ -62,6 +63,7 @@ class SMSCodeFragment : Fragment() {
             showProgressBar()
             validatePhoneNumber(login_phonenumber_text.text.toString())
         }
+        smsProgressBar.visibility = View.GONE
 
         signup_sms.setOnClickListener {
             showProgressBar()
@@ -88,9 +90,24 @@ class SMSCodeFragment : Fragment() {
                 )
             )
         }
+
+        get_login_otp_button.setOnClickListener {
+            smsProgressBar.visibility = View.VISIBLE
+            requestOTP(login_phonenumber_text.text.toString())
+        }
+
+        login_sms_button.setOnClickListener {
+            smsProgressBar.visibility = View.VISIBLE
+            loginWithOtp(
+                login_phonenumber_text.text.toString(),
+                eidtText_otp.text.toString()
+            )
+        }
+
     }
 
     private fun setupObservers() {
+
         loginLogoutUserViewModel.phoneNumberOTPResponse.observe(
             viewLifecycleOwner,
             Observer { phoneNumberLoginResponse ->
@@ -98,16 +115,14 @@ class SMSCodeFragment : Fragment() {
             }
         )
 
-        registerUserViewModel.phoneNumberValidationResponse.observe(
+        registerUserViewModel.phoneNumberValidationResponse_registration.observe(
             viewLifecycleOwner,
             Observer { validatePhoneNumberResponse ->
-                if (validatePhoneNumberResponse != null) {
-                    hideProgressBar()
-                    if (validatePhoneNumberResponse.valid) {
-                        //requestOTP
-                        requestOTP(validatePhoneNumberResponse.phoneNumber)
-                        startSMSListener()
-                    } else {
+                if (validatePhoneNumberResponse != null){
+                    if (validatePhoneNumberResponse.valid){
+//                        startSMSListener()
+                    }
+                    else{
                         openRegistrationPage()
                     }
                     Log.d("Phone Number Response", validatePhoneNumberResponse.toString())
@@ -134,15 +149,13 @@ class SMSCodeFragment : Fragment() {
         )
 
         registerUserViewModel.validateOTPRegistrationResponse.observe(
-            viewLifecycleOwner,
-            { validateOTPRegistrationResponse ->
-                if (validateOTPRegistrationResponse != null) {
-                    hideProgressBar()
-                    smsCode.setText(validateOTPRegistrationResponse.message)
-                    if (validateOTPRegistrationResponse.message.contains("activ", true)) {
-                        login_phoneNumber_button.visibility = View.VISIBLE
-                        login_phonenumber_text.visibility = View.VISIBLE
-                        smsProgressBar.visibility = View.GONE
+                viewLifecycleOwner,
+                {validateOTPRegistrationResponse ->
+                    if (validateOTPRegistrationResponse != null){
+                        smsCode.setText(validateOTPRegistrationResponse.message)
+                        if(validateOTPRegistrationResponse.message.contains("activ",true)){
+                            smsProgressBar.visibility = View.GONE
+                        }
                     }
                 }
             }
@@ -186,12 +199,21 @@ class SMSCodeFragment : Fragment() {
 
     }
 
-    private fun validatePhoneNumber(phoneNumber: String) {
-        registerUserViewModel.validatePhoneNumber(phoneNumber.removePrefix("+"))
+    private fun validatePhoneNumber_Registration(phoneNumber: String) {
+        registerUserViewModel.validatePhoneNumber_Registration(phoneNumber.removePrefix("+"))
     }
 
     private fun requestOTP(phoneNumber: String) {
         loginLogoutUserViewModel.requestOTP(phoneNumber)
+    }
+
+    private fun loginWithOtp(phoneNumber: String, otp: String) {
+        loginLogoutUserViewModel.loginWithOTP(
+            LoginWithOTP(
+                phoneNumber,
+                otp
+            )
+        )
     }
 
     // Construct a request for phone numbers and show the picker

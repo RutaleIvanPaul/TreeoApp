@@ -47,4 +47,12 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
             _phonenumberOTPResponse.postValue(mainRepository.requestOTP(phoneNumber))
         }
     }
+
+    fun loginWithOTP(loginWithOTP: LoginWithOTP) {
+        viewModelScope.launch(dispatcher.io()) {
+
+        }
+    }
+
+
 }

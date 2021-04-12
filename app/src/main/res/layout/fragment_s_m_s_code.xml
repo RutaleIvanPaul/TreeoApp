@@ -12,12 +12,12 @@
     tools:context=".ui.authentication.SMSCodeFragment">
 
     <Button
-        android:id="@+id/login_phoneNumber_button"
+        android:id="@+id/get_login_otp_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Log in"
-        android:visibility="gone"
+        android:text="get otp"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,11 +27,11 @@
         android:id="@+id/smsCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_phoneNumber_button" />
+        app:layout_constraintTop_toBottomOf="@+id/signup_sms" />
 
     <EditText
         android:id="@+id/login_phonenumber_text"
@@ -39,8 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
+        android:hint="Phone Number"
         android:inputType="phone"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -61,13 +62,13 @@
         android:id="@+id/firstname_sms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         android:ems="10"
         android:hint="Firstname"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/smsCode" />
+        app:layout_constraintTop_toBottomOf="@+id/login_sms_button" />
 
     <EditText
         android:id="@+id/lastname_sms"
@@ -144,14 +145,13 @@
         android:id="@+id/editText_validateCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="OTP Code"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.555"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/signup_sms" />
+        app:layout_constraintTop_toBottomOf="@+id/smsCode" />
 
     <Button
         android:id="@+id/validate_OTP"
@@ -163,6 +163,28 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText_validateCode" />
+
+    <EditText
+        android:id="@+id/eidtText_otp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="SMS Code"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/get_login_otp_button" />
+
+    <Button
+        android:id="@+id/login_sms_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Log in"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/eidtText_otp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
