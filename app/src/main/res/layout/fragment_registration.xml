@@ -148,10 +148,10 @@
             android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/phoneNumberLogin" />
+            app:layout_constraintTop_toBottomOf="@+id/regOnBoardStatusBtn" />
 
         <TextView
             android:id="@+id/login_screen_link"
@@ -176,6 +176,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login_button_facebook" />
+
+        <Button
+            android:id="@+id/regOnBoardStatusBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Button"
+            app:layout_constraintEnd_toEndOf="@+id/phoneNumberLogin"
+            app:layout_constraintStart_toStartOf="@+id/phoneNumberLogin"
+            app:layout_constraintTop_toBottomOf="@+id/phoneNumberLogin" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

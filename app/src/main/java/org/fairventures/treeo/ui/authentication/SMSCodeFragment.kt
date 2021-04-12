@@ -8,11 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.Credentials
 import com.google.android.gms.auth.api.credentials.HintRequest
@@ -34,8 +32,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SMSCodeFragment : Fragment() {
 
-    private val registerUserViewModel: RegisterUserViewModel by viewModels()
-    private val loginLogoutUserViewModel: LoginLogoutUserViewModel by viewModels()
+    private val registrationViewModel: RegistrationViewModel by viewModels()
+    private val loginLogoutViewModel: LoginLogoutViewModel by viewModels()
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -64,7 +62,7 @@ class SMSCodeFragment : Fragment() {
 
         signup_sms.setOnClickListener {
             showProgressBar()
-            registerUserViewModel.registerMobileUser(
+            registrationViewModel.registerMobileUser(
                 RegisterMobileUser(
                     firstName = firstname_sms.text.toString(),
                     lastName = lastname_sms.text.toString(),
@@ -80,7 +78,7 @@ class SMSCodeFragment : Fragment() {
         }
 
         validate_OTP.setOnClickListener {
-            registerUserViewModel.validateOTPRegistration(
+            registrationViewModel.validateOTPRegistration(
                 ValidateOTPRegistration(
                     phoneNumber = phone_sms.text.toString(),
                     code = editText_validateCode.text.toString()
@@ -105,7 +103,7 @@ class SMSCodeFragment : Fragment() {
 
     private fun setupObservers() {
 
-        loginLogoutUserViewModel.phoneNumberOTPResponse.observe(
+        loginLogoutViewModel.phoneNumberOTPResponse.observe(
             viewLifecycleOwner,
             Observer { otpRequestResponse ->
                 if(otpRequestResponse != null) {
@@ -116,7 +114,7 @@ class SMSCodeFragment : Fragment() {
             }
         )
 
-        loginLogoutUserViewModel.smsLoginResponse.observe(
+        loginLogoutViewModel.smsLoginResponse.observe(
             viewLifecycleOwner,
             Observer { smsLoginResponse ->
                 hideProgressBar()
@@ -129,7 +127,7 @@ class SMSCodeFragment : Fragment() {
             }
         )
 
-        registerUserViewModel.phoneNumberValidationResponse_registration.observe(
+        registrationViewModel.phoneNumberValidationResponseRegistration.observe(
             viewLifecycleOwner,
             Observer { validatePhoneNumberResponse ->
                 if (validatePhoneNumberResponse != null){
@@ -144,7 +142,7 @@ class SMSCodeFragment : Fragment() {
             }
         )
 
-        registerUserViewModel.registeredMobileUser.observe(
+        registrationViewModel.registeredMobileUser.observe(
             viewLifecycleOwner,
             Observer { registeredMobileUser ->
                 if (registeredMobileUser != null) {
@@ -162,7 +160,7 @@ class SMSCodeFragment : Fragment() {
             }
         )
 
-        registerUserViewModel.validateOTPRegistrationResponse.observe(
+        registrationViewModel.validateOTPRegistrationResponse.observe(
                 viewLifecycleOwner,
                 Observer {validateOTPRegistrationResponse ->
                     if (validateOTPRegistrationResponse != null){
@@ -180,16 +178,16 @@ class SMSCodeFragment : Fragment() {
         val username = with(sharedPref.edit()) {
             sharedPref.getString(getString(R.string.mobile_username), null)
         } ?: username_sms.text.toString()
-        this.findNavController().navigate(
-            R.id.action_SMSCodeFragment_to_homeFragment,
-            bundleOf(username to "username")
-        )
+//        this.findNavController().navigate(
+//            R.id.action_SMSCodeFragment_to_homeFragment,
+//            bundleOf(username to "username")
+//        )
     }
 
     private fun openRegistrationPage() {
-        this.findNavController().navigate(
-            R.id.action_SMSCodeFragment_to_registrationFragment
-        )
+//        this.findNavController().navigate(
+//            R.id.action_SMSCodeFragment_to_registrationFragment
+//        )
     }
 
     private fun saveMobileUserDetails(username: String) {
@@ -213,11 +211,11 @@ class SMSCodeFragment : Fragment() {
     }
 
     private fun validatePhoneNumber_Registration(phoneNumber: String) {
-        registerUserViewModel.validatePhoneNumber_Registration(phoneNumber.removePrefix("+"))
+        registrationViewModel.validatePhoneNumberRegistration(phoneNumber.removePrefix("+"))
     }
 
     private fun requestOTP(phoneNumber: String) {
-        loginLogoutUserViewModel.requestOTP(
+        loginLogoutViewModel.requestOTP(
             RequestOTP(
             phoneNumber
             )
@@ -225,7 +223,7 @@ class SMSCodeFragment : Fragment() {
     }
 
     private fun loginWithOtp(phoneNumber: String, otp: String) {
-        loginLogoutUserViewModel.loginWithOTP(
+        loginLogoutViewModel.loginWithOTP(
             LoginWithOTP(
                 phoneNumber,
                 otp

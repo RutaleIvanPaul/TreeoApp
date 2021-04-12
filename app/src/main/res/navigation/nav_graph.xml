@@ -3,82 +3,104 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/chooseLangFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/registrationFragment"
-        android:name="org.fairventures.treeo.ui.authentication.RegistrationFragment"
-        android:label="fragment_registration"
-        tools:layout="@layout/fragment_registration">
+        android:id="@+id/onBoardingHostFragment"
+        android:name="org.fairventures.treeo.ui.authentication.onboarding.OnBoardingHostFragment"
+        android:label="OnBoarding"
+        tools:layout="@layout/fragment_on_boarding_host">
         <action
-            android:id="@+id/action_registrationFragment_to_loginFragment"
-            app:destination="@id/loginFragment">
-            <argument
-                android:name="email"
-                android:defaultValue=""
-                app:argType="string" />
-        </action>
+            android:id="@+id/action_onBoardingHostFragment_to_onBoardingLandingPage"
+            app:destination="@id/onBoardingLandingPage"
+            app:popUpTo="@id/onBoardingLandingPage" />
         <action
-            android:id="@+id/action_registrationFragment_to_homeFragment"
-            app:destination="@id/homeFragment">
-            <argument
-                android:name="username"
-                android:defaultValue="username"
-                app:argType="string" />
-        </action>
+            android:id="@+id/action_onBoardingHostFragment_to_motivationsFragment"
+            app:destination="@id/motivationsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/onBoardingLandingPage"
+        android:name="org.fairventures.treeo.ui.authentication.onboarding.screens.OnBoardingLandingPage"
+        android:label="fragment_on_boarding_landing_page"
+        tools:layout="@layout/fragment_on_boarding_landing_page">
         <action
-            android:id="@+id/action_registrationFragment_to_SMSCodeFragment"
-            app:destination="@id/SMSCodeFragment" />
+            android:id="@+id/action_onBoardingLandingPage_to_onBoardingHostFragment"
+            app:destination="@id/onBoardingHostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseLangFragment"
+        android:name="org.fairventures.treeo.ui.authentication.onboarding.screens.ChooseLangFragment"
+        android:label="ChooseLangFragment">
         <action
-            android:id="@+id/action_registrationFragment_to_chooseLangFragment"
-            app:destination="@id/chooseLangFragment" />
+            android:id="@+id/action_chooseLangFragment_to_onBoardingScreen1"
+            app:destination="@id/onBoardingLandingPage" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="org.fairventures.treeo.ui.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home">
+        android:label="HomeFragment">
         <action
-            android:id="@+id/action_homeFragment_to_registrationFragment"
-            app:destination="@id/registrationFragment"
-            app:popUpTo="@id/registrationFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_homeFragment_to_chooseLangFragment"
+            app:destination="@id/chooseLangFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_phoneAuthHostFragment"
+            app:destination="@id/phoneAuthHostFragment" />
     </fragment>
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="org.fairventures.treeo.ui.authentication.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login">
-        <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment">
-            <argument
-                android:name="username"
-                android:defaultValue="username"
-                app:argType="string" />
-        </action>
-    </fragment>
+        android:id="@+id/guideFragment"
+        android:name="org.fairventures.treeo.ui.home.GuideFragment"
+        android:label="fragment_guide"
+        tools:layout="@layout/fragment_guide" />
     <fragment
-        android:id="@+id/SMSCodeFragment"
-        android:name="org.fairventures.treeo.ui.authentication.SMSCodeFragment"
-        android:label="fragment_s_m_s_code"
-        tools:layout="@layout/fragment_s_m_s_code" >
+        android:id="@+id/learnFragment"
+        android:name="org.fairventures.treeo.ui.home.LearnFragment"
+        android:label="fragment_learn"
+        tools:layout="@layout/fragment_learn" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="org.fairventures.treeo.ui.home.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/phoneAuthHostFragment"
+        android:name="org.fairventures.treeo.ui.authentication.login.PhoneAuthHostFragment"
+        android:label="fragment_phone_auth_host"
+        tools:layout="@layout/fragment_phone_auth_host">
         <action
-            android:id="@+id/action_SMSCodeFragment_to_registrationFragment"
-            app:destination="@id/registrationFragment" />
-        <action
-            android:id="@+id/action_SMSCodeFragment_to_homeFragment"
+            android:id="@+id/action_phoneAuthHostFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/chooseLangFragment"
-        android:name="org.fairventures.treeo.util.ChooseLangFragment"
-        android:label="ChooseLangFragment" >
+        android:id="@+id/cameraFragment"
+        android:name="org.fairventures.treeo.ui.measure.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" />
+    <fragment
+        android:id="@+id/registrationHostFragment"
+        android:name="org.fairventures.treeo.ui.authentication.registration.RegistrationHostFragment"
+        android:label="fragment_registration_host"
+        tools:layout="@layout/fragment_registration_host" >
         <action
-            android:id="@+id/action_chooseLangFragment_to_registrationFragment"
-            app:destination="@id/registrationFragment" />
+            android:id="@+id/action_registrationHostFragment_to_motivationsFragment"
+            app:destination="@id/motivationsFragment" />
         <action
-            android:id="@+id/action_chooseLangFragment_to_homeFragment"
+            android:id="@+id/action_registrationHostFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_registrationHostFragment_to_phoneAuthHostFragment"
+            app:destination="@id/phoneAuthHostFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/motivationsFragment"
+        android:name="org.fairventures.treeo.ui.authentication.onboarding.screens.MotivationsFragment"
+        android:label="fragment_motivations"
+        tools:layout="@layout/fragment_motivations" >
+        <action
+            android:id="@+id/action_motivationsFragment_to_registrationHostFragment"
+            app:destination="@id/registrationHostFragment" />
+        <action
+            android:id="@+id/action_motivationsFragment_to_onBoardingHostFragment"
+            app:destination="@id/onBoardingHostFragment" />
     </fragment>
 </navigation>
