@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.fairventures.treeo.R
@@ -19,7 +17,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
-    private val loginLogoutUserViewModel: LoginLogoutUserViewModel by viewModels()
+    private val loginLogoutViewModel: LoginLogoutViewModel by viewModels()
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -51,7 +49,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun setObservers() {
-        loginLogoutUserViewModel.loginToken.observe(viewLifecycleOwner, Observer {
+        loginLogoutViewModel.loginToken.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 saveUserDetails(it.token, getString(R.string.email_password), it.userId)
                 openHome(it.token)
@@ -63,7 +61,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun loginEmailPassword(email: String, password: String) {
-        loginLogoutUserViewModel.login(email, password)
+        loginLogoutViewModel.login(email, password)
     }
 
     private fun saveUserDetails(token: String, loginManager: String, userId: Int) {
@@ -77,10 +75,10 @@ class LoginFragment : Fragment() {
 
     private fun openHome(extra: String) {
         hideProgressBar()
-        this.findNavController().navigate(
-            R.id.action_loginFragment_to_homeFragment,
-            bundleOf("username" to extra)
-        )
+//        this.findNavController().navigate(
+//            R.id. addaction_loginFragment_to_homeFragment,
+//            bundleOf("username" to extra)
+//        )
     }
 
     private fun showProgressBar() {

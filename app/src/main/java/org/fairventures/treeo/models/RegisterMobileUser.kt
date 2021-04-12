@@ -1,10 +1,10 @@
 package org.fairventures.treeo.models
 
 data class RegisterMobileUser(
-    val country: String,
-    val firstName: String,
-    val lastName: String,
-    val password: String,
-    val phoneNumber: String,
-    val username: String
+    var firstName: String = "",
+    var lastName: String = "",
+    var country: String = "",
+    var phoneNumber: String = "",
+    var password: String? = "secret1234",
+    var username: String? = null
 )

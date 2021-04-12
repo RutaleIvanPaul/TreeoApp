@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.authentication.onboarding.screens.OnBoardingScreen2">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/onBoardingScreen2ImageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:maxHeight="230dp"
+        android:scaleType="centerInside"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/treeo_illustration" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/onBoardingScreen2TitleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:maxWidth="280dp"
+        android:text="Step 2: Know the value of your trees"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:textColor="@color/app_green"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/onBoardingScreen2ImageView" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="150dp"
+        android:layout_height="4dp"
+        android:background="@drawable/line_drawable"
+        app:layout_constraintStart_toStartOf="@+id/onBoardingScreen2TitleTV"
+        app:layout_constraintTop_toBottomOf="@+id/onBoardingScreen2TitleTV" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/onBoardingScreen2TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:maxWidth="280dp"
+        android:text="Get to know the value of your timber with our app and sell your timber for a fair market price."
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <android.widget.Button
+        android:id="@+id/onBoardingScreen2BackButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/back_button_state_list"
+        android:drawableStart="@drawable/ic_arrow_back_16"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:text="@string/text_back"
+        android:textColor="@color/app_green"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.widget.Button
+        android:id="@+id/onBoardingScreen2ContinueButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/button_state_list"
+        android:drawableEnd="@drawable/ic_arrow_forward_16"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:text="@string/text_continue"
+        android:textColor="@color/text_color_state_list"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
