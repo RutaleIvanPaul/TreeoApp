@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.fairventures.treeo.R
+import org.fairventures.treeo.util.errors
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -54,6 +55,9 @@ class LoginFragment : Fragment() {
             if (it != null) {
                 saveUserDetails(it.token, getString(R.string.email_password), it.userId)
                 openHome(it.token)
+            } else {
+                hideProgressBar()
+                loginBanner.text = errors.value
             }
         })
     }

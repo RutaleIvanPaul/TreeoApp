@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -17,9 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.facebook.*
 import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
-import com.google.android.gms.auth.api.credentials.Credential
-import com.google.android.gms.auth.api.credentials.Credentials
-import com.google.android.gms.auth.api.credentials.HintRequest
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -31,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_registration.*
 import org.fairventures.treeo.R
 import org.fairventures.treeo.models.RegisterUser
 import org.fairventures.treeo.util.RC_SIGN_IN
-import org.fairventures.treeo.util.RESOLVE_HINT
+import org.fairventures.treeo.util.errors
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -87,6 +83,9 @@ class RegistrationFragment : Fragment() {
         registerUserViewModel.newUser.observe(viewLifecycleOwner, Observer { registeredUser ->
             if (registeredUser != null) {
                 openLogin(registeredUser.email)
+            } else {
+                hideProgressBar()
+                registrationBanner.text = errors.value.toString()
             }
         })
 
@@ -191,7 +190,7 @@ class RegistrationFragment : Fragment() {
 
             if (account == null) {
                 Log.d("Sign In Details", "Could Not Sign In")
-                textView1.text = "Could not sign in"
+                registrationBanner.text = "Could not sign in"
 
             } else {
                 Log.d("Sign In Details", account.idToken!!)
@@ -199,7 +198,7 @@ class RegistrationFragment : Fragment() {
             }
         } catch (e: ApiException) {
             Log.d("TAG", "signInResult:failed code=" + e.statusCode)
-            textView1.text = "signInResult:failed codes = ${e.statusCode}"
+            registrationBanner.text = "signInResult:failed codes = ${e.statusCode}"
         }
     }
 

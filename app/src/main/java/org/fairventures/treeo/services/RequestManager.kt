@@ -3,6 +3,7 @@ package org.fairventures.treeo.services
 import android.util.Log
 import org.fairventures.treeo.models.*
 import org.fairventures.treeo.util.errors
+import org.fairventures.treeo.util.getErrorMessageFromJson
 import javax.inject.Inject
 
 class RequestManager @Inject constructor(
@@ -15,9 +16,12 @@ class RequestManager @Inject constructor(
 
         if (response.isSuccessful) {
             items = response.body()
+
         } else {
-            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
-            errors.postValue(response.message())
+            val errorResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $errorResponse ")
+
+            errors.postValue(getErrorMessageFromJson(errorResponse))
         }
         return items
     }
@@ -30,8 +34,10 @@ class RequestManager @Inject constructor(
         if (response.isSuccessful) {
             items = response.body()
         } else {
-            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
-            errors.postValue(response.message())
+            val jsonResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+            errors.postValue(getErrorMessageFromJson(jsonResponse))
         }
         return items
     }
@@ -45,8 +51,10 @@ class RequestManager @Inject constructor(
             items = response.body()
             Log.d("fbLog", response.toString())
         } else {
-            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
-            errors.postValue(response.message())
+            val jsonResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+            errors.postValue(getErrorMessageFromJson(jsonResponse))
         }
         return items
     }
@@ -60,8 +68,10 @@ class RequestManager @Inject constructor(
             items = response.body()!!.data
             Log.d("logRes", response.body()!!.data.toString())
         } else {
-            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
-            errors.postValue(response.message())
+            val jsonResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+            errors.postValue(getErrorMessageFromJson(jsonResponse))
         }
         return items
     }
@@ -75,8 +85,10 @@ class RequestManager @Inject constructor(
             items = response.body()
             Log.d("resBody", response.body().toString())
         } else {
-            Log.e("resErr", "API Fetch Error: ${response.message()} ")
-            errors.postValue(response.message())
+            val jsonResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+            errors.postValue(getErrorMessageFromJson(jsonResponse))
         }
         return items
     }
@@ -89,8 +101,10 @@ class RequestManager @Inject constructor(
         if (response.isSuccessful) {
             Log.d("Device Data", "Successfully Added Device Information")
         } else {
-            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
-            errors.postValue(response.message())
+            val jsonResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+            errors.postValue(getErrorMessageFromJson(jsonResponse))
         }
     }
 
@@ -101,17 +115,18 @@ class RequestManager @Inject constructor(
 
         if (response.isSuccessful) {
             items = response.body()?.data
-        }
-        else {
-            if (response.code() == 404){
+        } else {
+            if (response.code() == 404) {
                 items = ValidateResponseData(
                     errorStatus = "",
                     phoneNumber = "",
                     valid = false
                 )
             }
-            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
-            errors.postValue(response.message())
+            val jsonResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+            errors.postValue(getErrorMessageFromJson(jsonResponse))
         }
 
         return items
@@ -125,15 +140,17 @@ class RequestManager @Inject constructor(
         if (response.isSuccessful) {
             items = response.body()
         } else {
-            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
-            errors.postValue(response.message())
+            val jsonResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+            errors.postValue(getErrorMessageFromJson(jsonResponse))
         }
 
         return items
     }
 
 
-    suspend fun registerMobileUser(mobileUser: RegisterMobileUser):RegisteredMobileUser?{
+    suspend fun registerMobileUser(mobileUser: RegisterMobileUser): RegisteredMobileUser? {
         var items: RegisteredMobileUser? = null
 
         val response = apiService.registerMobileUser(mobileUser)
@@ -141,26 +158,30 @@ class RequestManager @Inject constructor(
         if (response.isSuccessful) {
             items = response.body()
         } else {
-            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
-            errors.postValue(response.message())
+            val jsonResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+            errors.postValue(getErrorMessageFromJson(jsonResponse))
         }
 
         return items
     }
 
     suspend fun validateOTPRegistration(
-            validateOTPRegistration: ValidateOTPRegistration
-    ):ValidateOTPRegistrationResponse?{
+        validateOTPRegistration: ValidateOTPRegistration
+    ): ValidateOTPRegistrationResponse? {
         var items: ValidateOTPRegistrationResponse? = null
 
         val response =
-                apiService.validateOTPRegistration(validateOTPRegistration)
+            apiService.validateOTPRegistration(validateOTPRegistration)
 
         if (response.isSuccessful) {
             items = response.body()
         } else {
-            Log.d("API ERROR", "API Fetch Error: ${response.message()} ")
-            errors.postValue(response.message())
+            val jsonResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+            errors.postValue(getErrorMessageFromJson(jsonResponse))
         }
 
         return items
