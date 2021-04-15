@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.fragment_s_m_s_code.*
 import org.fairventures.treeo.R
 import org.fairventures.treeo.models.LoginWithOTP
 import org.fairventures.treeo.models.RegisterMobileUser
+import org.fairventures.treeo.models.RequestOTP
 import org.fairventures.treeo.models.ValidateOTPRegistration
 import org.fairventures.treeo.util.RESOLVE_HINT
 import org.fairventures.treeo.util.errors
@@ -59,10 +60,6 @@ class SMSCodeFragment : Fragment() {
     }
 
     private fun setupUI() {
-        login_phoneNumber_button.setOnClickListener {
-            showProgressBar()
-            validatePhoneNumber(login_phonenumber_text.text.toString())
-        }
         smsProgressBar.visibility = View.GONE
 
         signup_sms.setOnClickListener {
@@ -92,12 +89,12 @@ class SMSCodeFragment : Fragment() {
         }
 
         get_login_otp_button.setOnClickListener {
-            smsProgressBar.visibility = View.VISIBLE
+            showProgressBar()
             requestOTP(login_phonenumber_text.text.toString())
         }
 
         login_sms_button.setOnClickListener {
-            smsProgressBar.visibility = View.VISIBLE
+            showProgressBar()
             loginWithOtp(
                 login_phonenumber_text.text.toString(),
                 eidtText_otp.text.toString()
@@ -110,8 +107,21 @@ class SMSCodeFragment : Fragment() {
 
         loginLogoutUserViewModel.phoneNumberOTPResponse.observe(
             viewLifecycleOwner,
-            Observer { phoneNumberLoginResponse ->
-                Log.d("PhoneNumberResponse", phoneNumberLoginResponse.toString())
+            Observer { otpRequestResponse ->
+                hideProgressBar()
+                smsCode.text = otpRequestResponse
+                Log.d("PhoneNumberResponse", otpRequestResponse)
+            }
+        )
+
+        loginLogoutUserViewModel.smsLoginResponse.observe(
+            viewLifecycleOwner,
+            Observer { smsLoginResponse ->
+                hideProgressBar()
+                if (smsLoginResponse != null){
+                    smsCode.text = "Success ${smsLoginResponse.username}"
+                    Log.d("SMS Login Response",smsLoginResponse.token)
+                }
             }
         )
 
@@ -150,7 +160,7 @@ class SMSCodeFragment : Fragment() {
 
         registerUserViewModel.validateOTPRegistrationResponse.observe(
                 viewLifecycleOwner,
-                {validateOTPRegistrationResponse ->
+                Observer {validateOTPRegistrationResponse ->
                     if (validateOTPRegistrationResponse != null){
                         smsCode.setText(validateOTPRegistrationResponse.message)
                         if(validateOTPRegistrationResponse.message.contains("activ",true)){
@@ -158,7 +168,6 @@ class SMSCodeFragment : Fragment() {
                         }
                     }
                 }
-            }
         )
 
     }
@@ -204,7 +213,11 @@ class SMSCodeFragment : Fragment() {
     }
 
     private fun requestOTP(phoneNumber: String) {
-        loginLogoutUserViewModel.requestOTP(phoneNumber)
+        loginLogoutUserViewModel.requestOTP(
+            RequestOTP(
+            phoneNumber
+            )
+        )
     }
 
     private fun loginWithOtp(phoneNumber: String, otp: String) {

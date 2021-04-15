@@ -33,10 +33,10 @@ interface ApiService {
         @Path(value = "phoneNumber", encoded = true)phoneNumber: String
     ): Response<BaseResponse<ValidateResponseData>>
 
-    @POST("auth/request-OTP")
+    @POST("auth/request-otp")
     suspend fun requestOTP(
-        @Body phoneNumber: String
-    ): Response<PhoneNumberOTPResponse>
+        @Body phoneNumber: RequestOTP
+    ): Response<BaseResponse<String>>
 
     @POST("users/mobile/register")
     suspend fun registerMobileUser(
@@ -47,5 +47,10 @@ interface ApiService {
     suspend fun validateOTPRegistration(
             @Body validateOTPRegistration: ValidateOTPRegistration
     ): Response<ValidateOTPRegistrationResponse>
+
+    @POST("/auth/verify-otp")
+    suspend fun loginWitOTP(
+        @Body loginWithOTP: LoginWithOTP
+    ): Response<BaseResponse<SmsLoginResponse>>
 
 }

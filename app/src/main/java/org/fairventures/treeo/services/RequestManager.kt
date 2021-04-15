@@ -132,13 +132,13 @@ class RequestManager @Inject constructor(
         return items
     }
 
-    suspend fun requestOTP(phoneNumber: String): PhoneNumberOTPResponse? {
-        var items: PhoneNumberOTPResponse? = null
+    suspend fun requestOTP(phoneNumber: RequestOTP): String? {
+        var items: String? = null
 
         val response = apiService.requestOTP(phoneNumber)
 
         if (response.isSuccessful) {
-            items = response.body()
+            items = response.body()?.message
         } else {
             val jsonResponse = response.errorBody()!!.charStream().readText()
             Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
@@ -177,6 +177,24 @@ class RequestManager @Inject constructor(
 
         if (response.isSuccessful) {
             items = response.body()
+        } else {
+            val jsonResponse = response.errorBody()!!.charStream().readText()
+            Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+            errors.postValue(getErrorMessageFromJson(jsonResponse))
+        }
+
+        return items
+    }
+
+    suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse? {
+        var items: SmsLoginResponse? = null
+
+        val response =
+            apiService.loginWitOTP(loginWithOTP)
+
+        if (response.isSuccessful) {
+            items = response.body()?.data
         } else {
             val jsonResponse = response.errorBody()!!.charStream().readText()
             Log.d("API ERROR", "API Fetch Error: $jsonResponse ")

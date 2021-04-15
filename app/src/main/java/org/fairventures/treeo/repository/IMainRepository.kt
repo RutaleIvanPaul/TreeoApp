@@ -10,9 +10,10 @@ interface IMainRepository {
     suspend fun logout(token: String): LogoutResponse?
     suspend fun postDeviceData(deviceInformation: DeviceInformation, userToken: String)
     suspend fun validatePhoneNumber(phoneNumber: String): ValidateResponseData?
-    suspend fun requestOTP(phoneNumber: String): PhoneNumberOTPResponse?
+    suspend fun requestOTP(phoneNumber: RequestOTP): String?
     suspend fun registerMobileUser(mobileUser: RegisterMobileUser): RegisteredMobileUser?
     suspend fun validateOTPRegistration(
             validateOTPRegistration: ValidateOTPRegistration
     ): ValidateOTPRegistrationResponse?
+    suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse?
 }

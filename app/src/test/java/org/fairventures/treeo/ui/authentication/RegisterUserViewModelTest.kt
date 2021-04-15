@@ -85,11 +85,11 @@ class RegisterUserViewModelTest {
         }
 
     @Test
-    fun `test validatePhoneNumber returns ValidateResponseData`() =
+    fun `test validatePhoneNumber_Registration returns ValidateResponseData`() =
         mainCoroutineRule.testDispatcher.runBlockingTest {
             val expectedNumber = "111"
-            viewModel.validatePhoneNumber(expectedNumber)
-            assertThat(viewModel.phoneNumberValidationResponse.value?.phoneNumber)
+            viewModel.validatePhoneNumber_Registration(expectedNumber)
+            assertThat(viewModel.phoneNumberValidationResponse_registration.value?.phoneNumber)
                     .isEqualTo(expectedNumber)
         }
 
