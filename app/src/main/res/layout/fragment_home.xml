@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:backgroundTint="#00BCD4"
-            android:text="Take Picture"
+            android:text="@string/take_picture"
             app:iconTint="#00BCD4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

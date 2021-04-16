@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Treeo</string>
+    <string name="already_account_login">¿Ya tienes una cuenta? Iniciar sesión</string>
+    <string name="login_button_text">Acceso</string>
+    <string name="logout_button_text">Log Out</string>
+    <string name="mobile_username">Nombre de usuario</string>
+    <string name="select_lang">Elige un idioma</string>
+    <string name="language">Idioma</string>
+    <string name="first_name">Primer nombre</string>
+    <string name="last_name">Apellido</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="country">País</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="phone_number">Número de teléfono</string>
+    <string name="sign_up">Inscribirse</string>
+    <string name="continue_with_phonenumber">Continuar con el número de teléfono</string>
+    <string name="take_picture">Tomar la foto</string>
+    <string name="activate_account">Activar la cuenta</string>
+    <string name="phone_number_256_499595994">Número de teléfono(+34 499595994)</string>
+    <string name="helloworld">¡Hola Mundo!</string>
+    <string name="choose_your_language_nfirst">Elige tu idioma</string>
+    <string name="choose_language">Elija el idioma de la aplicación TREEO. siempre se puede cambiar en la configuración.</string>
+    <string name="text_continue">Continuar</string>
+    <string name="settings">ajustes</string>
+</resources>

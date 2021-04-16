@@ -74,6 +74,4 @@ class RegisterUserViewModel @ViewModelInject constructor(
             ))
         }
     }
-
-
 }

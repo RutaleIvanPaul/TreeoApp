@@ -1,18 +1,42 @@
 <resources>
     <string name="app_name">Treeo</string>
-    <string name="facebook_app_id">915429019225102</string>
+    <string name="facebook_app_id" translatable="false">915429019225102</string>
     <string name="already_account_login">Already Have an Account? Log In</string>
-    <string name="no_account_sign_up">No Account? Sign Up</string>
+    <string name="no_account_sign_up" translatable="false">No Account? Sign Up</string>
     <string name="login_button_text">Log In</string>
     <string name="logout_button_text">Log Out</string>
-    <string name="user_token">User Token</string>
-    <string name="user_id">User Id</string>
+    <string name="user_token" translatable="false">User Token</string>
+    <string name="user_id" translatable="false">User Id</string>
     <string name="mobile_username">Username</string>
-    <string name="google">Google</string>
-    <string name="facebook">Facebook</string>
-    <string name="email_password">Email_password</string>
-    <string name="loginManager">Login Manager</string>
+    <string name="google" translatable="false">Google</string>
+    <string name="facebook" translatable="false">Facebook</string>
+    <string name="email_password" translatable="false">Email_password</string>
+    <string name="loginManager" translatable="false">Login Manager</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="text_crash">SIMULATE CRASH</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="text_crash" translatable="false">SIMULATE CRASH</string>
+    <string name="select_lang">Choose a language</string>
+    <string name="language">English</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="country">Country</string>
+    <string name="username">Username</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="continue_with_phonenumber">Continue with phonenumber</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="activate_account" translatable="false">Activate Account</string>
+    <string name="otp_code" translatable="false">OTP Code</string>
+    <string name="phone_number_256_499595994">Phone Number(+256 499595994)</string>
+    <string name="helloworld">Hello World!</string>
+    <string name="choose_your_language_nfirst">Choose your Language\nfirst</string>
+    <string name="choose_language">Choose the TREEO App language.You\ncan alwalys change it in settings.</string>
+    <string name="english" translatable="false">English</string>
+    <string name="luganda" translatable="false">Luganda</string>
+    <string name="bahasa" translatable="false">Bahasa</string>
+    <string name="spanish" translatable="false">Spanish</string>
+    <string name="text_continue">Continue</string>
+    <string name="settings">settings</string>
 </resources>
