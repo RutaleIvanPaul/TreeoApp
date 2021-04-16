@@ -61,11 +61,8 @@ class FakeMainRepository : IMainRepository {
         )
     }
 
-    private fun returnFakeOTP():PhoneNumberOTPResponse{
-        return PhoneNumberOTPResponse(
-            phoneNumber = "111",
-            status = "ok"
-        )
+    private fun returnFakeOTP():String{
+        return "OTP Sent"
     }
 
     private fun returnFakeRegisteredMobileUser(): RegisteredMobileUser{
@@ -93,6 +90,15 @@ class FakeMainRepository : IMainRepository {
         return LogoutResponse("user logged out", 200)
     }
 
+    private fun returnFakeSmsLoginResponse(): SmsLoginResponse? {
+        return SmsLoginResponse(
+            email = "email" ,
+            token = "token",
+            userId = 1,
+            username = "username"
+        )
+    }
+
     override suspend fun logout(token: String): LogoutResponse? {
         return returnFakeLogoutResponse(token)
     }
@@ -105,10 +111,6 @@ class FakeMainRepository : IMainRepository {
         return returnFakeValidatePhoneNumberResponse()
     }
 
-    override suspend fun requestOTP(phoneNumber: String): PhoneNumberOTPResponse? {
-       return returnFakeOTP()
-    }
-
     override suspend fun registerMobileUser(mobileUser: RegisterMobileUser): RegisteredMobileUser? {
         return returnFakeRegisteredMobileUser()
     }
@@ -116,4 +118,13 @@ class FakeMainRepository : IMainRepository {
     override suspend fun validateOTPRegistration(validateOTPRegistration: ValidateOTPRegistration): ValidateOTPRegistrationResponse? {
        return returnFakeOTPRegistrationResponse()
     }
+
+    override suspend fun requestOTP(phoneNumber: RequestOTP): String? {
+        return returnFakeOTP()
+    }
+
+    override suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse? {
+        return returnFakeSmsLoginResponse()
+    }
+
 }

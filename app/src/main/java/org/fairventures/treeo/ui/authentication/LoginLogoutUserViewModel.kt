@@ -21,8 +21,11 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
     private val _logoutResponse = MutableLiveData<LogoutResponse>()
     val logoutResponse: LiveData<LogoutResponse> get() = _logoutResponse
 
-    private val _phonenumberOTPResponse = MutableLiveData<PhoneNumberOTPResponse>()
-    val phoneNumberOTPResponse: LiveData<PhoneNumberOTPResponse> get() = _phonenumberOTPResponse
+    private val _phonenumberOTPResponse = MutableLiveData<String>()
+    val phoneNumberOTPResponse: LiveData<String> get() = _phonenumberOTPResponse
+
+    private val _smsLoginResponse = MutableLiveData<SmsLoginResponse>()
+    val smsLoginResponse: LiveData<SmsLoginResponse> get() = _smsLoginResponse
 
     fun login(email: String, password: String) {
         viewModelScope.launch(dispatcher.io()) {
@@ -42,9 +45,17 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
         }
     }
 
-    fun requestOTP(phoneNumber: String) {
+    fun requestOTP(phoneNumber: RequestOTP) {
         viewModelScope.launch(dispatcher.io()) {
             _phonenumberOTPResponse.postValue(mainRepository.requestOTP(phoneNumber))
         }
     }
+
+    fun loginWithOTP(loginWithOTP: LoginWithOTP) {
+        viewModelScope.launch(dispatcher.io()) {
+            _smsLoginResponse.postValue(mainRepository.loginWithOTP(loginWithOTP))
+        }
+    }
+
+
 }

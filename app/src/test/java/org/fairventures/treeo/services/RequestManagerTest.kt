@@ -127,4 +127,23 @@ class RequestManagerTest {
         assertThat(response?.message).isEqualTo("User Active")
     }
 
+    @Test
+    fun `test requestOTP success` () = runBlocking {
+        val requestOTP = RequestOTP(
+            "+123"
+        )
+        val response = requestManager.requestOTP(requestOTP)
+        assertThat(response).isEqualTo("OTP Sent")
+    }
+
+    @Test
+    fun `test loginWithOTP success`() = runBlocking {
+        val loginWithOTP = LoginWithOTP(
+            "+123",
+            "123"
+        )
+        val response = requestManager.loginWithOTP(loginWithOTP)
+        assertThat(response?.token).isEqualTo("token")
+    }
+
 }

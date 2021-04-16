@@ -76,14 +76,6 @@ class FakeApiService(private val delegate: BehaviorDelegate<ApiService>) : ApiSe
         return delegate.returningResponse(baseResponse).validatePhoneNumber(phoneNumber)
     }
 
-    override suspend fun requestOTP(phoneNumber: String): Response<PhoneNumberOTPResponse> {
-        val phoneNumberOTPResponse = PhoneNumberOTPResponse(
-            phoneNumber = "123",
-            status = "true"
-        )
-        return delegate.returningResponse(phoneNumberOTPResponse).requestOTP(phoneNumber)
-    }
-
     override suspend fun registerMobileUser(mobileUser: RegisterMobileUser): Response<RegisteredMobileUser> {
         val registeredMobileUser = RegisteredMobileUser(
                 email = "",
@@ -104,4 +96,28 @@ class FakeApiService(private val delegate: BehaviorDelegate<ApiService>) : ApiSe
 
         return delegate.returningResponse(validateOTPRegistrationResponse).validateOTPRegistration(validateOTPRegistration)
     }
+
+    override suspend fun requestOTP(phoneNumber: RequestOTP): Response<BaseResponse<String>> {
+        val baseResponse = BaseResponse(
+            "",
+            "OTP Sent"
+        )
+        return delegate.returningResponse(baseResponse).requestOTP(phoneNumber)
+    }
+
+    override suspend fun loginWitOTP(loginWithOTP: LoginWithOTP): Response<BaseResponse<SmsLoginResponse>> {
+        val smsLoginResponse = SmsLoginResponse(
+             email = "email" ,
+                token = "token",
+                userId = 1,
+                username = "username"
+        )
+
+        val baseResponse = BaseResponse(
+            smsLoginResponse,
+            "message"
+        )
+        return delegate.returningResponse(baseResponse).loginWitOTP(loginWithOTP)
+    }
+
 }

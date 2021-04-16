@@ -28,7 +28,7 @@ class MainRepository @Inject constructor(
     override suspend fun validatePhoneNumber(phoneNumber: String)=
         requestManager.validatePhoneNumber(phoneNumber)
 
-    override suspend fun requestOTP(phoneNumber: String): PhoneNumberOTPResponse? =
+    override suspend fun requestOTP(phoneNumber: RequestOTP): String? =
         requestManager.requestOTP(phoneNumber)
 
     override suspend fun registerMobileUser(mobileUser: RegisterMobileUser) =
@@ -38,6 +38,10 @@ class MainRepository @Inject constructor(
             requestManager.validateOTPRegistration(
                     validateOTPRegistration
             )
+
+    override suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse? =
+        requestManager.loginWithOTP(loginWithOTP)
+
 
 
 }
