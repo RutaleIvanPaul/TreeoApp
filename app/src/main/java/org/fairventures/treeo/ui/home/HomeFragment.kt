@@ -6,12 +6,14 @@ import android.app.ActivityManager
 import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.Context.CAMERA_SERVICE
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.hardware.SensorManager
 import android.hardware.camera2.CameraManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -33,6 +35,10 @@ import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.vmadalin.easypermissions.EasyPermissions
+import com.vmadalin.easypermissions.dialogs.DEFAULT_SETTINGS_REQ_CODE
+import com.vmadalin.easypermissions.dialogs.SettingsDialog
+import com.vmadalin.easypermissions.models.PermissionRequest
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -53,7 +59,7 @@ typealias LumaListener = (luma: Double) -> Unit
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -81,20 +87,33 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
         FirebaseCrashlytics.getInstance().setUserId(getUserId().toString())
 
-        // Request camera permissions
-        if (allPermissionsGranted()) {
-            Toast.makeText(requireContext(),"Permissions Granted",Toast.LENGTH_LONG).show()
-            startCamera()
-        } else {
-            ActivityCompat.requestPermissions(
-                requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
-        }
-
         outputDirectory = getOutputDirectory()
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
 
+    }
+
+    private fun checkAndRequestCameraPermissions() {
+        if (allPermissionsGranted()) {
+            Toast.makeText(requireContext(), "Permissions Granted", Toast.LENGTH_LONG).show()
+            startCamera()
+        } else {
+            if (isOSVersionMorHigher()) {
+                EasyPermissions.requestPermissions(
+                    this,
+                    PermissionRequest.Builder(requireContext())
+                        .code(REQUEST_CODE_PERMISSIONS)
+                        .perms(arrayOf(REQUIRED_PERMISSIONS))
+                        .rationale("Please Grant Permission to use your Camera")
+                        .build()
+                )
+            } else {
+                ActivityCompat.requestPermissions(
+                    requireActivity(), arrayOf(REQUIRED_PERMISSIONS), REQUEST_CODE_PERMISSIONS
+                )
+            }
+        }
     }
 
 
@@ -108,6 +127,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Request camera permissions
+        checkAndRequestCameraPermissions()
+
         welcomeMessage.text = arguments?.getString("username")
 
         getDeviceInformation()
@@ -116,6 +138,17 @@ class HomeFragment : Fragment() {
 
         setObservers()
         simulateCrash()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == DEFAULT_SETTINGS_REQ_CODE) {
+            if (allPermissionsGranted()){
+                Toast.makeText(requireContext(), "Permissions Granted", Toast.LENGTH_LONG).show()
+                startCamera()
+            }
+
+        }
     }
 
     private fun setupUI() {
@@ -129,33 +162,37 @@ class HomeFragment : Fragment() {
     }
 
     private fun takePhoto() {
-        // Get a stable reference of the modifiable image capture use case
-        val imageCapture = imageCapture ?: return
+        if(allPermissionsGranted()){
+            // Get a stable reference of the modifiable image capture use case
+            val imageCapture = imageCapture ?: return
 
-        // Create time-stamped output file to hold the image
-        val photoFile = File(
-            outputDirectory,
-            SimpleDateFormat(FILENAME_FORMAT, Locale.US
-            ).format(System.currentTimeMillis()) + "||" +getUserId().toString()+ ".jpg")
+            // Create time-stamped output file to hold the image
+            val photoFile = File(
+                outputDirectory,
+                getUserId().toString()+ ".jpg")
 
-        // Create output options object which contains file + metadata
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+            // Create output options object which contains file + metadata
+            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
-        // Set up image capture listener, which is triggered after photo has
-        // been taken
-        imageCapture.takePicture(
-            outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
-                override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
-                }
+            // Set up image capture listener, which is triggered after photo has
+            // been taken
+            imageCapture.takePicture(
+                outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
+                    override fun onError(exc: ImageCaptureException) {
+                        Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
+                    }
 
-                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    val savedUri = Uri.fromFile(photoFile)
-                    val msg = "Photo capture succeeded: $savedUri"
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
-                    Log.d(TAG, msg)
-                }
-            })
+                    override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                        val savedUri = Uri.fromFile(photoFile)
+                        val msg = "Photo capture succeeded: $savedUri"
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                        Log.d(TAG, msg)
+                    }
+                })
+        }
+        else{
+            checkAndRequestCameraPermissions()
+        }
     }
 
     private fun startCamera() {
@@ -195,10 +232,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun getOutputDirectory(): File {
-        val mediaDir = requireActivity().externalMediaDirs.firstOrNull()?.let {
-            File(it, resources.getString(R.string.app_name)).apply { mkdirs() } }
-        return if (mediaDir != null && mediaDir.exists())
-            mediaDir else requireActivity().filesDir
+        val contextWrapper = ContextWrapper(requireActivity().applicationContext)
+        val directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE)
+        val file = File(directory, SimpleDateFormat(FILENAME_FORMAT, Locale.US
+        ).format(System.currentTimeMillis())).apply { mkdir() }
+
+        return file
     }
 
     private fun setObservers() {
@@ -234,21 +273,52 @@ class HomeFragment : Fragment() {
         requestCode: Int, permissions: Array<String>, grantResults:
         IntArray) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
-                Toast.makeText(requireContext(),"Permissions Granted",Toast.LENGTH_LONG).show()
-                startCamera()
-            } else {
-                Toast.makeText(requireContext(),
-                    "Permissions not granted by the user.",
-                    Toast.LENGTH_SHORT).show()
-                requireActivity().finish()
+            if(isOSVersionMorHigher()){
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+                EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+            }
+            else{
+                if (allPermissionsGranted()) {
+                    Toast.makeText(requireContext(),"Permissions Granted",Toast.LENGTH_LONG).show()
+                    startCamera()
+                } else {
+                    Toast.makeText(requireContext(),
+                        "Permissions not granted by the user.",
+                        Toast.LENGTH_SHORT).show()
+                    requireActivity().finish()
+                }
             }
         }
     }
 
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
-        ContextCompat.checkSelfPermission(
-            requireContext(), it) == PackageManager.PERMISSION_GRANTED
+    private fun allPermissionsGranted(): Boolean{
+        if (isOSVersionMorHigher()){
+            return EasyPermissions.hasPermissions(requireContext(), REQUIRED_PERMISSIONS)
+        }else {
+            return ContextCompat.checkSelfPermission(
+                    requireContext(), REQUIRED_PERMISSIONS
+                ) == PackageManager.PERMISSION_GRANTED
+
+        }
+    }
+
+    private fun isOSVersionMorHigher():Boolean{
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+    }
+
+
+    override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
+        Toast.makeText(requireContext(), "Permissions Not Granted", Toast.LENGTH_LONG).show()
+        // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
+        // This will display a dialog directing them to enable the permission in app settings.
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, REQUIRED_PERMISSIONS)) {
+            SettingsDialog.Builder(requireContext()).build().show()
+        }
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
+        Toast.makeText(requireContext(), "Permissions Granted", Toast.LENGTH_LONG).show()
+        startCamera()
     }
 
     override fun onDestroy() {
@@ -339,6 +409,6 @@ class HomeFragment : Fragment() {
         private const val TAG = "CameraXBasic"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        private val REQUIRED_PERMISSIONS = Manifest.permission.CAMERA
     }
 }

@@ -108,9 +108,11 @@ class SMSCodeFragment : Fragment() {
         loginLogoutUserViewModel.phoneNumberOTPResponse.observe(
             viewLifecycleOwner,
             Observer { otpRequestResponse ->
-                hideProgressBar()
-                smsCode.text = otpRequestResponse
-                Log.d("PhoneNumberResponse", otpRequestResponse)
+                if(otpRequestResponse != null) {
+                    hideProgressBar()
+                    smsCode.text = otpRequestResponse
+                    Log.d("PhoneNumberResponse", otpRequestResponse)
+                }
             }
         )
 
@@ -120,7 +122,9 @@ class SMSCodeFragment : Fragment() {
                 hideProgressBar()
                 if (smsLoginResponse != null){
                     smsCode.text = "Success ${smsLoginResponse.username}"
+                    saveMobileUserDetails(smsLoginResponse.username)
                     Log.d("SMS Login Response",smsLoginResponse.token)
+                    openHomePage()
                 }
             }
         )
