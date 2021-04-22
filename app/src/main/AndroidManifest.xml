@@ -19,7 +19,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Treeo">
+        android:theme="@style/Theme.Treeo.NoActionBar">
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -28,7 +28,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fileprovider"></meta-data>
+                android:resource="@xml/fileprovider" />
         </provider>
 
         <meta-data
@@ -47,13 +47,14 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".util.SMSBroadcastReceiver" android:exported="true"
+        <receiver
+            android:name=".util.SMSBroadcastReceiver"
+            android:exported="true"
             android:permission="com.google.android.gms.auth.api.phone.permission.SEND">
             <intent-filter>
-                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED"/>
+                <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

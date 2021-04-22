@@ -65,7 +65,6 @@ class RegistrationFragment : Fragment() {
         phoneNumberLogin.setOnClickListener {
             openSMSValidationPage()
         }
-
     }
 
     private fun setObservers() {
@@ -98,29 +97,6 @@ class RegistrationFragment : Fragment() {
                 }
             }
         )
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        //Check if user has signed in before.
-        val account = GoogleSignIn.getLastSignedInAccount(requireContext())
-
-        val accessToken: AccessToken? = AccessToken.getCurrentAccessToken()
-        val isLoggedIn = accessToken != null && !accessToken.isExpired
-
-        val userToken = sharedPref.getString(getString(R.string.user_token), "")
-
-        if (!sharedPref.getString(getString(R.string.loginManager), null).isNullOrEmpty()) {
-            if (account != null) {
-                Log.d("Sign In Details", account.idToken!!)
-                openHome(account.displayName!!)
-            } else if (isLoggedIn) {
-                openHome(Profile.getCurrentProfile().name)
-            } else if (!userToken.isNullOrBlank()) {
-                openHome(userToken)
-            }
-        }
     }
 
     private fun signInWithGoogle() {

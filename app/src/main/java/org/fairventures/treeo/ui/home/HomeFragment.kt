@@ -350,8 +350,16 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
     private fun logoutFromBackend() {
         with(sharedPref.edit()) {
             val token = sharedPref.getString(getString(R.string.user_token), null)
+            val mobile_username = sharedPref.getString(getString(R.string.mobile_username), null)
             if (!token.isNullOrEmpty()) {
                 loginLogoutUserViewModel.logout(token)
+            }
+            else if(!mobile_username.isNullOrEmpty()){
+                with(sharedPref.edit()) {
+                    remove(getString(R.string.mobile_username))
+                    apply()
+                }
+                backToMain()
             }
         }
     }

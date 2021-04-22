@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Treeo</string>
+    <string name="select_lang">Kyusa olulimi</string>
+    <string name="first_name">Erinya Elisooka</string>
+    <string name="last_name">Erinya Elisembayo</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="country">Egwanga</string>
+    <string name="username">Erinya</string>
+    <string name="phone_number">Ennamba Yesimu</string>
+    <string name="sign_up">Wewandise</string>
+    <string name="continue_with_phonenumber">Weyongereyo ne nnamba yesimu</string>
+    <string name="take_picture">Kuba ekifannanyi</string>
+    <string name="activate_account">Gulawo Accounta</string>
+    <string name="phone_number_256_499595994">Ennamba Yesimu(+256 499595994)</string>
+    <string name="login_button_text">Yingira</string>
+    <string name="logout_button_text">Fuluma</string>
+    <string name="language">Olimini</string>
+    <string name="helloworld">Mbalamusiza  Abayeyo</string>
+    <string name="already_account_login">Woba Olina accounta, yingirira wano</string>
+    <string name="choose_your_language_nfirst">Sooka okyuse olulimi lyo</string>
+    <string name="choose_language">Kyusa olulimi lya TREEO App. Osobola okulukyusa eddako bwoba oyagadde.</string>
+    <string name="text_continue">Ewaddako</string>
+    <string name="settings">settings</string>
+</resources>
