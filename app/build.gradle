@@ -163,4 +163,7 @@ dependencies {
     //Easy Permissions KTX
     implementation 'com.vmadalin:easypermissions-ktx:0.1.0'
 
+    //Location
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+
 }

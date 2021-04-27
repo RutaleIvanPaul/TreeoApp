@@ -1,20 +1,22 @@
 package org.fairventures.treeo.ui.home
 
 import android.Manifest
-import android.app.Activity
 import android.app.ActivityManager
 import android.content.Context
-import android.content.Context.ACTIVITY_SERVICE
-import android.content.Context.CAMERA_SERVICE
+import android.content.Context.*
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.hardware.SensorManager
 import android.hardware.camera2.CameraManager
+import android.location.Location
+import android.location.LocationManager
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +36,7 @@ import androidx.navigation.fragment.findNavController
 import com.facebook.login.LoginManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.location.*
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.DEFAULT_SETTINGS_REQ_CODE
@@ -54,8 +57,6 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import javax.inject.Inject
-
-typealias LumaListener = (luma: Double) -> Unit
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
@@ -83,6 +84,11 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
     private lateinit var outputDirectory: File
     private lateinit var cameraExecutor: ExecutorService
 
+    private var locationManager : LocationManager? = null
+    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    lateinit var locationRequest: LocationRequest
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseCrashlytics.getInstance().setUserId(getUserId().toString())
@@ -90,6 +96,10 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
         outputDirectory = getOutputDirectory()
 
         cameraExecutor = Executors.newSingleThreadExecutor()
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        locationManager = requireActivity().getSystemService(LOCATION_SERVICE) as LocationManager
 
 
     }
@@ -104,13 +114,13 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
                     this,
                     PermissionRequest.Builder(requireContext())
                         .code(REQUEST_CODE_PERMISSIONS)
-                        .perms(arrayOf(REQUIRED_PERMISSIONS))
+                        .perms(REQUIRED_PERMISSIONS)
                         .rationale("Please Grant Permission to use your Camera")
                         .build()
                 )
             } else {
                 ActivityCompat.requestPermissions(
-                    requireActivity(), arrayOf(REQUIRED_PERMISSIONS), REQUEST_CODE_PERMISSIONS
+                    requireActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
                 )
             }
         }
@@ -143,7 +153,7 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == DEFAULT_SETTINGS_REQ_CODE) {
-            if (allPermissionsGranted()){
+            if (allPermissionsGranted() && isLocationEnabled(locationManager!!)){
                 Toast.makeText(requireContext(), "Permissions Granted", Toast.LENGTH_LONG).show()
                 startCamera()
             }
@@ -162,22 +172,23 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
     }
 
     private fun takePhoto() {
-        if(allPermissionsGranted()){
-            // Get a stable reference of the modifiable image capture use case
-            val imageCapture = imageCapture ?: return
+        if(allPermissionsGranted()) {
+            if (isLocationEnabled(locationManager!!)) {
+                // Get a stable reference of the modifiable image capture use case
+                val imageCapture = imageCapture ?: return
 
-            // Create time-stamped output file to hold the image
-            val photoFile = File(
-                outputDirectory,
-                getUserId().toString()+ ".jpg")
+                // Create time-stamped output file to hold the image
+                val photoFile = File(
+                        outputDirectory,
+                        getUserId().toString() + ".jpg")
 
-            // Create output options object which contains file + metadata
-            val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+                // Create output options object which contains file + metadata
+                val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
-            // Set up image capture listener, which is triggered after photo has
-            // been taken
-            imageCapture.takePicture(
-                outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
+                // Set up image capture listener, which is triggered after photo has
+                // been taken
+                imageCapture.takePicture(
+                        outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
                     override fun onError(exc: ImageCaptureException) {
                         Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                     }
@@ -187,11 +198,123 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
                         val msg = "Photo capture succeeded: $savedUri"
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                         Log.d(TAG, msg)
+
+                        getMetadataOfSavedImage(photoFile)
                     }
                 })
+            }
+            else{
+                checkAndRequestLocation()
+            }
         }
         else{
             checkAndRequestCameraPermissions()
+        }
+    }
+
+    private fun checkAndRequestLocation() {
+        Toast.makeText(requireContext(),"Please Turn on Location first",Toast.LENGTH_LONG).show()
+    }
+
+    private fun getMetadataOfSavedImage(photofile: File) {
+        val exifInterface = ExifInterface(photofile.absolutePath)
+        val tagsToCheck = arrayOf(
+                ExifInterface.TAG_DATETIME,
+                ExifInterface.TAG_FLASH,
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.TAG_IMAGE_WIDTH,
+                ExifInterface.TAG_IMAGE_LENGTH
+        )
+
+
+        getLastLocation()
+
+        //Incase we need to keep constant track of locations
+
+//        try {
+//            // Request location updates
+//            locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, locationListener)
+//        } catch(ex: SecurityException) {
+//            Log.d("EXIF ATTRIBUTES", "Security Exception, no location available")
+//        }
+
+        for (tag in tagsToCheck) {
+            exifInterface.getAttribute(tag)?.also {
+                Log.d("EXIF ATTRIBUTES", it)
+            }
+        }
+    }
+
+    private fun isLocationEnabled(locationManager: LocationManager):Boolean{
+        return locationManager?.isProviderEnabled(LocationManager.GPS_PROVIDER)
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    fun getLastLocation(){
+        if (allPermissionsGranted()) {
+
+            if (isLocationEnabled(locationManager!!)) {
+                try {
+                    fusedLocationProviderClient.lastLocation.addOnCompleteListener { task ->
+                        var location: Location? = task.result
+                        if (location == null) {
+                            newLocationData()
+                        } else {
+                            Log.d("Exif Location", "You Current Location is : Long: ${location.longitude} , Lat: ${location.latitude}, Accuracy ${location.accuracy} meters")
+                            val result = FloatArray(1)
+                            Location.distanceBetween(
+                                    location.latitude,
+                                    location.longitude,
+                                    0.3121138,
+                                    32.5859096,
+                                    result
+                            )
+                            Log.d("Exif Distance", "${result[0]}meters")
+                        }
+                    }
+                }
+                catch(e:SecurityException){
+                    Log.d("Exif Exception",e.message.toString())
+                }
+            } else {
+                Log.d("Exif Location","Location not turned on.")
+                Toast.makeText(requireContext(), "Please Turn on Your device Location", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+
+    fun newLocationData(){
+        var locationRequest =  LocationRequest()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.interval = 0
+        locationRequest.fastestInterval = 0
+        locationRequest.numUpdates = 1
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        if (
+                ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                )
+                !=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+                !=
+                PackageManager.PERMISSION_GRANTED
+        ) {
+
+            return
+        }
+        fusedLocationProviderClient!!.requestLocationUpdates(
+                locationRequest,locationCallback, Looper.myLooper()
+        )
+    }
+
+
+    private val locationCallback = object : LocationCallback(){
+        override fun onLocationResult(locationResult: LocationResult) {
         }
     }
 
@@ -293,13 +416,22 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
 
     private fun allPermissionsGranted(): Boolean{
         if (isOSVersionMorHigher()){
-            return EasyPermissions.hasPermissions(requireContext(), REQUIRED_PERMISSIONS)
+            REQUIRED_PERMISSIONS.forEach {
+                if (!EasyPermissions.hasPermissions(requireContext(), it)){
+                    return false
+                }
+            }
         }else {
-            return ContextCompat.checkSelfPermission(
-                    requireContext(), REQUIRED_PERMISSIONS
-                ) == PackageManager.PERMISSION_GRANTED
-
+            REQUIRED_PERMISSIONS.forEach {
+                if(ContextCompat.checkSelfPermission(
+                                requireContext(), it
+                        ) != PackageManager.PERMISSION_GRANTED){
+                    return false
+                }
+            }
         }
+
+        return true
     }
 
     private fun isOSVersionMorHigher():Boolean{
@@ -311,8 +443,10 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
         Toast.makeText(requireContext(), "Permissions Not Granted", Toast.LENGTH_LONG).show()
         // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
         // This will display a dialog directing them to enable the permission in app settings.
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, REQUIRED_PERMISSIONS)) {
-            SettingsDialog.Builder(requireContext()).build().show()
+        REQUIRED_PERMISSIONS.forEach {
+            if (EasyPermissions.somePermissionPermanentlyDenied(this, it)) {
+                SettingsDialog.Builder(requireContext()).build().show()
+            }
         }
     }
 
@@ -417,6 +551,19 @@ class HomeFragment : Fragment(), EasyPermissions.PermissionCallbacks  {
         private const val TAG = "CameraXBasic"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS = Manifest.permission.CAMERA
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        )
     }
+
+    //define the listener for incase we need to keep track of locations
+//    private val locationListener: LocationListener = object : LocationListener {
+//        override fun onLocationChanged(location: Location) {
+//            Log.d ("EXIF LOcation","" + location.longitude + ":" + location.latitude)
+//        }
+//        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
+//        override fun onProviderEnabled(provider: String) {}
+//        override fun onProviderDisabled(provider: String) {}
+//    }
 }

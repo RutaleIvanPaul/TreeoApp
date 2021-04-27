@@ -93,7 +93,7 @@ class DeviceInfoUtils(var context: Context, var dispactcher: IDispatcherProvider
         } else {
             storage = "protected"
             card = "protected"
-            Log.d("Device ValidateResponseData", "Android OS Q and above is protected")
+            Log.d("DeviceValidateResponse", "Android OS Q and above is protected")
         }
 
 
