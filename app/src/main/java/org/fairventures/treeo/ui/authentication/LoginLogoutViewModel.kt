@@ -10,7 +10,7 @@ import org.fairventures.treeo.models.*
 import org.fairventures.treeo.repository.IMainRepository
 import org.fairventures.treeo.util.IDispatcherProvider
 
-class LoginLogoutUserViewModel @ViewModelInject constructor(
+class LoginLogoutViewModel @ViewModelInject constructor(
     private val mainRepository: IMainRepository,
     private val dispatcher: IDispatcherProvider
 ) : ViewModel() {
@@ -21,11 +21,17 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
     private val _logoutResponse = MutableLiveData<LogoutResponse>()
     val logoutResponse: LiveData<LogoutResponse> get() = _logoutResponse
 
-    private val _phonenumberOTPResponse = MutableLiveData<String>()
-    val phoneNumberOTPResponse: LiveData<String> get() = _phonenumberOTPResponse
+    private val _phoneNumberOTPResponse = MutableLiveData<String>()
+    val phoneNumberOTPResponse: LiveData<String> get() = _phoneNumberOTPResponse
 
     private val _smsLoginResponse = MutableLiveData<SmsLoginResponse>()
     val smsLoginResponse: LiveData<SmsLoginResponse> get() = _smsLoginResponse
+
+    private val _loginStep = MutableLiveData(0)
+    val loginStep: LiveData<Int> get() = _loginStep
+
+    private val _phoneNumber = MutableLiveData<String>()
+    val phoneNumber: LiveData<String> get() = _phoneNumber
 
     fun login(email: String, password: String) {
         viewModelScope.launch(dispatcher.io()) {
@@ -47,7 +53,7 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
 
     fun requestOTP(phoneNumber: RequestOTP) {
         viewModelScope.launch(dispatcher.io()) {
-            _phonenumberOTPResponse.postValue(mainRepository.requestOTP(phoneNumber))
+            _phoneNumberOTPResponse.postValue(mainRepository.requestOTP(phoneNumber))
         }
     }
 
@@ -57,5 +63,15 @@ class LoginLogoutUserViewModel @ViewModelInject constructor(
         }
     }
 
+    fun loginContinue() {
+        _loginStep.value = loginStep.value!!.plus(1)
+    }
 
+    fun loginBack() {
+        _loginStep.value = loginStep.value?.minus(1)
+    }
+
+    fun setPhoneNumber(phoneNumber: String) {
+        _phoneNumber.value = phoneNumber
+    }
 }

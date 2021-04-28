@@ -12,7 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class RegisterUserViewModelTest {
+class RegistrationViewModelTest {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -20,11 +20,11 @@ class RegisterUserViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var viewModel: RegisterUserViewModel
+    private lateinit var viewModel: RegistrationViewModel
 
     @Before
     fun setup() {
-        viewModel = RegisterUserViewModel(
+        viewModel = RegistrationViewModel(
             FakeMainRepository(),
             mainCoroutineRule.testDispatcherProvider
         )
@@ -88,8 +88,8 @@ class RegisterUserViewModelTest {
     fun `test validatePhoneNumber_Registration returns ValidateResponseData`() =
         mainCoroutineRule.testDispatcher.runBlockingTest {
             val expectedNumber = "111"
-            viewModel.validatePhoneNumber_Registration(expectedNumber)
-            assertThat(viewModel.phoneNumberValidationResponse_registration.value?.phoneNumber)
+            viewModel.validatePhoneNumberRegistration(expectedNumber)
+            assertThat(viewModel.phoneNumberValidationResponseRegistration.value?.phoneNumber)
                     .isEqualTo(expectedNumber)
         }
 

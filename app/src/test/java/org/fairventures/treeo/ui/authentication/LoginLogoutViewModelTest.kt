@@ -15,7 +15,7 @@ import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class LoginLogoutUserViewModelTest {
+class LoginLogoutViewModelTest {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -23,11 +23,11 @@ class LoginLogoutUserViewModelTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
-    private lateinit var viewModel: LoginLogoutUserViewModel
+    private lateinit var viewModel: LoginLogoutViewModel
 
     @Before
     fun setUp() {
-        viewModel = LoginLogoutUserViewModel(
+        viewModel = LoginLogoutViewModel(
             FakeMainRepository(),
             mainCoroutineRule.testDispatcherProvider
         )

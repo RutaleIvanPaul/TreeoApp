@@ -35,7 +35,6 @@ object AppModule {
     @Provides
     fun providesDispatcherProvider() = DefaultDispatcherProvider() as IDispatcherProvider
 
-
     @Singleton
     @Provides
     fun providesRequestManager(apiService: ApiService) =
