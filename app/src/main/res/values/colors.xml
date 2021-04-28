@@ -9,5 +9,14 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#00802B</color>
     <color name="gray">#646567</color>
-    <color name="bg_color">#FFFDF9</color>
+    <color name="button_disabled">#50F2C94C</color>
+    <color name="app_green">#00802B</color>
+    <color name="app_green_darker">#013712</color>
+    <color name="mint_green">#E9F3EC</color>
+    <color name="disabled_green_text">#7B9684</color>
+    <color name="disabled_green">#E9F3EC</color>
+    <color name="app_green_20">#2000802B</color>
+    <color name="app_orange">#DF4F1E</color>
+    <color name="app_orange_20">#20DF4F1E</color>
+    <color name="app_background_color">#FFFDF9</color>
 </resources>

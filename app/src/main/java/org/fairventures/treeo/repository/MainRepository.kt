@@ -25,7 +25,7 @@ class MainRepository @Inject constructor(
     override suspend fun postDeviceData(deviceInformation: DeviceInformation, userToken: String) =
         requestManager.postDeviceData(deviceInformation, userToken)
 
-    override suspend fun validatePhoneNumber(phoneNumber: String)=
+    override suspend fun validatePhoneNumber(phoneNumber: String) =
         requestManager.validatePhoneNumber(phoneNumber)
 
     override suspend fun requestOTP(phoneNumber: RequestOTP): String? =
@@ -35,13 +35,12 @@ class MainRepository @Inject constructor(
         requestManager.registerMobileUser(mobileUser)
 
     override suspend fun validateOTPRegistration(validateOTPRegistration: ValidateOTPRegistration) =
-            requestManager.validateOTPRegistration(
-                    validateOTPRegistration
-            )
+        requestManager.validateOTPRegistration(
+            validateOTPRegistration
+        )
 
     override suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse? =
         requestManager.loginWithOTP(loginWithOTP)
-
 
 
 }

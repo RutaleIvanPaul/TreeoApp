@@ -190,8 +190,7 @@ class RequestManager @Inject constructor(
     suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse? {
         var items: SmsLoginResponse? = null
 
-        val response =
-            apiService.loginWitOTP(loginWithOTP)
+        val response = apiService.loginWitOTP(loginWithOTP)
 
         if (response.isSuccessful) {
             items = response.body()?.data
