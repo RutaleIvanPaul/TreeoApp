@@ -13,8 +13,7 @@
     <string name="email_password" translatable="false">Email_password</string>
     <string name="loginManager" translatable="false">Login Manager</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
-    <string name="text_crash" translatable="false">SIMULATE CRASH</string>
+
     <string name="select_lang">Choose a language</string>
     <string name="language">English</string>
     <string name="first_name">First Name</string>
@@ -27,16 +26,39 @@
     <string name="sign_up">Sign Up</string>
     <string name="continue_with_phonenumber">Continue with phonenumber</string>
     <string name="take_picture">Take Picture</string>
-    <string name="activate_account" translatable="false">Activate Account</string>
+    <string name="activate_account">Activate Account</string>
     <string name="otp_code" translatable="false">OTP Code</string>
     <string name="phone_number_256_499595994">Phone Number(+256 499595994)</string>
     <string name="helloworld">Hello World!</string>
-    <string name="choose_your_language_nfirst">Choose your Language\nfirst</string>
-    <string name="choose_language">Choose the TREEO App language.You\ncan alwalys change it in settings.</string>
+    <string name="text_choose_language">Choose Your Language First</string>
+    <string name="hint_choose_language">Choose the TREEO APP language. You can always change it in settings.</string>
     <string name="english" translatable="false">English</string>
     <string name="luganda" translatable="false">Luganda</string>
     <string name="bahasa" translatable="false">Bahasa</string>
     <string name="spanish" translatable="false">Spanish</string>
-    <string name="text_continue">Continue</string>
     <string name="settings">settings</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="first_time_user" translatable="false">first_time_user</string>
+    <string name="your_phone_number">Type your phone number</string>
+    <string name="pick_your_country">Pick your country</string>
+    <string name="text_continue">CONTINUE</string>
+    <string name="resend_the_passcode">RESEND THE PASSCODE</string>
+    <string name="passcode_delay_text">It might take a couple of minutes to receive the password</string>
+    <string name="camera_button_description" translatable="false">This is the camera button</string>
+    <string name="title_home">Home</string>
+    <string name="title_guide">Guide</string>
+    <string name="title_learn">Learn</string>
+    <string name="title_profile">Profile</string>
+    <string name="lorem_ipsum" translatable="false">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s</string>
+    <string name="text_back">BACK</string>
+    <string name="phone_helper_text">Type your phone number to receive a 1 time password</string>
+    <string name="otp_pass_code_message">Confirm the passcode sent to</string>
+    <string name="get_started">GET STARTED</string>
+    <string name="text_first_name">First name</string>
+    <string name="text_second_name">Second name</string>
+    <string name="text_username">Username</string>
+    <string name="text_last_name">Last name</string>
+    <string name="text_country">Country</string>
+    <string name="text_create_a_better_income">Create A Better Income By Tree Planting</string>
+    <string name="text_treeo_goal">We provide seedlings, educate and help farmers to create a sustainable income by planting trees.</string>
 </resources>

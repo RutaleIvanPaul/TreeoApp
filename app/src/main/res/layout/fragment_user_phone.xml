@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.authentication.registration.screens.UserPhoneFragment">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:maxWidth="280dp"
+        android:text="Tell TREEO a little more about yourself"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+        android:textColor="@color/app_green"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="148dp"
+        android:layout_height="4dp"
+        android:background="@drawable/line_drawable"
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView9"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView9" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:maxWidth="280dp"
+        android:text="Please fill in your phone number"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        app:layout_constraintStart_toStartOf="@+id/view4"
+        app:layout_constraintTop_toBottomOf="@+id/view4" />
+
+    <Spinner
+        android:id="@+id/userPhoneCountrySpinner"
+        style="@style/Widget.AppCompat.Light.Spinner.DropDown.ActionBar"
+        android:layout_width="160dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:hint="@string/pick_your_country"
+        android:spinnerMode="dialog"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintStart_toStartOf="@+id/appCompatTextView10"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView10" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/userPhoneTextInputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:hint="@string/your_phone_number"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userPhoneCountrySpinner">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/userPhoneInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:inputType="phone"
+            android:paddingBottom="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userPhoneLoginLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center_horizontal"
+        android:maxWidth="280dp"
+        android:text="THIS NUMBER IS ALREADY IN USE. CLICK HERE TO LOGIN INSTEAD"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textColor="@color/link_color_state_list"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/userPhoneTextInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/userPhoneTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/userPhoneTextInputLayout" />
+
+    <ProgressBar
+        android:id="@+id/userPhoneProgressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/userPhoneTextInputLayout"
+        app:layout_constraintStart_toStartOf="@+id/userPhoneTextInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/userPhoneTextInputLayout" />
+
+    <android.widget.Button
+        android:id="@+id/userPhoneBackButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/back_button_state_list"
+        android:drawableStart="@drawable/ic_arrow_back_16"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:text="@string/text_back"
+        android:textColor="@color/app_green"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.widget.Button
+        android:id="@+id/userPhoneContinueButton"
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/button_state_list"
+        android:drawableEnd="@drawable/ic_arrow_forward_16"
+        android:enabled="false"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:text="@string/text_continue"
+        android:textColor="@color/text_color_state_list"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
