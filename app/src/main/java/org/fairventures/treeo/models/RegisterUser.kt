@@ -1,11 +1,11 @@
 package org.fairventures.treeo.models
 
 data class RegisterUser(
-    var firstName: String,
-    var lastName: String,
-    var password: String,
-    var email: String,
-    var country: String,
-    var username: String,
-    var phoneNumber: String
+    var firstName: String="",
+    var lastName: String="",
+    var password: String="",
+    var email: String="",
+    var country: String="",
+    var username: String="",
+    var phoneNumber: String=""
 )

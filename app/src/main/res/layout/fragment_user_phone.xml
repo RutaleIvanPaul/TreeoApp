@@ -102,6 +102,36 @@
         app:layout_constraintStart_toStartOf="@+id/userPhoneTextInputLayout"
         app:layout_constraintTop_toBottomOf="@+id/userPhoneTextInputLayout" />
 
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="I've read and agreed with"
+        android:textSize="12sp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toTopOf="@id/userPhoneContinueButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        />
+
+    <TextView
+        android:id="@+id/text_gdpr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:clickable="true"
+        android:text="GDPR conditions"
+        android:textColor="#F44336"
+        android:textSize="12sp"
+        android:layout_marginBottom="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/checkBox"
+        app:layout_constraintBottom_toTopOf="@id/userPhoneContinueButton"
+        android:focusable="true" />
+
     <android.widget.Button
         android:id="@+id/userPhoneBackButton"
         android:layout_width="110dp"

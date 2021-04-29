@@ -10,8 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
+import android.widget.CheckBox
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -21,6 +24,7 @@ import org.fairventures.treeo.R
 import org.fairventures.treeo.adapters.CountrySpinnerAdapter
 import org.fairventures.treeo.models.Country
 import org.fairventures.treeo.models.RequestOTP
+import org.fairventures.treeo.ui.authentication.GDPRFragment
 import org.fairventures.treeo.ui.authentication.LoginLogoutViewModel
 import org.fairventures.treeo.util.errors
 import org.fairventures.treeo.util.getCountries
@@ -29,6 +33,7 @@ import org.fairventures.treeo.util.getCountries
 class PhoneAuthFragment : Fragment() {
 
     private val viewModel: LoginLogoutViewModel by activityViewModels()
+    private val TAG = "PhoneAuthFragment"
 
     val countryCode = MutableLiveData<String>()
     val phoneNumber = MutableLiveData<String>()
@@ -60,6 +65,7 @@ class PhoneAuthFragment : Fragment() {
 //            viewModel.requestOTP(RequestOTP(phoneNumber.value.toString()))
         }
     }
+
 
     private fun createSpinner() {
         val arrayAdapter = CountrySpinnerAdapter(
