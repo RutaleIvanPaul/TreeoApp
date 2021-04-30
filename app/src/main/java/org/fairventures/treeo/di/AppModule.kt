@@ -3,7 +3,6 @@ package org.fairventures.treeo.di
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,14 +69,4 @@ object AppModule {
         return applicationContext.getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE)
     }
 
-    // Configure sign-in to request the user's ID, email address, and basic
-    // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-    @Singleton
-    @Provides
-    fun providesGoogleSignInOptions() =
-        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(GOOGLE_CLIENT_ID)
-            .requestEmail()
-            .requestProfile()
-            .build()
 }

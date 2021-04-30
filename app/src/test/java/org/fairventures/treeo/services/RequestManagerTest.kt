@@ -5,145 +5,118 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
-import org.fairventures.treeo.getOrAwaitValue
-import org.fairventures.treeo.models.*
-import org.fairventures.treeo.util.BASE_URL
+import okhttp3.mockwebserver.MockWebServer
+import org.fairventures.treeo.enqueueResponse
+import org.fairventures.treeo.models.LoginWithOTP
+import org.fairventures.treeo.models.RegisterMobileUser
+import org.fairventures.treeo.models.RequestOTP
+import org.fairventures.treeo.models.ValidateOTPRegistration
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.mock.BehaviorDelegate
-import retrofit2.mock.MockRetrofit
-import retrofit2.mock.NetworkBehavior
+import java.util.concurrent.TimeUnit
 
 @ExperimentalCoroutinesApi
 class RequestManagerTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private lateinit var retrofit: Retrofit
-    private lateinit var mockRetrofit: MockRetrofit
-    private lateinit var behavior: NetworkBehavior
-    private lateinit var delegate: BehaviorDelegate<ApiService>
-    private lateinit var mockedService: FakeApiService
+    private val mockWebServer = MockWebServer()
+    private val testPhoneNumber = "+123000000000"
+
     private lateinit var requestManager: RequestManager
+    private lateinit var retrofitInstance: ApiService
+    private lateinit var client: OkHttpClient
 
     @Before
     fun setUp() {
-        // initialize retrofit
-        retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .client(OkHttpClient())
+        mockWebServer.start(8080)
+
+        client = OkHttpClient.Builder()
+            .connectTimeout(1, TimeUnit.SECONDS)
+            .readTimeout(1, TimeUnit.SECONDS)
+            .writeTimeout(1, TimeUnit.SECONDS)
+            .build()
+
+        retrofitInstance = Retrofit.Builder()
+            .baseUrl(mockWebServer.url("/").toString())
+            .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+            .create(ApiService::class.java)
 
-        // initialize mock retrofit
-        behavior = NetworkBehavior.create()
-        mockRetrofit = MockRetrofit.Builder(retrofit)
-            .networkBehavior(behavior)
-            .build()
-
-        delegate = mockRetrofit.create(ApiService::class.java)
-        mockedService = FakeApiService(delegate)
-        requestManager = RequestManager(mockedService)
+        requestManager = RequestManager(retrofitInstance)
     }
 
-    @Test
-    fun ` test create user success`() = runBlocking {
-        val user = RegisterUser(
-            "test-first",
-            "test-last",
-            "secret",
-            "test@gmail.com",
-            "country",
-            "test-name",
-            "999"
-        )
-
-        val response = requestManager.createUser(user)
-        assertThat(response?.email).isEqualTo(user.email)
-    }
-
-    @Test
-    fun `test google signup success`() = runBlocking {
-        val testToken = "thisisatesttoken"
-
-        val response = requestManager.googleSignUp(testToken)
-        assertThat(response?.email).isEqualTo("test@gmail.com")
-    }
-
-    @Test
-    fun `test facebook signup success`() = runBlocking {
-        val accessToken = "thisisatesttoken"
-
-        val response = requestManager.facebookSignUp(accessToken)
-        assertThat(response?.email).isEqualTo("test@gmail.com")
-    }
-
-    @Test
-    fun `test login success`() = runBlocking {
-        val loginDetails = LoginDetails("test@gmail.com", "secret")
-
-        val response = requestManager.login(loginDetails)
-        assertThat(response?.token).isEqualTo("thisisatesttoken")
+    @After
+    fun tearDown() {
+        mockWebServer.shutdown()
     }
 
     @Test
     fun `test logout success`() = runBlocking {
+        mockWebServer.enqueueResponse("logout_response.json", 200)
         val accessToken = "thisisatesttoken"
 
         val response = requestManager.logout(accessToken)
-        assertThat(response?.message).isEqualTo("logout success")
+        assertThat(response?.message).isEqualTo("logged out")
     }
 
     @Test
-    fun `test validatePhoneNumber failure`() = runBlocking {
-        val response = requestManager.validatePhoneNumber("123")
-        assertThat(response?.valid).isFalse()
+    fun `test validatePhoneNumber success`() = runBlocking {
+        mockWebServer.enqueueResponse("validate_phone_number_response.json", 200)
+        val response = requestManager.validatePhoneNumber(testPhoneNumber)
+        assertThat(response?.valid).isTrue()
     }
 
     @Test
     fun `test registerMobileUser success`() = runBlocking {
+        mockWebServer.enqueueResponse("register_mobile_user_response.json", 201)
         val mobileUser = RegisterMobileUser(
-                firstName = "firstname",
-                lastName = "lastname"  ,
-                country = "Uganda",
-                password = "password",
-                phoneNumber = "123",
-                username = "username"
+            firstName = "firstname",
+            lastName = "lastname",
+            country = "Uganda",
+            password = "password",
+            phoneNumber = testPhoneNumber,
+            username = "username"
         )
-        val response =  requestManager.registerMobileUser(mobileUser)
-        assertThat(response?.firstName).isEqualTo(mobileUser.firstName)
+        val response = requestManager.registerMobileUser(mobileUser)
+        assertThat(response?.firstName).isEqualTo("firstname")
     }
 
     @Test
     fun `test validateOTPRegistration success`() = runBlocking {
+        mockWebServer.enqueueResponse("validate_otp_registration_response.json", 200)
         val validateOTPRegistration = ValidateOTPRegistration(
-                code =  "123",
-                phoneNumber = "123"
+            code = "1234",
+            phoneNumber = testPhoneNumber
         )
         val response = requestManager.validateOTPRegistration(validateOTPRegistration)
-        assertThat(response?.message).isEqualTo("User Active")
+        assertThat(response?.message).isEqualTo("+123000000000 has been activated")
     }
 
     @Test
-    fun `test requestOTP success` () = runBlocking {
+    fun `test requestOTP success`() = runBlocking {
+        mockWebServer.enqueueResponse("request_otp_response.json", 200)
         val requestOTP = RequestOTP(
-            "+123"
+            testPhoneNumber
         )
         val response = requestManager.requestOTP(requestOTP)
-        assertThat(response).isEqualTo("OTP Sent")
+        assertThat(response).isEqualTo("OTP sent successfully")
     }
 
     @Test
     fun `test loginWithOTP success`() = runBlocking {
+        mockWebServer.enqueueResponse("login_with_otp_response.json", 200)
         val loginWithOTP = LoginWithOTP(
-            "+123",
+            testPhoneNumber,
             "123"
         )
         val response = requestManager.loginWithOTP(loginWithOTP)
-        assertThat(response?.token).isEqualTo("token")
+        assertThat(response?.token).isEqualTo("this_is_a_dummy_token")
     }
 
 }

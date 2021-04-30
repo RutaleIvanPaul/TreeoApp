@@ -16,9 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.facebook.login.LoginManager
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -41,10 +38,6 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var sharedPref: SharedPreferences
-
-    @Inject
-    lateinit var googleSignInOptions: GoogleSignInOptions
-
 
     @Inject
     lateinit var deviceInfoUtils: DeviceInfoUtils
@@ -140,10 +133,8 @@ class HomeFragment : Fragment() {
         val loginManager = sharedPref.getString(getString(R.string.loginManager), "")
         when {
             loginManager.equals(getString(R.string.google)) -> {
-                signOutGoogle()
             }
             loginManager.equals(getString(R.string.facebook)) -> {
-                LoginManager.getInstance().logOut()
                 logoutFromBackend()
             }
             else -> {
@@ -171,15 +162,6 @@ class HomeFragment : Fragment() {
                 backToMain()
             }
         }
-    }
-
-    private fun signOutGoogle() {
-        val mGoogleSignInClient =
-            GoogleSignIn.getClient(requireActivity(), googleSignInOptions)
-        mGoogleSignInClient.signOut()
-            .addOnCompleteListener(requireActivity()) {
-                logoutFromBackend()
-            }
     }
 
     private fun getUserToken(): String {
