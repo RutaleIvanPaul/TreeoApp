@@ -23,6 +23,6 @@
     <style name="Theme.Treeo.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">#FFFDF9</item>
+        <item name="android:statusBarColor">@color/app_green</item>
     </style>
 </resources>

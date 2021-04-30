@@ -72,6 +72,9 @@ class MainActivity : AppCompatActivity(), OnLocaleChangedListener {
                 R.id.profileFragment -> {
                     showBottomBar()
                 }
+                R.id.cameraFragment -> {
+                    hideBottomBar()
+                }
                 else -> {
                     hideBottomBar()
                 }
