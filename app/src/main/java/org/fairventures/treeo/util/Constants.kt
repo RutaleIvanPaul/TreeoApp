@@ -12,3 +12,5 @@ val SHARED_PREFERENCES_NAME = "shared_preferences"
 val errors = MutableLiveData<String>()
 const val FILE_NAME = "photo.jpg"
 const val RESOLVE_HINT = 9001
+
+const val TREEO_DATABASE_NAME = "Treeo Database"

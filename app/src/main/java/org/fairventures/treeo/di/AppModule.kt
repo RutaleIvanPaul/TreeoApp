@@ -3,6 +3,9 @@ package org.fairventures.treeo.di
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,6 +13,9 @@ import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.fairventures.treeo.db.TreeoDatabase
+import org.fairventures.treeo.db.dao.ActivityDao
+import org.fairventures.treeo.repository.DBMainRepository
 import org.fairventures.treeo.repository.IMainRepository
 import org.fairventures.treeo.repository.MainRepository
 import org.fairventures.treeo.services.ApiService
@@ -68,5 +74,36 @@ object AppModule {
     fun provideSharedPreferences(@ApplicationContext applicationContext: Context): SharedPreferences {
         return applicationContext.getSharedPreferences(SHARED_PREFERENCES_NAME, MODE_PRIVATE)
     }
+
+    // Configure sign-in to request the user's ID, email address, and basic
+    // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+    @Singleton
+    @Provides
+    fun providesGoogleSignInOptions() =
+        GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(GOOGLE_CLIENT_ID)
+            .requestEmail()
+            .requestProfile()
+            .build()
+
+    @Singleton
+    @Provides
+    fun providesTreeoDatabase(@ApplicationContext applicationContext: Context): TreeoDatabase {
+        return Room.databaseBuilder(
+            applicationContext,
+            TreeoDatabase::class.java,
+            TREEO_DATABASE_NAME
+        ).build()
+    }
+
+    @Singleton
+    @Provides
+    fun providesActivityDao(database: TreeoDatabase) =
+        database.getActivityDao()
+
+    @Singleton
+    @Provides
+    fun providesDBMainRepository(activityDao: ActivityDao) =
+        DBMainRepository(activityDao)
 
 }
