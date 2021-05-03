@@ -73,8 +73,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun insertActivity() {
-        val activity = Activity(
-            activityId = 1,
+        val activities = arrayOf(
+                Activity(
             type = " ",
             due_date = " ",
             plot = null,
@@ -99,8 +99,63 @@ class HomeFragment : Fragment() {
                     )
                 )
             )
+        ),
+                Activity(
+                        type = " ",
+                        due_date = " ",
+                        plot = null,
+                        activity_id_from_remoteDB = 3,
+                        acitivity_code = "land",
+                        questionnaire = Questionnaire(
+                                activity_id_from_remoteDB = 3,
+                                questionnaire_id_from_remote = 3,
+                                questionnaire_title = mapOf("en" to "title", "lg" to "taito"),
+                                pages = arrayOf(
+                                        Page(
+                                                pageType = "checkbox",
+                                                questionCode = "qc",
+                                                header = mapOf("en" to "this header", "lg" to "omutwe"),
+                                                description = mapOf("en" to "description", "lg" to "desc"),
+                                                options = arrayOf(
+                                                        Option(
+                                                                option_title = mapOf("en" to "this option", "lg" to "oputioni"),
+                                                                option_code = "oc"
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                ),
+                Activity(
+                        type = " ",
+                        due_date = " ",
+                        plot = null,
+                        activity_id_from_remoteDB = 2,
+                        acitivity_code = "land",
+                        questionnaire = Questionnaire(
+                                activity_id_from_remoteDB = 2,
+                                questionnaire_id_from_remote = 3,
+                                questionnaire_title = mapOf("en" to "title", "lg" to "taito"),
+                                pages = arrayOf(
+                                        Page(
+                                                pageType = "checkbox",
+                                                questionCode = "qc",
+                                                header = mapOf("en" to "this", "lg" to "omutwe"),
+                                                description = mapOf("en" to "description", "lg" to "desc"),
+                                                options = arrayOf(
+                                                        Option(
+                                                                option_title = mapOf("en" to "this option", "lg" to "oputioni"),
+                                                                option_code = "oc"
+                                                        )
+                                                )
+                                        )
+                                )
+                        )
+                )
         )
-        homeViewModel.insertActivity(activity)
+        activities.forEach {activity ->
+            homeViewModel.insertActivity(activity)
+        }
     }
 
     override fun onStart() {
