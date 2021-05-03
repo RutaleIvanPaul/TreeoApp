@@ -53,4 +53,9 @@ interface ApiService {
         @Body loginWithOTP: LoginWithOTP
     ): Response<BaseResponse<SmsLoginResponse>>
 
+    @GET("users/questionnaire/planned-activity")
+    suspend fun retrievePlannedActivities(
+        @Header("Authorization") token: String
+    ): Response<UserActivities>
+
 }

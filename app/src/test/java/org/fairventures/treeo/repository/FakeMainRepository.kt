@@ -1,6 +1,7 @@
 package org.fairventures.treeo.repository
 
 import org.fairventures.treeo.models.*
+import org.fairventures.treeo.db.models.Activity
 
 class FakeMainRepository : IMainRepository {
     private fun returnFakeUser(registerUser: RegisterUser): NewRegisteredUser {
@@ -99,6 +100,19 @@ class FakeMainRepository : IMainRepository {
         )
     }
 
+    private fun returnFakeretrievePlannedActivities(): UserActivities? {
+        val activity: List<PlannedActivity> = listOf(PlannedActivity(0, "", false, "", "", null, null))
+        return UserActivities(
+            firstName = "firstname",
+            lastName = "lastname",
+            email = "email@gmail.com",
+            phoneNumber = "0788934521",
+            country = "Uganda",
+            username = "username",
+            plannedActivites = activity
+        )
+    }
+
     override suspend fun logout(token: String): LogoutResponse? {
         return returnFakeLogoutResponse(token)
     }
@@ -125,6 +139,10 @@ class FakeMainRepository : IMainRepository {
 
     override suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse? {
         return returnFakeSmsLoginResponse()
+    }
+
+    override suspend fun retrievePlannedActivities(userToken: String): UserActivities? {
+        return returnFakeretrievePlannedActivities()
     }
 
 }
