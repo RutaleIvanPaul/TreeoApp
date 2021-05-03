@@ -120,6 +120,10 @@ class RegistrationViewModel @ViewModelInject constructor(
         newUserObj.country = country
     }
 
+    fun setGDPRStatus(check_gdpr: Boolean){
+        newUserObj.isGdprCompliant = check_gdpr
+    }
+
     fun getNewUserObj() = newUserObj
 
     fun onBoardingContinue() {

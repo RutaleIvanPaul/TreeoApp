@@ -6,5 +6,6 @@ data class RegisterMobileUser(
     var country: String = "",
     var phoneNumber: String = "",
     var password: String? = "secret1234",
-    var username: String? = null
+    var username: String? = null,
+    var isGdprCompliant: Boolean? = false
 )

@@ -3,19 +3,24 @@ package org.fairventures.treeo.ui.authentication.registration.screens
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.CheckBox
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
+import kotlinx.android.synthetic.main.fragment_motivations.*
 import kotlinx.android.synthetic.main.fragment_user_phone.*
 import org.fairventures.treeo.R
 import org.fairventures.treeo.adapters.CountrySpinnerAdapter
 import org.fairventures.treeo.models.Country
+import org.fairventures.treeo.ui.authentication.GDPRFragment
 import org.fairventures.treeo.ui.authentication.RegistrationViewModel
 import org.fairventures.treeo.util.*
 
@@ -26,6 +31,10 @@ class UserPhoneFragment : Fragment() {
     val countryCode = MutableLiveData<String>()
     val phoneNumber = MutableLiveData<String>()
     var country = ""
+    private var gdprConsent = MutableLiveData<Boolean>()
+
+    private val TAG = "UserPhoneFragment"
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +54,8 @@ class UserPhoneFragment : Fragment() {
         initializeButtons(view)
         initializeSpinner()
         initializeEditText()
+        onCheckboxClicked()
+        setUpGDPRConsent()
     }
 
     private fun initializeSpinner() {
@@ -101,9 +112,26 @@ class UserPhoneFragment : Fragment() {
         })
     }
 
+    private fun setUpGDPRConsent() {
+        text_gdpr.setOnClickListener {
+            GDPRFragment.display(childFragmentManager)
+        }
+    }
+
+    private fun onCheckboxClicked() {
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                gdprConsent.postValue(true)
+            } else {
+                gdprConsent.postValue(false)
+            }
+        }
+    }
+
     private fun initializeButtons(view: View) {
         userPhoneContinueButton.setOnClickListener {
             viewModel.setUserPhoneNumber(phoneNumber.value.toString(), country)
+            viewModel.setGDPRStatus(gdprConsent.value!!)
             viewModel.registerMobileUser()
             viewModel.registrationContinue()
         }
@@ -133,6 +161,12 @@ class UserPhoneFragment : Fragment() {
                 viewModel.validatePhoneNumberRegistration(
                     phoneNumber.value?.removePrefix("+").toString()
                 )
+            }
+        })
+
+        gdprConsent.observe(viewLifecycleOwner, Observer {
+            if (it != false && phoneNumber.value != null) {
+                enableView(userPhoneContinueButton)
             } else {
                 disableView(userPhoneContinueButton)
             }
@@ -143,8 +177,7 @@ class UserPhoneFragment : Fragment() {
             if (it.phoneNumber.isNotEmpty()) {
                 showView(userPhoneLoginLink)
             } else {
-                hideView(userPhoneLoginLink)
-                enableView(userPhoneContinueButton)
+                    hideView(userPhoneLoginLink)
             }
         })
     }
