@@ -24,6 +24,10 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.fairventures.treeo.R
 import org.fairventures.treeo.adapters.WhatsNewRecyclerAdapter
+import org.fairventures.treeo.db.models.Activity
+import org.fairventures.treeo.db.models.Option
+import org.fairventures.treeo.db.models.Page
+import org.fairventures.treeo.db.models.Questionnaire
 import org.fairventures.treeo.models.WhatsNew
 import org.fairventures.treeo.ui.authentication.LoginLogoutViewModel
 import org.fairventures.treeo.util.DeviceInfoUtils
@@ -46,6 +50,7 @@ class HomeFragment : Fragment() {
     lateinit var dispatcher: IDispatcherProvider
 
     private val loginLogoutViewModel: LoginLogoutViewModel by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +69,38 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpViews()
         setObservers()
+        insertActivity()
+    }
+
+    private fun insertActivity() {
+        val activity = Activity(
+            activityId = 1,
+            type = " ",
+            due_date = " ",
+            plot = null,
+            activity_id_from_remoteDB = 2,
+            acitivity_code = "land",
+            questionnaire = Questionnaire(
+                activity_id_from_remoteDB = 2,
+                questionnaire_id_from_remote = 3,
+                questionnaire_title = mapOf("en" to "title", "lg" to "taito"),
+                pages = arrayOf(
+                    Page(
+                        pageType = "checkbox",
+                        questionCode = "qc",
+                        header = mapOf("en" to "this header", "lg" to "omutwe"),
+                        description = mapOf("en" to "description", "lg" to "desc"),
+                        options = arrayOf(
+                            Option(
+                                option_title = mapOf("en" to "this option", "lg" to "oputioni"),
+                                option_code = "oc"
+                            )
+                        )
+                    )
+                )
+            )
+        )
+        homeViewModel.insertActivity(activity)
     }
 
     override fun onStart() {
@@ -111,6 +148,13 @@ class HomeFragment : Fragment() {
                 } else {
                     Log.d("Logout", "Logout Response is null")
                 }
+            }
+        )
+
+        homeViewModel.getAllActivities().observe(
+            viewLifecycleOwner,
+            Observer {activities ->
+                Log.d("DBActivities", activities[0].toString())
             }
         )
     }
