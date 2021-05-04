@@ -1,5 +1,9 @@
 package org.fairventures.treeo.db.models
 
-data class Answer (
-    var answer: Array<String>
-)
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+class Answer(var answer: Array<String>) : Parcelable {
+
+}
