@@ -24,10 +24,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.fairventures.treeo.R
 import org.fairventures.treeo.adapters.WhatsNewRecyclerAdapter
-import org.fairventures.treeo.db.models.Activity
-import org.fairventures.treeo.db.models.Option
-import org.fairventures.treeo.db.models.Page
-import org.fairventures.treeo.db.models.Questionnaire
+import org.fairventures.treeo.db.models.*
 import org.fairventures.treeo.models.WhatsNew
 import org.fairventures.treeo.ui.authentication.LoginLogoutViewModel
 import org.fairventures.treeo.util.DeviceInfoUtils
@@ -153,8 +150,42 @@ class HomeFragment : Fragment() {
                         )
                 )
         )
+
+        val questionnaireAnswers = arrayOf(
+            QuestionnaireAnswer(
+                questionnaire_id_from_remote = 2,
+                answers = arrayOf(
+                    Answer(
+                        questionCode = "land_use",
+                        answer = arrayOf("Trees","Sugarcanes")
+                    ),
+                    Answer(
+                        questionCode = "terrain",
+                        answer = arrayOf("Hilly","flat")
+                    )
+                )
+            ),
+            QuestionnaireAnswer(
+                questionnaire_id_from_remote = 3,
+                answers = arrayOf(
+                    Answer(
+                        questionCode = "land_type",
+                        answer = arrayOf("Fertile","Not")
+                    ),
+                    Answer(
+                        questionCode = "tree_status",
+                        answer = arrayOf("Grown","Young")
+                    )
+                )
+            )
+        )
+
         activities.forEach {activity ->
             homeViewModel.insertActivity(activity)
+        }
+
+        questionnaireAnswers.forEach {
+            homeViewModel.insertQuestionnaireAnswer(it)
         }
     }
 
@@ -210,6 +241,13 @@ class HomeFragment : Fragment() {
             viewLifecycleOwner,
             Observer {activities ->
                 Log.d("DBActivities", activities[0].toString())
+            }
+        )
+
+        homeViewModel.getQuestionnaireAnswers(2).observe(
+            viewLifecycleOwner,
+            Observer {
+                Log.d("DBQuestionnaireAnswers", it.toString())
             }
         )
     }

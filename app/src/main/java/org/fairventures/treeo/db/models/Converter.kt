@@ -15,4 +15,14 @@ class Converter {
         return Gson().fromJson(questionnaire,Questionnaire::class.java)
     }
 
+    @TypeConverter
+    fun fromQuestionnaireAnswer(answer: Array<Answer>): String{
+        return Gson().toJson(answer)
+    }
+
+    @TypeConverter
+    fun fromStringtoAnswer(answer: String): Array<Answer>{
+        return Gson().fromJson(answer,Array<Answer>::class.java)
+    }
+
 }
