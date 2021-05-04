@@ -15,6 +15,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.fairventures.treeo.db.TreeoDatabase
 import org.fairventures.treeo.db.dao.ActivityDao
+import org.fairventures.treeo.db.dao.QuestionnaireAnswerDao
 import org.fairventures.treeo.repository.DBMainRepository
 import org.fairventures.treeo.repository.IMainRepository
 import org.fairventures.treeo.repository.MainRepository
@@ -93,7 +94,9 @@ object AppModule {
             applicationContext,
             TreeoDatabase::class.java,
             TREEO_DATABASE_NAME
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Singleton
@@ -103,7 +106,12 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesDBMainRepository(activityDao: ActivityDao) =
-        DBMainRepository(activityDao)
+    fun providesQuestionnaireAnswerDao(database: TreeoDatabase) =
+        database.getQuestionnaireAnswerDao()
+
+    @Singleton
+    @Provides
+    fun providesDBMainRepository(activityDao: ActivityDao, questionnaireAnswerDao: QuestionnaireAnswerDao) =
+        DBMainRepository(activityDao, questionnaireAnswerDao)
 
 }

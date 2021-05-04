@@ -1,4 +1,6 @@
 package org.fairventures.treeo.db.models
 
-class Answer {
-}
+data class Answer (
+    var questionCode: String,
+    var answer: Array<String>
+)
