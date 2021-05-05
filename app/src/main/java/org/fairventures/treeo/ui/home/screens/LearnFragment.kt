@@ -1,4 +1,4 @@
-package org.fairventures.treeo.ui.home
+package org.fairventures.treeo.ui.home.screens
 
 import android.os.Bundle
 import android.view.LayoutInflater

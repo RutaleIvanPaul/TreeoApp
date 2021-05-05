@@ -25,4 +25,8 @@
         <item name="windowNoTitle">true</item>
         <item name="android:statusBarColor">@color/app_green</item>
     </style>
+
+    <style name="ShapeAppearanceOverlay.App.TreeoCornerRadius" parent="">
+        <item name="cornerSize">10%</item>
+    </style>
 </resources>

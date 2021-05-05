@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="org.fairventures.treeo.ui.home.HomeFragment"
+        android:name="org.fairventures.treeo.ui.home.screens.HomeFragment"
         android:label="HomeFragment">
         <action
             android:id="@+id/action_homeFragment_to_chooseLangFragment"
@@ -45,20 +45,31 @@
         <action
             android:id="@+id/action_homeFragment_to_phoneAuthHostFragment"
             app:destination="@id/phoneAuthHostFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_questionnaireFragment"
+            app:destination="@id/questionnaireFragment">
+            <argument
+                android:name="activity"
+                app:argType="org.fairventures.treeo.db.models.Activity" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/guideFragment"
-        android:name="org.fairventures.treeo.ui.home.GuideFragment"
+        android:name="org.fairventures.treeo.ui.home.screens.GuideFragment"
         android:label="fragment_guide"
-        tools:layout="@layout/fragment_guide" />
+        tools:layout="@layout/fragment_guide">
+        <action
+            android:id="@+id/action_guideFragment_to_questionnaireFragment"
+            app:destination="@id/questionnaireFragment" />
+    </fragment>
     <fragment
         android:id="@+id/learnFragment"
-        android:name="org.fairventures.treeo.ui.home.LearnFragment"
+        android:name="org.fairventures.treeo.ui.home.screens.LearnFragment"
         android:label="fragment_learn"
         tools:layout="@layout/fragment_learn" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="org.fairventures.treeo.ui.home.ProfileFragment"
+        android:name="org.fairventures.treeo.ui.home.screens.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
@@ -79,7 +90,7 @@
         android:id="@+id/registrationHostFragment"
         android:name="org.fairventures.treeo.ui.authentication.registration.RegistrationHostFragment"
         android:label="fragment_registration_host"
-        tools:layout="@layout/fragment_registration_host" >
+        tools:layout="@layout/fragment_registration_host">
         <action
             android:id="@+id/action_registrationHostFragment_to_motivationsFragment"
             app:destination="@id/motivationsFragment" />
@@ -95,7 +106,7 @@
         android:id="@+id/motivationsFragment"
         android:name="org.fairventures.treeo.ui.authentication.onboarding.screens.MotivationsFragment"
         android:label="fragment_motivations"
-        tools:layout="@layout/fragment_motivations" >
+        tools:layout="@layout/fragment_motivations">
         <action
             android:id="@+id/action_motivationsFragment_to_registrationHostFragment"
             app:destination="@id/registrationHostFragment" />
@@ -103,4 +114,9 @@
             android:id="@+id/action_motivationsFragment_to_onBoardingHostFragment"
             app:destination="@id/onBoardingHostFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/questionnaireFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.QuestionnaireFragment"
+        android:label="fragment_questionnaire"
+        tools:layout="@layout/fragment_questionnaire" />
 </navigation>

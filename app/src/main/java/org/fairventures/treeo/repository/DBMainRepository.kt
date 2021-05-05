@@ -13,15 +13,16 @@ class DBMainRepository @Inject constructor(
     suspend fun insertActivity(activity: Activity) =
         activityDao.insertActivity(activity)
 
-    fun getActivities() =
-        activityDao.getActivities()
+    fun getActivities() = activityDao.getActivities()
 
     suspend fun insertQuestionnaireAnswer(questionnaireAnswer: QuestionnaireAnswer) =
         questionnaireAnswerDao.insertQuestionnaireAnswer(questionnaireAnswer)
 
-    fun getQuestionnaireAnswers(questionnaire_id_from_remote:Long) =
+    fun getQuestionnaireAnswers(questionnaire_id_from_remote: Long) =
         questionnaireAnswerDao.getActivities(questionnaire_id_from_remote)
 
     fun getAnsweredQuestion(questionnaire_id_from_remote: Long, questionCode: String) =
-        questionnaireAnswerDao.getAnsweredQuestion(questionnaire_id_from_remote,questionCode)
+        questionnaireAnswerDao.getAnsweredQuestion(questionnaire_id_from_remote, questionCode)
+
+    suspend fun getNextTwoActivities() = activityDao.getNextTwoActivities()
 }

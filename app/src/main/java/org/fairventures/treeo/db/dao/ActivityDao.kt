@@ -16,5 +16,7 @@ interface ActivityDao {
     @Query("SELECT * FROM Activity")
     fun getActivities(): LiveData<List<Activity>>
 
+    @Query("SELECT * FROM Activity LIMIT 2")
+    suspend fun getNextTwoActivities(): List<Activity>
 
 }

@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import org.fairventures.treeo.R
 import org.fairventures.treeo.models.WhatsNew
 
+
 class WhatsNewRecyclerAdapter(val context: Context, val items: List<WhatsNew>) :
     RecyclerView.Adapter<WhatsNewRecyclerAdapter.WhatsNewViewHolder>() {
     class WhatsNewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
