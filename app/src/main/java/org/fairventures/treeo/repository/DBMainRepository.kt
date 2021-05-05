@@ -25,4 +25,6 @@ class DBMainRepository @Inject constructor(
         questionnaireAnswerDao.getAnsweredQuestion(questionnaire_id_from_remote, questionCode)
 
     suspend fun getNextTwoActivities() = activityDao.getNextTwoActivities()
+
+    suspend fun updateActivity(activity: Activity)  = activityDao.updateActivity(activity)
 }

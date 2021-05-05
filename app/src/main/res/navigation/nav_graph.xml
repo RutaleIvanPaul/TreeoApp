@@ -118,5 +118,9 @@
         android:id="@+id/questionnaireFragment"
         android:name="org.fairventures.treeo.ui.questionnaire.QuestionnaireFragment"
         android:label="fragment_questionnaire"
-        tools:layout="@layout/fragment_questionnaire" />
+        tools:layout="@layout/fragment_questionnaire" >
+        <action
+            android:id="@+id/action_questionnaireFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

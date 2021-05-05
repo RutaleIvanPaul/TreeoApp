@@ -1,10 +1,7 @@
 package org.fairventures.treeo.db.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import org.fairventures.treeo.db.models.Activity
 
 @Dao
@@ -16,7 +13,10 @@ interface ActivityDao {
     @Query("SELECT * FROM Activity")
     fun getActivities(): LiveData<List<Activity>>
 
-    @Query("SELECT * FROM Activity LIMIT 2")
+    @Query("SELECT * FROM Activity WHERE is_complete = 0 LIMIT 2")
     suspend fun getNextTwoActivities(): List<Activity>
+
+    @Update
+    suspend fun updateActivity(activity: Activity)
 
 }

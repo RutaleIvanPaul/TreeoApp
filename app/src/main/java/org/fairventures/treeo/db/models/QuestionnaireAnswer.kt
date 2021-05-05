@@ -9,5 +9,5 @@ data class QuestionnaireAnswer (
     var questionnaire_answer_id: Long = 0L,
     var questionnaire_id_from_remote: Long,
     var questionCode: String,
-    var answers: Array<Answer>
+    var answers: Array<String>
 )
