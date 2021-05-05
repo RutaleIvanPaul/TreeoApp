@@ -8,5 +8,6 @@ data class QuestionnaireAnswer (
     @PrimaryKey(autoGenerate = true)
     var questionnaire_answer_id: Long = 0L,
     var questionnaire_id_from_remote: Long,
+    var questionCode: String,
     var answers: Array<Answer>
 )

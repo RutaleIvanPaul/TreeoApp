@@ -21,4 +21,7 @@ class DBMainRepository @Inject constructor(
 
     fun getQuestionnaireAnswers(questionnaire_id_from_remote:Long) =
         questionnaireAnswerDao.getActivities(questionnaire_id_from_remote)
+
+    fun getAnsweredQuestion(questionnaire_id_from_remote: Long, questionCode: String) =
+        questionnaireAnswerDao.getAnsweredQuestion(questionnaire_id_from_remote,questionCode)
 }

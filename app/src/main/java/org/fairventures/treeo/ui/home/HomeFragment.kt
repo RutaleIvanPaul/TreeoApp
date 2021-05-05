@@ -153,32 +153,34 @@ class HomeFragment : Fragment() {
 
         val questionnaireAnswers = arrayOf(
             QuestionnaireAnswer(
-                questionnaire_id_from_remote = 2,
-                answers = arrayOf(
+                    questionnaire_id_from_remote = 2,
+                    questionCode = "land_use",
+                    answers = arrayOf(
                     Answer(
-                        questionCode = "land_use",
                         answer = arrayOf("Trees","Sugarcanes")
-                    ),
-                    Answer(
-                        questionCode = "terrain",
-                        answer = arrayOf("Hilly","flat")
                     )
                 )
             ),
+                QuestionnaireAnswer(
+                        questionnaire_id_from_remote = 2,
+                        questionCode = "terrain",
+                        answers = arrayOf(
+                                Answer(
+                                        answer = arrayOf("Hilly","flat")
+                                )
+                        )
+                ),
             QuestionnaireAnswer(
                 questionnaire_id_from_remote = 3,
+                    questionCode = "land_type",
                 answers = arrayOf(
                     Answer(
-                        questionCode = "land_type",
-                        answer = arrayOf("Fertile","Not")
-                    ),
-                    Answer(
-                        questionCode = "tree_status",
-                        answer = arrayOf("Grown","Young")
+                            answer = arrayOf("Fertile","Not")
+                    )
                     )
                 )
             )
-        )
+
 
         activities.forEach {activity ->
             homeViewModel.insertActivity(activity)
@@ -248,6 +250,13 @@ class HomeFragment : Fragment() {
             viewLifecycleOwner,
             Observer {
                 Log.d("DBQuestionnaireAnswers", it.toString())
+            }
+        )
+
+        homeViewModel.getAnsweredQuestion(2,"terrain").observe(
+            viewLifecycleOwner,
+            Observer {
+                Log.d("DBQuestionnaireAnswered",it.toString())
             }
         )
     }

@@ -32,5 +32,8 @@ class HomeViewModel @ViewModelInject constructor(
     fun getQuestionnaireAnswers(questionnaire_id_from_remote: Long) =
         dbMainRepository.getQuestionnaireAnswers(questionnaire_id_from_remote)
 
+    fun getAnsweredQuestion(questionnaire_id_from_remote: Long, questionCode: String) =
+        dbMainRepository.getAnsweredQuestion(questionnaire_id_from_remote,questionCode)
+
 
 }
