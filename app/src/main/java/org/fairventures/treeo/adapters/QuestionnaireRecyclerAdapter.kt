@@ -3,9 +3,9 @@ package org.fairventures.treeo.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox
-import com.google.android.material.textview.MaterialTextView
 import org.fairventures.treeo.R
 import org.fairventures.treeo.db.models.Option
 
@@ -17,6 +17,7 @@ class QuestionnaireRecyclerAdapter() :
 
     private lateinit var list: List<Option>
     private lateinit var questionType: String
+    private var lastSelectedPosition = -1
 
     class CheckBoxViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val checkBox: MaterialCheckBox = itemView.findViewById(R.id.questionnaireCheckBox)
@@ -31,7 +32,7 @@ class QuestionnaireRecyclerAdapter() :
     }
 
     class RadioButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val radioButton: MaterialTextView = itemView.findViewById(R.id.questionnaireOptionTextView)
+        val radioButton: RadioButton = itemView.findViewById(R.id.questionnaireOptionTextView)
 
         companion object {
             fun from(parent: ViewGroup): RadioButtonViewHolder {
@@ -55,16 +56,15 @@ class QuestionnaireRecyclerAdapter() :
             is CheckBoxViewHolder -> {
                 holder.apply {
                     holder.checkBox.text = list[position].option_title["en"]
-                    itemView.setOnClickListener {
-
-                    }
                 }
             }
             is RadioButtonViewHolder -> {
                 holder.apply {
-                    holder.radioButton.text = list[position].option_title["en"]
-                    itemView.setOnClickListener {
-
+                    radioButton.text = list[position].option_title["en"]
+                    holder.radioButton.isChecked = lastSelectedPosition == position
+                    radioButton.setOnClickListener {
+                        lastSelectedPosition = adapterPosition;
+                        notifyDataSetChanged();
                     }
                 }
             }
