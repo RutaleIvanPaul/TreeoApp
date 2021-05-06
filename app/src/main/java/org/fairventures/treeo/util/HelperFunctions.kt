@@ -77,11 +77,11 @@ fun insertActivity(homeViewModel:HomeViewModel) {
                         options = arrayOf(
                             Option(
                                 option_title = mapOf("en" to "Activity 1 Page 1 option 1", "lg" to "oputioni"),
-                                option_code = "this option 1"
+                                option_code = "ac1qc1 option 1"
                             ),
                             Option(
                                 option_title = mapOf("en" to "Activity 1 Page 1 option 2", "lg" to "oputioni"),
-                                option_code = "this option 2"
+                                option_code = "ac1qc1 option 2"
                             )
                         )
                     ),
@@ -96,11 +96,11 @@ fun insertActivity(homeViewModel:HomeViewModel) {
                                     "en" to "Activity 1 Page 2 Option 1",
                                     "lg" to "oputioni"
                                 ),
-                                option_code = "oputioni"
+                                option_code = "ac1qc2 oputioni 1"
                             ),
                             Option(
                                 option_title = mapOf("en" to "Activity 1 Page 2 Option 2", "lg" to "oputioni"),
-                                option_code = "oc"
+                                option_code = "ac1qc2 oputioni 2"
                             )
                         )
                     )
@@ -126,11 +126,11 @@ fun insertActivity(homeViewModel:HomeViewModel) {
                         options = arrayOf(
                             Option(
                                 option_title = mapOf("en" to "Activity 2 Page 1 Option 1", "lg" to "oputioni"),
-                                option_code = "this"
+                                option_code = "ac2qc1 option 1"
                             ),
                             Option(
                                 option_title = mapOf("en" to "Activity 2 Page 1 Option 2", "lg" to "oputioni"),
-                                option_code = "option 2"
+                                option_code = "ac2qc1 option 2"
                             )
                         )
                     ),
@@ -145,11 +145,11 @@ fun insertActivity(homeViewModel:HomeViewModel) {
                                     "en" to "Activity 2 Page 2 Option 1",
                                     "lg" to "oputioni"
                                 ),
-                                option_code = "oputioni 2"
+                                option_code = "ac2qc2 oputioni 1"
                             ),
                             Option(
                                 option_title = mapOf("en" to "Activity 2 Page 2 Option 2", "lg" to "oputioni"),
-                                option_code = "oputioni 2"
+                                option_code = "ac2qc2 oputioni 2"
                             )
                         )
                     )
