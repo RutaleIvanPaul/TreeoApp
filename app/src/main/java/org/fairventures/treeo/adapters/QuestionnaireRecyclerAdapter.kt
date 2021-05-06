@@ -72,7 +72,7 @@ class QuestionnaireRecyclerAdapter() :
                     radioButton.text = list[position].option_title["en"]
                     holder.radioButton.isChecked = lastSelectedPosition == position
                     radioButton.setOnClickListener {
-                        manageAnswers(position)
+                        manageRadioButtonAnswers(position)
                         lastSelectedPosition = adapterPosition;
                         notifyDataSetChanged();
                     }
@@ -88,6 +88,12 @@ class QuestionnaireRecyclerAdapter() :
         } else {
             currentAnswers.add(option_code)
         }
+    }
+
+    private fun manageRadioButtonAnswers(position: Int) {
+        val option_code = list[position].option_code
+        currentAnswers.clear()
+        currentAnswers.add(option_code)
     }
 
     override fun getItemCount(): Int {
