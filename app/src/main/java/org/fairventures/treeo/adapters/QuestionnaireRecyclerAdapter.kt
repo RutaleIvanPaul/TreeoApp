@@ -1,5 +1,6 @@
 package org.fairventures.treeo.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +19,10 @@ class QuestionnaireRecyclerAdapter() :
     private lateinit var list: List<Option>
     private lateinit var questionType: String
     private var lastSelectedPosition = -1
+
+    companion object {
+        val currentAnswers: MutableList<String> = mutableListOf()
+    }
 
     class CheckBoxViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val checkBox: MaterialCheckBox = itemView.findViewById(R.id.questionnaireCheckBox)
@@ -56,6 +61,10 @@ class QuestionnaireRecyclerAdapter() :
             is CheckBoxViewHolder -> {
                 holder.apply {
                     holder.checkBox.text = list[position].option_title["en"]
+                    holder.checkBox.setOnClickListener {
+                        manageAnswers(position)
+
+                    }
                 }
             }
             is RadioButtonViewHolder -> {
@@ -63,11 +72,21 @@ class QuestionnaireRecyclerAdapter() :
                     radioButton.text = list[position].option_title["en"]
                     holder.radioButton.isChecked = lastSelectedPosition == position
                     radioButton.setOnClickListener {
+                        manageAnswers(position)
                         lastSelectedPosition = adapterPosition;
                         notifyDataSetChanged();
                     }
                 }
             }
+        }
+    }
+
+    private fun manageAnswers(position: Int) {
+        val option_code = list[position].option_code
+        if (currentAnswers.contains(option_code)) {
+            currentAnswers.remove(option_code)
+        } else {
+            currentAnswers.add(option_code)
         }
     }
 
@@ -90,6 +109,7 @@ class QuestionnaireRecyclerAdapter() :
     fun submitList(options: List<Option>, flag: String) {
         list = options
         questionType = flag
+        currentAnswers.clear()
         notifyDataSetChanged()
     }
 }

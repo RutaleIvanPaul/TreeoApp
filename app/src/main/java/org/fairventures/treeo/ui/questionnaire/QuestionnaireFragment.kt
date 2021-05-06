@@ -1,11 +1,14 @@
 package org.fairventures.treeo.ui.questionnaire
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shuhart.stepview.StepView
 import kotlinx.android.synthetic.main.fragment_questionnaire.*
@@ -13,10 +16,11 @@ import org.fairventures.treeo.R
 import org.fairventures.treeo.adapters.QuestionnaireRecyclerAdapter
 import org.fairventures.treeo.db.models.Activity
 import org.fairventures.treeo.db.models.Page
+import org.fairventures.treeo.db.models.QuestionnaireAnswer
 
 class QuestionnaireFragment : Fragment() {
 
-    private val viewModel: QuestionnaireViewModel by activityViewModels()
+    private val questionnaireViewModel: QuestionnaireViewModel by activityViewModels()
     private var plannedActivity: Activity? = null
     private var currentPage: Int = 0
     private lateinit var pages: Array<Page>
@@ -35,6 +39,11 @@ class QuestionnaireFragment : Fragment() {
         plannedActivity = arguments?.getParcelable("activity")
         setUpViews()
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        restoreFromPrevious()
+//    }
 
     private fun setUpViews() {
         initializePages()
@@ -74,11 +83,23 @@ class QuestionnaireFragment : Fragment() {
 
     private fun initializeButtons() {
         questionnaireContinueButton.setOnClickListener {
+            showProgressBar()
+            insertAnswer(
+                QuestionnaireAnswer(
+                    questionnaire_id_from_remote = plannedActivity?.questionnaire?.questionnaire_id_from_remote!!,
+                    questionCode = pages[currentPage].questionCode,
+                    answers = QuestionnaireRecyclerAdapter.currentAnswers.toTypedArray()
+                )
+            )
             if (currentPage < pages.size - 1) {
                 currentPage += 1
                 updateStepView()
                 updateTextView()
                 updateRecyclerView()
+            }
+            else if (currentPage == pages.size - 1){
+                completeActivity()
+                navigateToHomeFragment()
             }
         }
 
@@ -89,7 +110,54 @@ class QuestionnaireFragment : Fragment() {
                 updateTextView()
                 updateRecyclerView()
             }
+            else if (currentPage == 0){
+                navigateToHomeFragment()
+            }
         }
+    }
+
+    private fun completeActivity() {
+        plannedActivity?.is_complete = true
+        questionnaireViewModel.completeActivity(plannedActivity!!)
+    }
+
+    private fun navigateToHomeFragment() {
+        findNavController().navigate(R.id.action_questionnaireFragment_to_homeFragment)
+    }
+
+    private fun insertAnswer(questionnaireAnswer: QuestionnaireAnswer) {
+        if(questionnaireAnswer.answers.size >0) {
+            questionnaireViewModel.insertQuestionnaireAnswer(questionnaireAnswer)
+        }
+    }
+
+//    private fun restoreFromPrevious(){
+//        pages.forEach { page ->
+//            questionnaireViewModel.getAnsweredQuestion(
+//                plannedActivity?.questionnaire?.questionnaire_id_from_remote!!,
+//                page.questionCode).observe(
+//                viewLifecycleOwner,
+//                Observer {questionnaireAnswer ->
+//                    if (questionnaireAnswer == null){
+//                        currentPage = pages.indexOf(page)
+//                        Log.d("QstionnaireCurrentPage", currentPage.toString())
+//                        updateStepView()
+//                        return@Observer
+//                    }
+//                    else{
+//                        Log.d("Qstionnaire", questionnaireAnswer.toString())
+//                    }
+//                }
+//            )
+//        }
+//    }
+
+    private fun showProgressBar() {
+        pages_progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        pages_progressBar.visibility = View.GONE
     }
 
     private fun updateStepView() {
@@ -102,6 +170,7 @@ class QuestionnaireFragment : Fragment() {
 
     private fun updateRecyclerView() {
         questionAdapter.submitList(pages[currentPage].options.toList(), pages[currentPage].pageType)
+        hideProgressBar()
     }
 
     companion object {

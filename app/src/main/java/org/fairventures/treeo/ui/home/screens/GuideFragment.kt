@@ -5,10 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import org.fairventures.treeo.R
 import org.fairventures.treeo.models.Activity
+import org.fairventures.treeo.ui.home.HomeViewModel
+import org.fairventures.treeo.util.insertActivity
 
+@AndroidEntryPoint
 class GuideFragment : Fragment() {
+
+    private val homeViewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -21,6 +28,7 @@ class GuideFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpViews()
+        insertActivity(homeViewModel)
     }
 
     private fun setUpViews() {

@@ -18,13 +18,13 @@ class Converter {
     }
 
     @TypeConverter
-    fun fromQuestionnaireAnswer(answer: Array<Answer>): String {
+    fun fromQuestionnaireAnswer(answer: Array<String>): String {
         return Gson().toJson(answer)
     }
 
     @TypeConverter
-    fun fromStringtoAnswer(answer: String): Array<Answer> {
-        return Gson().fromJson(answer, Array<Answer>::class.java)
+    fun fromStringtoAnswer(answer: String): Array<String> {
+        return Gson().fromJson(answer, Array<String>::class.java)
     }
 }
 
