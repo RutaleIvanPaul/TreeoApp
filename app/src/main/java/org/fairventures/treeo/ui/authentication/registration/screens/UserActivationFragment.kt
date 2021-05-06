@@ -2,6 +2,7 @@ package org.fairventures.treeo.ui.authentication.registration.screens
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,6 +87,7 @@ class UserActivationFragment : Fragment() {
         viewModel.validateOTPRegistrationResponse.observe(viewLifecycleOwner, Observer {
             hideView(userActivationOtpProgressBar)
             if (it != null) {
+                saveAuthToken(it.token)
                 view.findNavController()
                     .navigate(R.id.action_registrationHostFragment_to_homeFragment)
             } else {
@@ -94,11 +96,17 @@ class UserActivationFragment : Fragment() {
         })
     }
 
-    private fun saveUserInfoToPrefs(firstName: String, userId: Int, token: String = "") {
+    private fun saveUserInfoToPrefs(firstName: String, userId: Int) {
         with(preferences.edit()) {
             putBoolean(getString(org.fairventures.treeo.R.string.first_time_user), false)
             putString("firstName", firstName)
             putInt(getString(R.string.user_id), userId)
+            apply()
+        }
+    }
+
+    private fun saveAuthToken(token: String) {
+        with(preferences.edit()) {
             putString(getString(R.string.user_token), token)
             apply()
         }

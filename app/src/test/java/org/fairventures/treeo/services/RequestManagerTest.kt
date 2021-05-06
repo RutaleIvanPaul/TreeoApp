@@ -95,7 +95,7 @@ class RequestManagerTest {
             phoneNumber = testPhoneNumber
         )
         val response = requestManager.validateOTPRegistration(validateOTPRegistration)
-        assertThat(response?.message).isEqualTo("+123000000000 has been activated")
+        assertThat(response?.token).isEqualTo("thisisatesttoken")
     }
 
     @Test

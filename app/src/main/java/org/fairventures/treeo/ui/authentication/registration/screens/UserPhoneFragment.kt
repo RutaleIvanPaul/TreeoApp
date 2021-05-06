@@ -1,21 +1,19 @@
 package org.fairventures.treeo.ui.authentication.registration.screens
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.CheckBox
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
-import kotlinx.android.synthetic.main.fragment_motivations.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_user_phone.*
 import org.fairventures.treeo.R
 import org.fairventures.treeo.adapters.CountrySpinnerAdapter
@@ -23,7 +21,9 @@ import org.fairventures.treeo.models.Country
 import org.fairventures.treeo.ui.authentication.GDPRFragment
 import org.fairventures.treeo.ui.authentication.RegistrationViewModel
 import org.fairventures.treeo.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class UserPhoneFragment : Fragment() {
 
     private val viewModel: RegistrationViewModel by activityViewModels()
@@ -34,6 +34,9 @@ class UserPhoneFragment : Fragment() {
     private var gdprConsent = MutableLiveData<Boolean>()
 
     private val TAG = "UserPhoneFragment"
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
 
 
     override fun onCreateView(
@@ -141,8 +144,10 @@ class UserPhoneFragment : Fragment() {
         }
 
         userPhoneLoginLink.setOnClickListener {
-            view.findNavController()
-                .navigate(R.id.action_registrationHostFragment_to_phoneAuthHostFragment)
+            setFirstTimeUserStatus()
+            view.findNavController().navigate(
+                R.id.action_registrationHostFragment_to_phoneAuthHostFragment
+            )
         }
     }
 
@@ -177,9 +182,16 @@ class UserPhoneFragment : Fragment() {
             if (it.phoneNumber.isNotEmpty()) {
                 showView(userPhoneLoginLink)
             } else {
-                    hideView(userPhoneLoginLink)
+                hideView(userPhoneLoginLink)
             }
         })
+    }
+
+    private fun setFirstTimeUserStatus() {
+        with(sharedPref.edit()) {
+            putBoolean(getString(R.string.first_time_user), false)
+            apply()
+        }
     }
 
     companion object {

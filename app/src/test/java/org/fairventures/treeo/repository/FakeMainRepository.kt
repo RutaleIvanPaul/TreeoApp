@@ -53,7 +53,7 @@ class FakeMainRepository : IMainRepository {
         )
     }
 
-    private fun returnFakeValidatePhoneNumberResponse(): ValidateResponseData{
+    private fun returnFakeValidatePhoneNumberResponse(): ValidateResponseData {
         return ValidateResponseData(
             errorStatus = "none",
             phoneNumber = "111",
@@ -61,24 +61,23 @@ class FakeMainRepository : IMainRepository {
         )
     }
 
-    private fun returnFakeOTP():String{
+    private fun returnFakeOTP(): String {
         return "OTP Sent"
     }
 
-    private fun returnFakeRegisteredMobileUser(): RegisteredMobileUser{
+    private fun returnFakeRegisteredMobileUser(): RegisteredMobileUser {
         return RegisteredMobileUser(
-                email = "",
-                firstName = "firstname",
-                id = 2,
-                isActive = true,
-                lastName = "lastname"
+            email = "",
+            firstName = "firstname",
+            id = 2,
+            isActive = true,
+            lastName = "lastname"
         )
     }
 
-    private fun returnFakeOTPRegistrationResponse(): ValidateOTPRegistrationResponse{
+    private fun returnFakeOTPRegistrationResponse(): ValidateOTPRegistrationResponse {
         return ValidateOTPRegistrationResponse(
-                data = "",
-                message = "User Active"
+            token = "thisisatesttoken"
         )
     }
 
@@ -92,7 +91,7 @@ class FakeMainRepository : IMainRepository {
 
     private fun returnFakeSmsLoginResponse(): SmsLoginResponse? {
         return SmsLoginResponse(
-            email = "email" ,
+            email = "email",
             token = "token",
             userId = 1,
             username = "username"
@@ -116,7 +115,7 @@ class FakeMainRepository : IMainRepository {
     }
 
     override suspend fun validateOTPRegistration(validateOTPRegistration: ValidateOTPRegistration): ValidateOTPRegistrationResponse? {
-       return returnFakeOTPRegistrationResponse()
+        return returnFakeOTPRegistrationResponse()
     }
 
     override suspend fun requestOTP(phoneNumber: RequestOTP): String? {
