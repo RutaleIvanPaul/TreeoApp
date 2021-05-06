@@ -14,17 +14,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.textview.MaterialTextView
+        <RadioButton
             android:id="@+id/questionnaireOptionTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/checkbox_state_list"
+            android:background="@drawable/radio_state_list"
+            android:buttonTint="@color/option_tint_state_list"
             android:maxWidth="200dp"
             android:padding="8dp"
             android:text="Earn better income"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:textColor="@color/option_text_state_list"
+            android:textColor="@color/radio_text_state_list"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
