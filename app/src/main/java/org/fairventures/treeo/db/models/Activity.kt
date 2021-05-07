@@ -11,7 +11,7 @@ data class Activity(
     @PrimaryKey(autoGenerate = true)
     var activityId: Long = 0L,
     var type: String = "",
-    var due_date: Long = 0L,
+    var due_date: String,
     var title: String = "",
     var description: String = "",
     var is_complete: Boolean = false,

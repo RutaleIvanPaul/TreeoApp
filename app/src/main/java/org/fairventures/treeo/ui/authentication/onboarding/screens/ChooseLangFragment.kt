@@ -56,6 +56,10 @@ class ChooseLangFragment : Fragment() {
 
     private fun initializeButton() {
         chooseLangContinueButton.setOnClickListener {
+            with(sharedPref.edit()) {
+                putString(getString(R.string.selected_language), viewModel.localeLanguage.value)
+                apply()
+            }
             this.findNavController().navigate(
                 R.id.action_chooseLangFragment_to_onBoardingScreen1
             )

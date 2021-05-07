@@ -10,7 +10,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import org.fairventures.treeo.R
 import org.fairventures.treeo.models.Activity
 import org.fairventures.treeo.ui.home.HomeViewModel
-import org.fairventures.treeo.util.insertActivity
 
 @AndroidEntryPoint
 class GuideFragment : Fragment() {
@@ -28,7 +27,6 @@ class GuideFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpViews()
-        insertActivity(homeViewModel)
     }
 
     private fun setUpViews() {

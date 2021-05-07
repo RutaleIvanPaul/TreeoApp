@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.fairventures.treeo.db.models.Activity
 import org.fairventures.treeo.db.models.QuestionnaireAnswer
+import org.fairventures.treeo.models.UserActivities
 import org.fairventures.treeo.repository.DBMainRepository
 import org.fairventures.treeo.repository.MainRepository
 import org.fairventures.treeo.util.IDispatcherProvider
@@ -21,6 +22,9 @@ class HomeViewModel @ViewModelInject constructor(
 
     private val _nextTwoActivities = MutableLiveData<List<Activity>>()
     val nextTwoActivities: LiveData<List<Activity>> get() = _nextTwoActivities
+
+    private val _plannedActivities = MutableLiveData<UserActivities>()
+    val plannedActivities: LiveData<UserActivities> get() = _plannedActivities
 
     fun insertActivity(activity: Activity) {
         viewModelScope.launch(dispatcher.io()) {
@@ -41,12 +45,10 @@ class HomeViewModel @ViewModelInject constructor(
 
     fun getPlannedActivities(token: String){
         viewModelScope.launch(dispatcher.io()) {
-            mainRepository.retrievePlannedActivities(token)
+            _plannedActivities.postValue(mainRepository.retrievePlannedActivities(token))
         }
     }
 
-    fun getAnsweredQuestion(questionnaire_id_from_remote: Long, questionCode: String) =
-        dbMainRepository.getAnsweredQuestion(questionnaire_id_from_remote, questionCode)
 
     fun getNextTwoActivities() {
         viewModelScope.launch(dispatcher.io()) {
