@@ -42,5 +42,6 @@ class MainRepository @Inject constructor(
     override suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse? =
         requestManager.loginWithOTP(loginWithOTP)
 
-
+    override suspend fun retrievePlannedActivities(userToken: String): UserActivities? =
+        requestManager.retrievePlannedActivities(userToken)
 }

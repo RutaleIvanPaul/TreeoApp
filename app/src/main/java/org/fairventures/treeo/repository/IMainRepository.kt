@@ -16,4 +16,5 @@ interface IMainRepository {
             validateOTPRegistration: ValidateOTPRegistration
     ): ValidateOTPRegistrationResponse?
     suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse?
+    suspend fun retrievePlannedActivities(userToken: String): UserActivities?
 }

@@ -69,6 +69,7 @@ class HomeFragment : Fragment() {
         setUpViews()
         setObservers()
         homeViewModel.getNextTwoActivities()
+        getPlannedActivities()
     }
 
 
@@ -229,5 +230,9 @@ class HomeFragment : Fragment() {
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()
+    }
+
+    private fun getPlannedActivities(){
+        homeViewModel.getPlannedActivities(getUserToken())
     }
 }

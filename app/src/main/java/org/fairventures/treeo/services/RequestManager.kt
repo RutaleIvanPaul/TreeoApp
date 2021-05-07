@@ -1,6 +1,8 @@
 package org.fairventures.treeo.services
 
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.fairventures.treeo.models.*
 import org.fairventures.treeo.util.errors
 import org.fairventures.treeo.util.getErrorMessageFromJson
@@ -202,6 +204,24 @@ class RequestManager @Inject constructor(
         }
 
         return items
+    }
+
+    suspend fun retrievePlannedActivities(userToken: String): UserActivities?{
+        var activities: UserActivities? = null
+            val response = apiService.retrievePlannedActivities(userToken)
+            if (response.isSuccessful) {
+                activities = response.body()
+                Log.d("Body", "retrievePlannedActivities: $activities ")
+            } else {
+                if (response.code() == 404) {
+                    Log.d("Message", "Unauthorized")
+                }
+                val jsonResponse = response.errorBody()!!.charStream().readText()
+                Log.d("API ERROR", "API Fetch Error: $jsonResponse ")
+
+                errors.postValue(getErrorMessageFromJson(jsonResponse))
+            }
+        return activities
     }
 
 }
