@@ -19,13 +19,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.fairventures.treeo.R
 import org.fairventures.treeo.adapters.HomeGuideRecyclerAdapter
 import org.fairventures.treeo.adapters.WhatsNewRecyclerAdapter
 import org.fairventures.treeo.db.models.*
+import org.fairventures.treeo.models.ActivityTemplate
+import org.fairventures.treeo.models.UserActivities
 import org.fairventures.treeo.models.WhatsNew
 import org.fairventures.treeo.ui.authentication.LoginLogoutViewModel
 import org.fairventures.treeo.ui.home.HomeViewModel
@@ -51,6 +51,8 @@ class HomeFragment : Fragment() {
     private val loginLogoutViewModel: LoginLogoutViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
 
+    private lateinit var homeGuideRecyclerAdapter: HomeGuideRecyclerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseCrashlytics.getInstance().setUserId(getUserId().toString())
@@ -68,8 +70,6 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpViews()
         setObservers()
-        homeViewModel.getNextTwoActivities()
-        getPlannedActivities()
     }
 
 
@@ -79,12 +79,20 @@ class HomeFragment : Fragment() {
         getDeviceInformation()
     }
 
-    private fun setUpViews() {
-        setUpWhatsNewRecycler()
+    override fun onResume() {
+        super.onResume()
+        getPlannedActivities()
+        homeViewModel.getNextTwoActivities()
     }
 
-    private fun setUpHomeGuideRecycler(list: List<Activity>) {
-        homeGuideRecycler.adapter = HomeGuideRecyclerAdapter(this, list)
+    private fun setUpViews() {
+        setUpWhatsNewRecycler()
+        setUpHomeGuideRecycler()
+    }
+
+    private fun setUpHomeGuideRecycler() {
+        homeGuideRecyclerAdapter = HomeGuideRecyclerAdapter(this)
+        homeGuideRecycler.adapter = homeGuideRecyclerAdapter
         homeGuideRecycler.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,
@@ -141,10 +149,80 @@ class HomeFragment : Fragment() {
 //            }
 //        )
 
-        homeViewModel.nextTwoActivities.observe(viewLifecycleOwner, Observer {
-            setUpHomeGuideRecycler(it)
+        homeViewModel.nextTwoActivities.observe(viewLifecycleOwner, Observer { activities ->
+            homeGuideRecyclerAdapter.submitList(activities)
         })
 
+        homeViewModel.plannedActivities.observe(
+            viewLifecycleOwner,
+            Observer {userActivities ->
+                if (userActivities != null){
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if(insertActivitiesFromApi(userActivities)){
+                            homeViewModel.getNextTwoActivities()
+                        }
+                    }
+                }
+                else{
+                    Log.d("Planned Activities", "Response is null")
+                }
+            }
+        )
+
+    }
+
+    private suspend fun insertActivitiesFromApi(userActivities: UserActivities)  =
+        CoroutineScope(Dispatchers.IO).async {
+            val plannedActivityIds = mutableListOf<Long>()
+            userActivities.plannedActivites.forEach { plannedActivity ->
+                homeViewModel.insertActivity(
+                        Activity(
+                                type = plannedActivity.activityTemplate?.activityType!!,
+                                due_date = plannedActivity.dueDate,
+                                plot = plannedActivity.plot.toString(),
+                                activity_id_from_remoteDB = plannedActivity.id,
+                                activity_code = plannedActivity.activityTemplate.code.toString(),
+                                questionnaire = Questionnaire(
+                                        activity_id_from_remoteDB = plannedActivity.id,
+                                        questionnaire_id_from_remote = plannedActivity.activityTemplate.questionnaire.id,
+                                        questionnaire_title = plannedActivity.activityTemplate.questionnaire.configuration.title,
+                                        pages = getPages(plannedActivity.activityTemplate.questionnaire.configuration.pages)
+                                )
+                        )
+                )
+                plannedActivityIds.add(plannedActivity.id)
+            }
+            return@async true
+        }.await()
+
+
+    private fun getPages(pages: List<org.fairventures.treeo.models.Page>): Array<Page> {
+        val pagesList:MutableList<Page> = mutableListOf()
+        pages.forEach{page ->
+            pagesList.add(
+                Page(
+                    pageType = page.pageType,
+                    questionCode = page.questionCode,
+                    header = page.header,
+                    description = page.description,
+                    options = getOptions(page.options)
+                )
+            )
+        }
+        return pagesList.toTypedArray()
+    }
+
+    private fun getOptions(options: List<org.fairventures.treeo.models.Option>): Array<Option> {
+        val optionsList = mutableListOf<Option>()
+        Log.d("Options",options.toString())
+        options.forEach {option ->
+           optionsList.add(Option(
+                option_title = option.title,
+                option_code = option.code
+            )
+           )
+        }
+        return optionsList.toTypedArray()
     }
 
     private fun getDeviceInformation() {

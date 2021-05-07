@@ -17,8 +17,11 @@ import org.fairventures.treeo.db.models.Activity
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HomeGuideRecyclerAdapter(private val context: Fragment, private val list: List<Activity>) :
+class HomeGuideRecyclerAdapter(private val context: Fragment) :
     RecyclerView.Adapter<HomeGuideRecyclerAdapter.GuideViewHolder>() {
+
+    var list: List<Activity> = listOf()
+
     class GuideViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.guideObjectImageView)
         val dateTextView: TextView = itemView.findViewById(R.id.guideObjectDateTextView)
@@ -44,7 +47,7 @@ class HomeGuideRecyclerAdapter(private val context: Fragment, private val list: 
 //                Glide.with(context)
 //                    .load(list[position].image)
 //                    .into(imageView)
-                dateTextView.text = convertLongToTime(list[position].due_date)
+                dateTextView.text = list[position].due_date
 //                titleTextView.text = list[position].title
 //                detailsTextView.text = list[position].details
             }
@@ -66,6 +69,11 @@ class HomeGuideRecyclerAdapter(private val context: Fragment, private val list: 
     private fun convertLongToTime(time: Long): String {
         val simpleDateFormat = SimpleDateFormat("dd.LLL.yyyy", Locale.getDefault())
         return simpleDateFormat.format(time).toString()
+    }
+
+    fun submitList(newList: List<Activity>){
+        list = newList
+        notifyDataSetChanged()
     }
 
 }

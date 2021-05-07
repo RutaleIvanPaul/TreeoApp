@@ -61,4 +61,7 @@
     <string name="text_country">Country</string>
     <string name="text_create_a_better_income">Create A Better Income By Tree Planting</string>
     <string name="text_treeo_goal">We provide seedlings, educate and help farmers to create a sustainable income by planting trees.</string>
+
+
+    <string name="selected_language" translatable="false">Selected Language</string>
 </resources>

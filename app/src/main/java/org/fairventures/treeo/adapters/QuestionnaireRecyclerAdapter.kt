@@ -1,6 +1,6 @@
 package org.fairventures.treeo.adapters
 
-import android.util.Log
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox
 import org.fairventures.treeo.R
 import org.fairventures.treeo.db.models.Option
+import javax.inject.Inject
 
 private const val ITEM_VIEW_TYPE_CHECKBOX = 1
 private const val ITEM_VIEW_TYPE_RADIO = 2
 
-class QuestionnaireRecyclerAdapter() :
+class QuestionnaireRecyclerAdapter(var selectedLanguage: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private lateinit var list: List<Option>
@@ -60,7 +61,7 @@ class QuestionnaireRecyclerAdapter() :
         when (holder) {
             is CheckBoxViewHolder -> {
                 holder.apply {
-                    holder.checkBox.text = list[position].option_title["en"]
+                    holder.checkBox.text = list[position].option_title[selectedLanguage]
                     holder.checkBox.setOnClickListener {
                         manageAnswers(position)
 
@@ -69,7 +70,7 @@ class QuestionnaireRecyclerAdapter() :
             }
             is RadioButtonViewHolder -> {
                 holder.apply {
-                    radioButton.text = list[position].option_title["en"]
+                    radioButton.text = list[position].option_title[selectedLanguage]
                     holder.radioButton.isChecked = lastSelectedPosition == position
                     radioButton.setOnClickListener {
                         manageRadioButtonAnswers(position)
@@ -118,4 +119,5 @@ class QuestionnaireRecyclerAdapter() :
         currentAnswers.clear()
         notifyDataSetChanged()
     }
+
 }

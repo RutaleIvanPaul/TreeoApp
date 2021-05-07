@@ -1,23 +1,26 @@
 package org.fairventures.treeo.ui.questionnaire
 
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shuhart.stepview.StepView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_questionnaire.*
 import org.fairventures.treeo.R
 import org.fairventures.treeo.adapters.QuestionnaireRecyclerAdapter
 import org.fairventures.treeo.db.models.Activity
 import org.fairventures.treeo.db.models.Page
 import org.fairventures.treeo.db.models.QuestionnaireAnswer
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class QuestionnaireFragment : Fragment() {
 
     private val questionnaireViewModel: QuestionnaireViewModel by activityViewModels()
@@ -25,6 +28,19 @@ class QuestionnaireFragment : Fragment() {
     private var currentPage: Int = 0
     private lateinit var pages: Array<Page>
     private lateinit var questionAdapter: QuestionnaireRecyclerAdapter
+
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
+
+    private var selectedLanguage = "en"
+
+    private fun getSelectedLanguage(): String {
+        with(sharedPref.edit()) {
+            return sharedPref.getString("Selected Language","en")!!
+            apply()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,6 +54,7 @@ class QuestionnaireFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         plannedActivity = arguments?.getParcelable("activity")
         setUpViews()
+        selectedLanguage = getSelectedLanguage()
     }
 
 //    override fun onResume() {
@@ -55,7 +72,7 @@ class QuestionnaireFragment : Fragment() {
 
     private fun initializeTextView() {
         val title = pages[currentPage].header
-        questionnaireTextView.text = title["en"]
+        questionnaireTextView.text = title[selectedLanguage]
     }
 
     private fun initializePages() {
@@ -71,7 +88,7 @@ class QuestionnaireFragment : Fragment() {
     }
 
     private fun initializeRecycler() {
-        questionAdapter = QuestionnaireRecyclerAdapter()
+        questionAdapter = QuestionnaireRecyclerAdapter(selectedLanguage)
         questionnaireRecyclerView.adapter = questionAdapter
         questionnaireRecyclerView.layoutManager = LinearLayoutManager(
             context,
@@ -165,7 +182,7 @@ class QuestionnaireFragment : Fragment() {
     }
 
     private fun updateTextView() {
-        questionnaireTextView.text = pages[currentPage].header["en"]
+        questionnaireTextView.text = pages[currentPage].header[selectedLanguage]
     }
 
     private fun updateRecyclerView() {
