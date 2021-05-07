@@ -174,11 +174,10 @@ class RequestManager @Inject constructor(
     ): ValidateOTPRegistrationResponse? {
         var items: ValidateOTPRegistrationResponse? = null
 
-        val response =
-            apiService.validateOTPRegistration(validateOTPRegistration)
+        val response = apiService.validateOTPRegistration(validateOTPRegistration)
 
         if (response.isSuccessful) {
-            items = response.body()
+            items = response.body()?.data
         } else {
             val jsonResponse = response.errorBody()!!.charStream().readText()
             Log.d("API ERROR", "API Fetch Error: $jsonResponse ")

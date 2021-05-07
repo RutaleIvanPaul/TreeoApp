@@ -121,8 +121,8 @@ class RegistrationViewModelTest {
                 viewModel.validateOTPRegistration(
                         validateOTPRegistration
                 )
-                assertThat(viewModel.validateOTPRegistrationResponse.value?.message)
-                        .isEqualTo("User Active")
+                assertThat(viewModel.validateOTPRegistrationResponse.value?.token)
+                        .isEqualTo("thisisatesttoken")
             }
 }
 
