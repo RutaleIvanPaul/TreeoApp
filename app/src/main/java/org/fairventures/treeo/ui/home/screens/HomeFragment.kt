@@ -179,6 +179,8 @@ class HomeFragment : Fragment() {
                         Activity(
                                 type = plannedActivity.activityTemplate?.activityType!!,
                                 due_date = plannedActivity.dueDate,
+                                title = plannedActivity.title,
+                                description = plannedActivity.description,
                                 plot = plannedActivity.plot.toString(),
                                 activity_id_from_remoteDB = plannedActivity.id,
                                 activity_code = plannedActivity.activityTemplate.code.toString(),

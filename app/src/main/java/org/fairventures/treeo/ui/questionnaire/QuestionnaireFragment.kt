@@ -73,6 +73,7 @@ class QuestionnaireFragment : Fragment() {
     private fun initializeTextView() {
         val title = pages[currentPage].header
         questionnaireTextView.text = title[selectedLanguage]
+        questionnaireDescriptionTextView.text = pages[currentPage].description[selectedLanguage]
     }
 
     private fun initializePages() {
@@ -183,6 +184,7 @@ class QuestionnaireFragment : Fragment() {
 
     private fun updateTextView() {
         questionnaireTextView.text = pages[currentPage].header[selectedLanguage]
+        questionnaireDescriptionTextView.text = pages[currentPage].description[selectedLanguage]
     }
 
     private fun updateRecyclerView() {

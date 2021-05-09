@@ -100,7 +100,11 @@ class FakeMainRepository : IMainRepository {
     }
 
     private fun returnFakeretrievePlannedActivities(): UserActivities? {
-        val activity: List<PlannedActivity> = listOf(PlannedActivity(0, "", false, "", "", null, null))
+        val activity: List<PlannedActivity> = listOf(
+                PlannedActivity(
+                0, "", false, "", "", "",
+                        "",null, null
+                ))
         return UserActivities(
             firstName = "firstname",
             lastName = "lastname",
