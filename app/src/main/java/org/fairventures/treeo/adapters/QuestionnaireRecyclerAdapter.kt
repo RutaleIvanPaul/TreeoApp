@@ -62,6 +62,7 @@ class QuestionnaireRecyclerAdapter(var selectedLanguage: String) :
             is CheckBoxViewHolder -> {
                 holder.apply {
                     holder.checkBox.text = list[position].option_title[selectedLanguage]
+                    holder.checkBox.isChecked = false
                     holder.checkBox.setOnClickListener {
                         manageAnswers(position)
 
