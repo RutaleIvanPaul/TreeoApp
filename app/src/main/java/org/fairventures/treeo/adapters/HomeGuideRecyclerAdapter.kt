@@ -48,8 +48,8 @@ class HomeGuideRecyclerAdapter(private val context: Fragment) :
 //                    .load(list[position].image)
 //                    .into(imageView)
                 dateTextView.text = list[position].due_date
-//                titleTextView.text = list[position].title
-//                detailsTextView.text = list[position].details
+                titleTextView.text = list[position].title
+                detailsTextView.text = list[position].description
             }
 
             holder.itemView.setOnClickListener {
