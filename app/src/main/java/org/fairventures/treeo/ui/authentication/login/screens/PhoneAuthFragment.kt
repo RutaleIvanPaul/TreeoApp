@@ -10,11 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
-import android.widget.CheckBox
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -24,8 +21,9 @@ import org.fairventures.treeo.R
 import org.fairventures.treeo.adapters.CountrySpinnerAdapter
 import org.fairventures.treeo.models.Country
 import org.fairventures.treeo.models.RequestOTP
-import org.fairventures.treeo.ui.authentication.GDPRFragment
 import org.fairventures.treeo.ui.authentication.LoginLogoutViewModel
+import org.fairventures.treeo.util.disableView
+import org.fairventures.treeo.util.enableView
 import org.fairventures.treeo.util.errors
 import org.fairventures.treeo.util.getCountries
 
@@ -62,10 +60,9 @@ class PhoneAuthFragment : Fragment() {
         phoneLoginContinueButton.setOnClickListener {
             viewModel.loginContinue()
             viewModel.setPhoneNumber(phoneNumber.value.toString())
-//            viewModel.requestOTP(RequestOTP(phoneNumber.value.toString()))
+            viewModel.requestOTP(RequestOTP(phoneNumber.value.toString()))
         }
     }
-
 
     private fun createSpinner() {
         val arrayAdapter = CountrySpinnerAdapter(
@@ -116,38 +113,21 @@ class PhoneAuthFragment : Fragment() {
         phoneNumber.observe(viewLifecycleOwner, {
             if (it != null && it.length == 13) {
                 closeKeyboard(phoneInputEditText)
-                enableProgressBar()
-                viewModel.requestOTP(RequestOTP(phoneNumber.value.toString()))
+                enableView(phoneLoginContinueButton)
             } else {
-                disableButton()
+                disableView(phoneLoginContinueButton)
             }
         })
 
         viewModel.phoneNumberOTPResponse.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                enableButton()
-                disableProgressBar()
+                enableView(phoneLoginContinueButton)
+                disableView(checkNumberProgressBar)
             } else {
-                disableProgressBar()
+                disableView(checkNumberProgressBar)
                 Toast.makeText(requireContext(), errors.value, Toast.LENGTH_LONG).show()
             }
         })
-    }
-
-    private fun enableButton() {
-        phoneLoginContinueButton.isEnabled = true
-    }
-
-    private fun disableButton() {
-        phoneLoginContinueButton.isEnabled = false
-    }
-
-    private fun enableProgressBar() {
-        checkNumberProgressBar.visibility = View.VISIBLE
-    }
-
-    private fun disableProgressBar() {
-        checkNumberProgressBar.visibility = View.GONE
     }
 
     private fun closeKeyboard(view: View) {
