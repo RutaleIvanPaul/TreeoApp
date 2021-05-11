@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import dagger.Module
 import dagger.Provides
@@ -48,10 +47,16 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesHttpClient(): OkHttpClient {
+    fun providesNetworkInterceptor(@ApplicationContext context: Context) =
+        NetworkConnectionInterceptor(context)
+
+    @Singleton
+    @Provides
+    fun providesHttpClient(networkInterceptor: NetworkConnectionInterceptor): OkHttpClient {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
-        return OkHttpClient.Builder().addInterceptor(interceptor).build()
+        return OkHttpClient.Builder().addInterceptor(networkInterceptor).addInterceptor(interceptor)
+            .build()
     }
 
     @Singleton
@@ -111,7 +116,10 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesDBMainRepository(activityDao: ActivityDao, questionnaireAnswerDao: QuestionnaireAnswerDao) =
+    fun providesDBMainRepository(
+        activityDao: ActivityDao,
+        questionnaireAnswerDao: QuestionnaireAnswerDao
+    ) =
         DBMainRepository(activityDao, questionnaireAnswerDao)
 
 }

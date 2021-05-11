@@ -5,7 +5,10 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.fairventures.treeo.MainCoroutineRule
-import org.fairventures.treeo.models.*
+import org.fairventures.treeo.models.NewRegisteredUser
+import org.fairventures.treeo.models.RegisterMobileUser
+import org.fairventures.treeo.models.RegisterUser
+import org.fairventures.treeo.models.ValidateOTPRegistration
 import org.fairventures.treeo.repository.FakeMainRepository
 import org.junit.Before
 import org.junit.Rule
@@ -54,35 +57,6 @@ class RegistrationViewModelTest {
             assertThat(viewModel.newUser.value?.email).isEqualTo(expectedUser.email)
         }
 
-    @Test
-    fun `test googleSignUp returns GoogleUser`() =
-        mainCoroutineRule.testDispatcher.runBlockingTest {
-            val testToken = "thisisafaketesttoken"
-            val expectedUser = GoogleUser(
-                    "username",
-                    "googleuser@gmail.com",
-                    "thisisanotherfaketoken",
-                    0
-            )
-            viewModel.googleSignUp(testToken)
-            assertThat(viewModel.googleUser.value?.email).isEqualTo(expectedUser.email)
-        }
-
-    @Test
-    fun `test facebookSignUp returns FacebookUser`() =
-        mainCoroutineRule.testDispatcher.runBlockingTest {
-            val testToken = "thisisafaketesttoken"
-            val expectedUser = FacebookUser(
-                "face@gmail.com",
-                "firstName",
-                "lastName",
-                0,
-                "thisisanotherfaketoken",
-                "username"
-            )
-            viewModel.facebookSignUp(testToken)
-            assertThat(viewModel.facebookUser.value?.email).isEqualTo(expectedUser.email)
-        }
 
     @Test
     fun `test validatePhoneNumber_Registration returns ValidateResponseData`() =
@@ -90,39 +64,39 @@ class RegistrationViewModelTest {
             val expectedNumber = "111"
             viewModel.validatePhoneNumberRegistration(expectedNumber)
             assertThat(viewModel.phoneNumberValidationResponseRegistration.value?.phoneNumber)
-                    .isEqualTo(expectedNumber)
+                .isEqualTo(expectedNumber)
         }
 
     @Test
-    fun `test registerMobileUser returns RegisteredMobileUser` () =
-            mainCoroutineRule.testDispatcher.runBlockingTest {
-                val mobileUser = RegisterMobileUser(
-                        firstName = "firstname",
-                        lastName = "lastname",
-                        country = "Uganda",
-                        password = "password",
-                        phoneNumber = "123",
-                        username = "username"
-                )
-                viewModel.registerMobileUser(
-                        mobileUser
-                )
-                assertThat(viewModel.registeredMobileUser.value?.firstName)
-                        .isEqualTo(mobileUser.firstName)
-            }
+    fun `test registerMobileUser returns RegisteredMobileUser`() =
+        mainCoroutineRule.testDispatcher.runBlockingTest {
+            val mobileUser = RegisterMobileUser(
+                firstName = "firstname",
+                lastName = "lastname",
+                country = "Uganda",
+                password = "password",
+                phoneNumber = "123",
+                username = "username"
+            )
+            viewModel.registerMobileUser(
+                mobileUser
+            )
+            assertThat(viewModel.registeredMobileUser.value?.firstName)
+                .isEqualTo(mobileUser.firstName)
+        }
 
     @Test
     fun `test validateOTPRegistration returns ValidateOTPRegistrationResponse`() =
-            mainCoroutineRule.testDispatcher.runBlockingTest {
-                val validateOTPRegistration = ValidateOTPRegistration(
-                        code = "123",
-                        phoneNumber = "123"
-                )
-                viewModel.validateOTPRegistration(
-                        validateOTPRegistration
-                )
-                assertThat(viewModel.validateOTPRegistrationResponse.value?.token)
-                        .isEqualTo("thisisatesttoken")
-            }
+        mainCoroutineRule.testDispatcher.runBlockingTest {
+            val validateOTPRegistration = ValidateOTPRegistration(
+                code = "123",
+                phoneNumber = "123"
+            )
+            viewModel.validateOTPRegistration(
+                validateOTPRegistration
+            )
+            assertThat(viewModel.validateOTPRegistrationResponse.value?.token)
+                .isEqualTo("thisisatesttoken")
+        }
 }
 

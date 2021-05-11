@@ -1,7 +1,6 @@
 package org.fairventures.treeo.repository
 
 import org.fairventures.treeo.models.*
-import org.fairventures.treeo.db.models.Activity
 
 class FakeMainRepository : IMainRepository {
     private fun returnFakeUser(registerUser: RegisterUser): NewRegisteredUser {
@@ -15,34 +14,6 @@ class FakeMainRepository : IMainRepository {
 
     override suspend fun createUser(registerUser: RegisterUser): NewRegisteredUser? {
         return returnFakeUser(registerUser)
-    }
-
-    private fun returnFakeGoogleUser(googleAuthToken: String): GoogleUser {
-        return GoogleUser(
-            "username",
-            "googleuser@gmail.com",
-            googleAuthToken,
-            200
-        )
-    }
-
-    override suspend fun googleSignUp(googleAuthToken: String): GoogleUser? {
-        return returnFakeGoogleUser(googleAuthToken)
-    }
-
-    private fun returnFakeFacebookUser(accessToken: String): FacebookUser {
-        return FacebookUser(
-            "face@gmail.com",
-            "firstName",
-            "lastName",
-            0,
-            accessToken,
-            "username"
-        )
-    }
-
-    override suspend fun faceBookSignUp(accessToken: String): FacebookUser? {
-        return returnFakeFacebookUser(accessToken)
     }
 
     private fun returnFakeLoginResponse(loginDetails: LoginDetails): LoginResponse {
@@ -101,10 +72,11 @@ class FakeMainRepository : IMainRepository {
 
     private fun returnFakeretrievePlannedActivities(): UserActivities? {
         val activity: List<PlannedActivity> = listOf(
-                PlannedActivity(
+            PlannedActivity(
                 0, "", false, "", "", "",
-                        "",null, null
-                ))
+                "", null, null
+            )
+        )
         return UserActivities(
             firstName = "firstname",
             lastName = "lastname",

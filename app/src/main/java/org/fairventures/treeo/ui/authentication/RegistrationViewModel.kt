@@ -63,18 +63,6 @@ class RegistrationViewModel @ViewModelInject constructor(
         }
     }
 
-    fun googleSignUp(googleAuthToken: String) {
-        viewModelScope.launch(dispatcher.io()) {
-            _googleUser.postValue(mainRepository.googleSignUp(googleAuthToken))
-        }
-    }
-
-    fun facebookSignUp(access_token: String) {
-        viewModelScope.launch(dispatcher.io()) {
-            _facebookUser.postValue(mainRepository.faceBookSignUp(access_token))
-        }
-    }
-
     fun validatePhoneNumberRegistration(phoneNumber: String) {
         viewModelScope.launch(dispatcher.io()) {
             _phoneNumberValidationResponseRegistration.postValue(
@@ -120,7 +108,7 @@ class RegistrationViewModel @ViewModelInject constructor(
         newUserObj.country = country
     }
 
-    fun setGDPRStatus(check_gdpr: Boolean){
+    fun setGDPRStatus(check_gdpr: Boolean) {
         newUserObj.isGdprCompliant = check_gdpr
     }
 
