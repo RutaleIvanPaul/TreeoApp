@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -24,13 +25,13 @@ import org.fairventures.treeo.R
 import org.fairventures.treeo.adapters.HomeGuideRecyclerAdapter
 import org.fairventures.treeo.adapters.WhatsNewRecyclerAdapter
 import org.fairventures.treeo.db.models.*
-import org.fairventures.treeo.models.ActivityTemplate
 import org.fairventures.treeo.models.UserActivities
 import org.fairventures.treeo.models.WhatsNew
 import org.fairventures.treeo.ui.authentication.LoginLogoutViewModel
 import org.fairventures.treeo.ui.home.HomeViewModel
 import org.fairventures.treeo.util.DeviceInfoUtils
 import org.fairventures.treeo.util.IDispatcherProvider
+import org.fairventures.treeo.util.errors
 import javax.inject.Inject
 
 //typealias LumaListener = (luma: Double) -> Unit
@@ -71,7 +72,6 @@ class HomeFragment : Fragment() {
         setUpViews()
         setObservers()
     }
-
 
 
     override fun onStart() {
@@ -155,42 +155,42 @@ class HomeFragment : Fragment() {
 
         homeViewModel.plannedActivities.observe(
             viewLifecycleOwner,
-            Observer {userActivities ->
-                if (userActivities != null){
+            Observer { userActivities ->
+                if (userActivities != null) {
                     CoroutineScope(Dispatchers.IO).launch {
-                        if(insertActivitiesFromApi(userActivities)){
+                        if (insertActivitiesFromApi(userActivities)) {
                             homeViewModel.getNextTwoActivities()
                         }
                     }
-                }
-                else{
+                } else {
                     Log.d("Planned Activities", "Response is null")
+                    Toast.makeText(context, errors.value, Toast.LENGTH_LONG).show()
                 }
             }
         )
 
     }
 
-    private suspend fun insertActivitiesFromApi(userActivities: UserActivities)  =
+    private suspend fun insertActivitiesFromApi(userActivities: UserActivities) =
         CoroutineScope(Dispatchers.IO).async {
             val plannedActivityIds = mutableListOf<Long>()
             userActivities.plannedActivites.forEach { plannedActivity ->
                 homeViewModel.insertActivity(
-                        Activity(
-                                type = plannedActivity.activityTemplate?.activityType!!,
-                                due_date = plannedActivity.dueDate,
-                                title = plannedActivity.title,
-                                description = plannedActivity.description,
-                                plot = plannedActivity.plot.toString(),
-                                activity_id_from_remoteDB = plannedActivity.id,
-                                activity_code = plannedActivity.activityTemplate.code.toString(),
-                                questionnaire = Questionnaire(
-                                        activity_id_from_remoteDB = plannedActivity.id,
-                                        questionnaire_id_from_remote = plannedActivity.activityTemplate.questionnaire.id,
-                                        questionnaire_title = plannedActivity.activityTemplate.questionnaire.configuration.title,
-                                        pages = getPages(plannedActivity.activityTemplate.questionnaire.configuration.pages)
-                                )
+                    Activity(
+                        type = plannedActivity.activityTemplate?.activityType!!,
+                        due_date = plannedActivity.dueDate,
+                        title = plannedActivity.title,
+                        description = plannedActivity.description,
+                        plot = plannedActivity.plot.toString(),
+                        activity_id_from_remoteDB = plannedActivity.id,
+                        activity_code = plannedActivity.activityTemplate.code.toString(),
+                        questionnaire = Questionnaire(
+                            activity_id_from_remoteDB = plannedActivity.id,
+                            questionnaire_id_from_remote = plannedActivity.activityTemplate.questionnaire.id,
+                            questionnaire_title = plannedActivity.activityTemplate.questionnaire.configuration.title,
+                            pages = getPages(plannedActivity.activityTemplate.questionnaire.configuration.pages)
                         )
+                    )
                 )
                 plannedActivityIds.add(plannedActivity.id)
             }
@@ -199,8 +199,8 @@ class HomeFragment : Fragment() {
 
 
     private fun getPages(pages: List<org.fairventures.treeo.models.Page>): Array<Page> {
-        val pagesList:MutableList<Page> = mutableListOf()
-        pages.forEach{page ->
+        val pagesList: MutableList<Page> = mutableListOf()
+        pages.forEach { page ->
             pagesList.add(
                 Page(
                     pageType = page.pageType,
@@ -216,13 +216,14 @@ class HomeFragment : Fragment() {
 
     private fun getOptions(options: List<org.fairventures.treeo.models.Option>): Array<Option> {
         val optionsList = mutableListOf<Option>()
-        Log.d("Options",options.toString())
-        options.forEach {option ->
-           optionsList.add(Option(
-                option_title = option.title,
-                option_code = option.code
+        Log.d("Options", options.toString())
+        options.forEach { option ->
+            optionsList.add(
+                Option(
+                    option_title = option.title,
+                    option_code = option.code
+                )
             )
-           )
         }
         return optionsList.toTypedArray()
     }
@@ -312,7 +313,7 @@ class HomeFragment : Fragment() {
         fun newInstance() = HomeFragment()
     }
 
-    private fun getPlannedActivities(){
+    private fun getPlannedActivities() {
         homeViewModel.getPlannedActivities(getUserToken())
     }
 }

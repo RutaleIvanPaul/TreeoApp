@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.MutableLiveData
@@ -179,10 +180,11 @@ class UserPhoneFragment : Fragment() {
 
         viewModel.phoneNumberValidationResponseRegistration.observe(viewLifecycleOwner, Observer {
             hideView(userPhoneProgressBar)
-            if (it.phoneNumber.isNotEmpty()) {
+            if (it != null) {
                 showView(userPhoneLoginLink)
             } else {
                 hideView(userPhoneLoginLink)
+                Toast.makeText(context, errors.value, Toast.LENGTH_LONG).show()
             }
         })
     }

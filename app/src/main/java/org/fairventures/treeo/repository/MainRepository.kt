@@ -10,12 +10,6 @@ class MainRepository @Inject constructor(
     override suspend fun createUser(registerUser: RegisterUser) =
         requestManager.createUser(registerUser)
 
-    override suspend fun googleSignUp(googleAuthToken: String) =
-        requestManager.googleSignUp(googleAuthToken)
-
-    override suspend fun faceBookSignUp(accessToken: String) =
-        requestManager.facebookSignUp(accessToken)
-
     override suspend fun login(loginDetails: LoginDetails) =
         requestManager.login(loginDetails)
 
