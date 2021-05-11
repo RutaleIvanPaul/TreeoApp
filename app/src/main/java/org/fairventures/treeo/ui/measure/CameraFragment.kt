@@ -3,10 +3,15 @@ package org.fairventures.treeo.ui.measure
 import android.Manifest
 import android.content.Context
 import android.content.Context.LOCATION_SERVICE
+import android.content.Context.SENSOR_SERVICE
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.location.Location
 import android.location.LocationManager
 import android.media.ExifInterface
@@ -43,7 +48,7 @@ import java.util.concurrent.Executors
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks {
+class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks, SensorEventListener {
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -58,6 +63,11 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var locationRequest: LocationRequest
 
+    var sensorManager: SensorManager? = null
+    private var picture_taken_before: Boolean = false
+    private var currentSteps: Float = 0f
+    private var previousSteps: Float =0f
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -68,6 +78,30 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             LocationServices.getFusedLocationProviderClient(requireActivity())
 
         locationManager = requireActivity().getSystemService(LOCATION_SERVICE) as LocationManager
+
+        sensorManager = requireActivity().getSystemService(SENSOR_SERVICE) as SensorManager
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager?.unregisterListener(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        var stepsSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+
+        if (stepsSensor == null) {
+            Toast.makeText(requireContext(), "No Step Counter Sensor !", Toast.LENGTH_LONG).show()
+            REQUIRED_PERMISSIONS = arrayOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        } else {
+            sensorManager?.registerListener(this, stepsSensor, SensorManager.SENSOR_STATUS_ACCURACY_HIGH)
+        }
     }
 
     override fun onCreateView(
@@ -144,6 +178,11 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                             Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                             Log.d(TAG, msg)
 
+                            if (!picture_taken_before){
+                                picture_taken_before = true
+                                previousSteps = currentSteps
+                            }
+
                             getMetadataOfSavedImage(photoFile)
                         }
                     })
@@ -165,6 +204,9 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun getMetadataOfSavedImage(photofile: File) {
+
+        Log.d("Exif",(currentSteps-previousSteps).toString())
+
         val exifInterface = ExifInterface(photofile.absolutePath)
         val tagsToCheck = arrayOf(
             ExifInterface.TAG_DATETIME,
@@ -424,11 +466,21 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         private const val TAG = "CameraXBasic"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION
+        private var REQUIRED_PERMISSIONS = arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACTIVITY_RECOGNITION
         )
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+            currentSteps = event?.values?.get(0)!!
+            Log.d("Steps:" , event?.values?.get(0).toString())
+
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
     }
 }
 
