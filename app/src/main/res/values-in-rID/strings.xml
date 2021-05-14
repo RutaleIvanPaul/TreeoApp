@@ -42,4 +42,5 @@
     <string name="passcode_delay_text">Mungkin perlu beberapa menit untuk menerima kode sandi</string>
     <string name="phone_helper_text">Ketik nomor telepon Anda untuk menerima kode akses 1 kali</string>
     <string name="otp_pass_code_message">Konfirmasikan kode sandi yang dikirim ke</string>
+    <string name="gdpr_conditions">GDPR Conditions</string>
 </resources>

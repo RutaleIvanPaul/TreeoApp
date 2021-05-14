@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
+import kotlinx.android.synthetic.main.fragment_gdpr.*
 import org.fairventures.treeo.R
 import java.util.*
 
@@ -32,16 +33,11 @@ class GDPRFragment: DialogFragment() {
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val toolbar: Toolbar = view.findViewById(R.id.toolbar)
-        toolbar.setNavigationOnClickListener { v: View? -> dismiss() }
-        toolbar.title = "GDPR Conditions"
-        toolbar.setOnMenuItemClickListener { item: MenuItem? ->
+
+        gdpr_conditions_button.setOnClickListener {
             dismiss()
-            true
         }
-//        val current: Locale = resources.configuration.locale
-//        viewModel.setLocaleLanguage(current.language)
-//        Log.d(TAG, "onViewCreated: "+ current)
+
 
         val webView = view.findViewById<WebView>(R.id.webview)
         webView.loadUrl("https://fairventures.org/ueber-uns-2/datenschutz/")
