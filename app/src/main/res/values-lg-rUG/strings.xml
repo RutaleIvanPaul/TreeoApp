@@ -42,4 +42,5 @@
     <string name="passcode_delay_text">Kiyinza okutwala edakiika okufuna passcode</string>
     <string name="phone_helper_text">Wandiika essimu yo okufuna passcode</string>
     <string name="otp_pass_code_message">Kakasa passcode esindikibwa ku numba eno</string>
+    <string name="gdpr_conditions">GDPR Conditions</string>
 </resources>
