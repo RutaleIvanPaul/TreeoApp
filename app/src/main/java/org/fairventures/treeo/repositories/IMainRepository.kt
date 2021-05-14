@@ -1,6 +1,7 @@
-package org.fairventures.treeo.repository
+package org.fairventures.treeo.repositories
 
 import org.fairventures.treeo.models.*
+import org.fairventures.treeo.services.models.ActivityDTO
 
 interface IMainRepository {
     suspend fun createUser(registerUser: RegisterUser): NewRegisteredUser?
@@ -15,5 +16,5 @@ interface IMainRepository {
     ): ValidateOTPRegistrationResponse?
 
     suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse?
-    suspend fun retrievePlannedActivities(userToken: String): UserActivities?
+    suspend fun retrievePlannedActivities(userToken: String): List<ActivityDTO>?
 }

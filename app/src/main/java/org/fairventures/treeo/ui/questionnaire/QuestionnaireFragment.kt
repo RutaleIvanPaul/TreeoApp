@@ -13,188 +13,123 @@ import com.shuhart.stepview.StepView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_questionnaire.*
 import org.fairventures.treeo.R
-import org.fairventures.treeo.adapters.QuestionnaireRecyclerAdapter
-import org.fairventures.treeo.db.models.Activity
-import org.fairventures.treeo.db.models.Page
-import org.fairventures.treeo.db.models.QuestionnaireAnswer
+import org.fairventures.treeo.adapters.OptionCheckedListener
+import org.fairventures.treeo.adapters.OptionRecyclerAdapter
+import org.fairventures.treeo.models.ActivitySummaryItem
+import org.fairventures.treeo.models.Page
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class QuestionnaireFragment : Fragment() {
-
-    private val questionnaireViewModel: QuestionnaireViewModel by activityViewModels()
-    private var plannedActivity: Activity? = null
-    private var currentPage: Int = 0
-    private lateinit var pages: Array<Page>
-    private lateinit var questionAdapter: QuestionnaireRecyclerAdapter
-
-
+class QuestionnaireFragment : Fragment(), OptionCheckedListener {
     @Inject
     lateinit var sharedPref: SharedPreferences
 
-    private var selectedLanguage = "en"
+    private val questionnaireViewModel: QuestionnaireViewModel by activityViewModels()
+    private var summaryItem: ActivitySummaryItem? = null
+    private var currentPage: Int = 0
+    private var pageList = listOf<Page>()
+    private lateinit var questionAdapter: OptionRecyclerAdapter
 
-    private fun getSelectedLanguage(): String {
-        with(sharedPref.edit()) {
-            return sharedPref.getString("Selected Language","en")!!
-            apply()
-        }
-    }
+    private var selectedLanguage = "en"
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        summaryItem = arguments?.getParcelable("summaryItem")
         return inflater.inflate(R.layout.fragment_questionnaire, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        plannedActivity = arguments?.getParcelable("activity")
-        setUpViews()
         selectedLanguage = getSelectedLanguage()
+        pageList = summaryItem!!.pages
+        initializeViews()
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        restoreFromPrevious()
-//    }
-
-    private fun setUpViews() {
-        initializePages()
+    private fun initializeViews() {
         initializeStepView()
-        initializeTextView()
+        initializeTextViews()
         initializeButtons()
         initializeRecycler()
-    }
-
-    private fun initializeTextView() {
-        val title = pages[currentPage].header
-        questionnaireTextView.text = title[selectedLanguage]
-        questionnaireDescriptionTextView.text = pages[currentPage].description[selectedLanguage]
-    }
-
-    private fun initializePages() {
-        pages = plannedActivity!!.questionnaire!!.pages
     }
 
     private fun initializeStepView() {
         questionnaireIndicatorView.state
             .animationType(StepView.ANIMATION_LINE)
-            .stepsNumber(pages.size)
+            .stepsNumber(pageList.size)
             .animationDuration(resources.getInteger(android.R.integer.config_shortAnimTime))
             .commit()
     }
 
+    private fun initializeTextViews() {
+        questionnaireTextView.text = pageList[currentPage].header[selectedLanguage]
+        questionnaireDescriptionTextView.text = pageList[currentPage].description[selectedLanguage]
+    }
+
     private fun initializeRecycler() {
-        questionAdapter = QuestionnaireRecyclerAdapter(selectedLanguage)
-        questionnaireRecyclerView.adapter = questionAdapter
-        questionnaireRecyclerView.layoutManager = LinearLayoutManager(
+        questionAdapter = OptionRecyclerAdapter(selectedLanguage, this)
+        optionRecyclerview.adapter = questionAdapter
+        optionRecyclerview.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,
             false
         )
-        questionAdapter.submitList(pages[currentPage].options.toList(), pages[currentPage].pageType)
+        questionAdapter.submitList(pageList[currentPage].options!!, pageList[currentPage].pageType)
     }
 
     private fun initializeButtons() {
         questionnaireContinueButton.setOnClickListener {
-            showProgressBar()
-            insertAnswer(
-                QuestionnaireAnswer(
-                    questionnaire_id_from_remote = plannedActivity?.questionnaire?.questionnaire_id_from_remote!!,
-                    questionCode = pages[currentPage].questionCode,
-                    answers = QuestionnaireRecyclerAdapter.currentAnswers.toTypedArray()
-                )
-            )
-            if (currentPage < pages.size - 1) {
+            if (currentPage < pageList.size - 1) {
                 currentPage += 1
                 updateStepView()
-                updateTextView()
+                updateTextViews()
                 updateRecyclerView()
-            }
-            else if (currentPage == pages.size - 1){
-                completeActivity()
-                navigateToHomeFragment()
-            }
-        }
-
-        questionnaireBackButton.setOnClickListener {
-            if (currentPage > 0) {
-                currentPage -= 1
-                updateStepView()
-                updateTextView()
-                updateRecyclerView()
-            }
-            else if (currentPage == 0){
-                navigateToHomeFragment()
+            } else if (currentPage == pageList.size - 1) {
+                completeActivity(summaryItem!!.activity.id)
+                leaveQuestionnaire()
             }
         }
     }
 
-    private fun completeActivity() {
-        plannedActivity?.is_complete = true
-        questionnaireViewModel.completeActivity(plannedActivity!!)
-    }
-
-    private fun navigateToHomeFragment() {
-        findNavController().navigate(R.id.action_questionnaireFragment_to_homeFragment)
-    }
-
-    private fun insertAnswer(questionnaireAnswer: QuestionnaireAnswer) {
-        if(questionnaireAnswer.answers.size >0) {
-            questionnaireViewModel.insertQuestionnaireAnswer(questionnaireAnswer)
-        }
-    }
-
-//    private fun restoreFromPrevious(){
-//        pages.forEach { page ->
-//            questionnaireViewModel.getAnsweredQuestion(
-//                plannedActivity?.questionnaire?.questionnaire_id_from_remote!!,
-//                page.questionCode).observe(
-//                viewLifecycleOwner,
-//                Observer {questionnaireAnswer ->
-//                    if (questionnaireAnswer == null){
-//                        currentPage = pages.indexOf(page)
-//                        Log.d("QstionnaireCurrentPage", currentPage.toString())
-//                        updateStepView()
-//                        return@Observer
-//                    }
-//                    else{
-//                        Log.d("Qstionnaire", questionnaireAnswer.toString())
-//                    }
-//                }
-//            )
-//        }
-//    }
-
-    private fun showProgressBar() {
-        pages_progressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideProgressBar() {
-        pages_progressBar.visibility = View.GONE
+    private fun leaveQuestionnaire() {
+        findNavController().popBackStack()
     }
 
     private fun updateStepView() {
         questionnaireIndicatorView.go(currentPage, true)
     }
 
-    private fun updateTextView() {
-        questionnaireTextView.text = pages[currentPage].header[selectedLanguage]
-        questionnaireDescriptionTextView.text = pages[currentPage].description[selectedLanguage]
+    private fun updateTextViews() {
+        questionnaireTextView.text = pageList[currentPage].header[selectedLanguage]
+        questionnaireDescriptionTextView.text = pageList[currentPage].description[selectedLanguage]
     }
 
     private fun updateRecyclerView() {
-        questionAdapter.submitList(pages[currentPage].options.toList(), pages[currentPage].pageType)
-        hideProgressBar()
+        questionAdapter.submitList(pageList[currentPage].options!!, pageList[currentPage].pageType)
+    }
+
+    private fun getSelectedLanguage(): String {
+        with(sharedPref.edit()) {
+            return sharedPref.getString("Selected Language", "en")!!
+        }
+    }
+
+    private fun completeActivity(id: Long) {
+        questionnaireViewModel.markActivityAsCompleted(id)
+    }
+
+    override fun onOptionCheck(id: Long, isSelected: Boolean) {
+        questionnaireViewModel.updateOption(id, isSelected)
     }
 
     companion object {
-        // TODO: Rename and change types and number of parameters
+
         @JvmStatic
         fun newInstance() = QuestionnaireFragment()
     }
 }
+
+

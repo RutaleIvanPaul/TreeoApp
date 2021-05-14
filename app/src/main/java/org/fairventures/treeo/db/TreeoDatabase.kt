@@ -2,26 +2,26 @@ package org.fairventures.treeo.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
-import org.fairventures.treeo.db.converters.Converter
 import org.fairventures.treeo.db.dao.ActivityDao
-import org.fairventures.treeo.db.dao.QuestionnaireAnswerDao
-import org.fairventures.treeo.db.models.Activity
-import org.fairventures.treeo.db.models.QuestionnaireAnswer
+import org.fairventures.treeo.db.models.ActivityEntity
+import org.fairventures.treeo.db.models.OptionEntity
+import org.fairventures.treeo.db.models.PageEntity
+import org.fairventures.treeo.db.models.QuestionnaireEntity
 
-
+//@TypeConverters(Converter::class)
 @Database(
     entities = [
-        Activity::class,
-        QuestionnaireAnswer::class
+        ActivityEntity::class,
+        OptionEntity::class,
+        PageEntity::class,
+        QuestionnaireEntity::class
     ],
     version = 1
 )
-@TypeConverters(Converter::class)
 abstract class TreeoDatabase : RoomDatabase() {
 
     abstract fun getActivityDao(): ActivityDao
 
-    abstract fun getQuestionnaireAnswerDao(): QuestionnaireAnswerDao
+//    abstract fun getQuestionnaireAnswerDao(): QuestionnaireAnswerDao
 
 }

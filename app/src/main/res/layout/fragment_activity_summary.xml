@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.questionnaire.ActivityDetailsFragment">
+    tools:context=".ui.questionnaire.ActivitySummaryFragment">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/activityTitleTextView"
@@ -40,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/activityDetailsRecyclerview"
+        android:id="@+id/activitySummaryRecyclerview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"

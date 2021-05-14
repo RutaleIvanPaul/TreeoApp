@@ -9,19 +9,15 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.fairventures.treeo.R
-import org.fairventures.treeo.db.models.Activity
-import org.fairventures.treeo.models.ActivityDetail
+import org.fairventures.treeo.models.ActivitySummaryItem
+import org.fairventures.treeo.models.Option
 
 
-class ActivityDetailsAdapter(
+class ActivitySummaryAdapter(
     private val context: Context,
-    private val listener: HelperActivityListener
-) :
-    RecyclerView.Adapter<ActivityDetailsAdapter.ActivityDetailsHolder>() {
-    //    var list: List<Activity> = listOf()
-    var list: List<ActivityDetail> = listOf()
-
-    //    var answerMap: Map<String, String?> = mapOf()
+    private val summaryListener: ActivitySummaryListener
+) : RecyclerView.Adapter<ActivitySummaryAdapter.ActivityDetailsHolder>() {
+    var list: List<ActivitySummaryItem> = listOf()
     var language = ""
 
     class ActivityDetailsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -58,29 +54,36 @@ class ActivityDetailsAdapter(
     override fun onBindViewHolder(holder: ActivityDetailsHolder, position: Int) {
         holder.apply {
             itemView.setOnClickListener {
-                listener.onActivityClick(list[position].activity)
+                summaryListener.onActivityClick(list[position])
+            }
+            startButton.setOnClickListener {
+                summaryListener.onActivityClick(list[position])
+            }
+            editButton.setOnClickListener {
+                summaryListener.onActivityClick(list[position])
             }
 
             val cardHeader = "Part " + (position + 1) + "- " + list[position].activity.title
             titleTextview.text = cardHeader
-            val pages = list[position].activity.questionnaire!!.pages.toList()
 
-            if (list[position].activity.is_complete) {
+            if (list[position].activity.isCompleted) {
                 editButton.visibility = View.VISIBLE
                 startButton.visibility = View.GONE
                 completeLayout.visibility = View.VISIBLE
                 inCompleteLayout.visibility = View.GONE
 
-                pages.forEach {
+                clearContainer(summaryContainer)
+                list[position].pages.forEach {
                     summaryContainer.addView(
                         inflateCompleteLayout(
                             it.header[language]!!,
-                            list[position].questionAnswer[it.questionCode]
+                            it.options!!
                         )
                     )
                 }
             } else {
-                pages.forEach {
+                clearContainer(summaryContainer)
+                list[position].pages.forEach {
                     summaryContainer.addView(
                         inflateIncompleteLayout(
                             it.header[language]!!,
@@ -109,7 +112,7 @@ class ActivityDetailsAdapter(
         return view
     }
 
-    private fun inflateCompleteLayout(header: String, answer: String?): View {
+    private fun inflateCompleteLayout(header: String, options: List<Option>): View {
         val inflater = context
             .applicationContext
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -117,32 +120,29 @@ class ActivityDetailsAdapter(
         val actionTextView: TextView = view.findViewById(R.id.activitySummaryCompleteTextview)
         val resultTextView: TextView = view.findViewById(R.id.activityAnswerCompleteTextview)
         actionTextView.text = header
-        resultTextView.text = answer
-
+        options.forEach {
+            if (it.isSelected) {
+                resultTextView.text = it.title[language]
+            }
+        }
         return view
     }
 
-//    fun submitList(activities: List<Activity>, selectedLanguage: String) {
-//        list = activities
-//        language = selectedLanguage
-//        notifyDataSetChanged()
-//    }
+    private fun clearContainer(view: LinearLayout) {
+        if (view.childCount > 0) {
+            view.removeAllViews()
+        }
+    }
 
-    fun submitList(activities: List<ActivityDetail>, selectedLanguage: String) {
+    fun submitList(activities: List<ActivitySummaryItem>, selectedLanguage: String) {
         list = activities
         language = selectedLanguage
         notifyDataSetChanged()
     }
-
-//    fun submitAnswerMap(answers: Map<String, String?>) {
-//        answerMap = answers
-//        notifyDataSetChanged()
-//    }
-
 }
 
-interface HelperActivityListener {
-    fun onActivityClick(activity: Activity)
+interface ActivitySummaryListener {
+    fun onActivityClick(activity: ActivitySummaryItem)
 }
 
 

@@ -50,14 +50,14 @@
             app:destination="@id/questionnaireFragment">
             <argument
                 android:name="activity"
-                app:argType="org.fairventures.treeo.db.models.Activity" />
+                app:argType="org.fairventures.treeo.models.Activity" />
         </action>
         <action
             android:id="@+id/action_homeFragment_to_activityDetailsFragment"
-            app:destination="@id/activityDetailsFragment">
+            app:destination="@id/activitySummaryFragment">
             <argument
                 android:name="activity"
-                app:argType="org.fairventures.treeo.db.models.Activity" />
+                app:argType="org.fairventures.treeo.models.Activity" />
         </action>
     </fragment>
     <fragment
@@ -70,10 +70,10 @@
             app:destination="@id/questionnaireFragment" />
         <action
             android:id="@+id/action_guideFragment_to_activityDetailsFragment"
-            app:destination="@id/activityDetailsFragment">
+            app:destination="@id/activitySummaryFragment">
             <argument
                 android:name="activity"
-                app:argType="org.fairventures.treeo.db.models.Activity" />
+                app:argType="org.fairventures.treeo.models.Activity" />
         </action>
     </fragment>
     <fragment
@@ -138,16 +138,16 @@
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/activityDetailsFragment"
-        android:name="org.fairventures.treeo.ui.questionnaire.ActivityDetailsFragment"
-        android:label="fragment_activity_details"
-        tools:layout="@layout/fragment_activity_details">
+        android:id="@+id/activitySummaryFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.ActivitySummaryFragment"
+        android:label="Summary Fragment"
+        tools:layout="@layout/fragment_activity_summary">
         <action
-            android:id="@+id/action_activityDetailsFragment_to_questionnaireFragment"
+            android:id="@+id/action_activitySummaryFragment_to_questionnaireFragment"
             app:destination="@id/questionnaireFragment">
             <argument
-                android:name="activity"
-                app:argType="org.fairventures.treeo.db.models.Activity" />
+                android:name="summaryItem"
+                app:argType="org.fairventures.treeo.models.ActivitySummaryItem" />
         </action>
     </fragment>
 </navigation>

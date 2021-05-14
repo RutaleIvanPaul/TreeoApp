@@ -2,6 +2,7 @@ package org.fairventures.treeo.services
 
 import android.util.Log
 import org.fairventures.treeo.models.*
+import org.fairventures.treeo.services.models.ActivityDTO
 import org.fairventures.treeo.util.errors
 import org.fairventures.treeo.util.getErrorMessageFromJson
 import javax.inject.Inject
@@ -172,13 +173,14 @@ class RequestManager @Inject constructor(
         return items
     }
 
-    suspend fun retrievePlannedActivities(userToken: String): UserActivities? {
-        var activities: UserActivities? = null
+    suspend fun retrievePlannedActivities(userToken: String): List<ActivityDTO> {
+        var activities = listOf<ActivityDTO>()
         try {
             val response = apiService.retrievePlannedActivities(userToken)
 
             if (response.isSuccessful) {
-                activities = response.body()
+                activities = response.body()!!.plannedActivities
+                Log.d("ActivitiesRM", activities.toString())
             } else {
                 if (response.code() == 404) {
                     Log.d("Message", "Unauthorized")

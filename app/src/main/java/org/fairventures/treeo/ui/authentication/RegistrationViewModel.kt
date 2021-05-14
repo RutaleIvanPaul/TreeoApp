@@ -7,23 +7,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.fairventures.treeo.models.*
-import org.fairventures.treeo.repository.IMainRepository
+import org.fairventures.treeo.repositories.IMainRepository
 import org.fairventures.treeo.util.IDispatcherProvider
 
 
 class RegistrationViewModel @ViewModelInject constructor(
     private val mainRepository: IMainRepository,
     private val dispatcher: IDispatcherProvider
-) :
-    ViewModel() {
-    private val _googleUser = MutableLiveData<GoogleUser>()
-    val googleUser: LiveData<GoogleUser> get() = _googleUser
+) : ViewModel() {
 
     private val _newUser = MutableLiveData<NewRegisteredUser>()
     val newUser: LiveData<NewRegisteredUser> get() = _newUser
-
-    private val _facebookUser = MutableLiveData<FacebookUser>()
-    val facebookUser: LiveData<FacebookUser> get() = _facebookUser
 
     private val _phoneNumberValidationResponseRegistration =
         MutableLiveData<ValidateResponseData>()
@@ -36,8 +30,7 @@ class RegistrationViewModel @ViewModelInject constructor(
     private val _validateOTPRegistrationResponse =
         MutableLiveData<ValidateOTPRegistrationResponse>()
     val validateOTPRegistrationResponse: LiveData<ValidateOTPRegistrationResponse>
-        get() =
-            _validateOTPRegistrationResponse
+        get() = _validateOTPRegistrationResponse
 
     private val _onBoardingStep = MutableLiveData(0)
     val onBoardingStep: LiveData<Int> get() = _onBoardingStep
@@ -109,7 +102,7 @@ class RegistrationViewModel @ViewModelInject constructor(
     }
 
     fun setGDPRStatus(check_gdpr: Boolean) {
-        newUserObj.isGdprCompliant = check_gdpr
+        newUserObj.gdprAccepted = check_gdpr
     }
 
     fun getNewUserObj() = newUserObj

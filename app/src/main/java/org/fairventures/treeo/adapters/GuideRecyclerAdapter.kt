@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.fairventures.treeo.R
-import org.fairventures.treeo.db.models.Activity
+import org.fairventures.treeo.models.Activity
 
 class GuideRecyclerAdapter(private val listener: OnGuideClickListener) :
     RecyclerView.Adapter<GuideRecyclerAdapter.GuidePageViewHolder>() {
@@ -38,9 +38,9 @@ class GuideRecyclerAdapter(private val listener: OnGuideClickListener) :
 //                Glide.with(context)
 //                    .load(list[position].image)
 //                    .into(imageView)
-            dateTextView.text = list[position].due_date
-            titleTextView.text = list[position].title
-            detailsTextView.text = list[position].description
+//            dateTextView.text = list[position].due_date
+//            titleTextView.text = list[position].title
+//            detailsTextView.text = list[position].description
         }
 
         holder.itemView.setOnClickListener {

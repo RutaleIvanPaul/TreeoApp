@@ -1,6 +1,10 @@
-package org.fairventures.treeo.repository
+package org.fairventures.treeo.repositories
 
 import org.fairventures.treeo.models.*
+import org.fairventures.treeo.services.models.ActivityDTO
+import org.fairventures.treeo.services.models.ActivityTemplateDTO
+import org.fairventures.treeo.services.models.ConfigurationDTO
+import org.fairventures.treeo.services.models.QuestionnaireDTO
 
 class FakeMainRepository : IMainRepository {
     private fun returnFakeUser(registerUser: RegisterUser): NewRegisteredUser {
@@ -70,21 +74,36 @@ class FakeMainRepository : IMainRepository {
         )
     }
 
-    private fun returnFakeretrievePlannedActivities(): UserActivities? {
-        val activity: List<PlannedActivity> = listOf(
-            PlannedActivity(
-                0, "", false, "", "", "",
-                "", null, null
-            )
+    private fun returnFakeretrievePlannedActivities(): List<ActivityDTO> {
+        val configuration = ConfigurationDTO(
+            listOf(),
+            mapOf()
         )
-        return UserActivities(
-            firstName = "firstname",
-            lastName = "lastname",
-            email = "email@gmail.com",
-            phoneNumber = "0788934521",
-            country = "Uganda",
-            username = "username",
-            plannedActivites = activity
+        val questionnaire = QuestionnaireDTO(
+            1,
+            1,
+            configuration
+        )
+        val template = ActivityTemplateDTO(
+            1,
+            "test",
+            1,
+            1,
+            1,
+            questionnaire
+        )
+        return listOf(
+            ActivityDTO(
+                0,
+                "",
+                false,
+                "",
+                "",
+                "",
+                "",
+                null,
+                template
+            )
         )
     }
 
@@ -116,8 +135,9 @@ class FakeMainRepository : IMainRepository {
         return returnFakeSmsLoginResponse()
     }
 
-    override suspend fun retrievePlannedActivities(userToken: String): UserActivities? {
+    override suspend fun retrievePlannedActivities(userToken: String): List<ActivityDTO> {
         return returnFakeretrievePlannedActivities()
     }
 
 }
+
