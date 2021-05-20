@@ -55,7 +55,7 @@ class HomeGuideRecyclerAdapter(private val context: Fragment) :
             holder.itemView.setOnClickListener {
                 context.findNavController()
                     .navigate(
-                        R.id.action_homeFragment_to_questionnaireFragment,
+                        R.id.action_homeFragment_to_activityDetailsFragment,
                         bundleOf("activity" to list[position])
                     )
             }
@@ -71,7 +71,7 @@ class HomeGuideRecyclerAdapter(private val context: Fragment) :
         return simpleDateFormat.format(time).toString()
     }
 
-    fun submitList(newList: List<Activity>){
+    fun submitList(newList: List<Activity>) {
         list = newList
         notifyDataSetChanged()
     }

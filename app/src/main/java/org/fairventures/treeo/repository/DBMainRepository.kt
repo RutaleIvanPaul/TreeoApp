@@ -26,5 +26,7 @@ class DBMainRepository @Inject constructor(
 
     suspend fun getNextTwoActivities() = activityDao.getNextTwoActivities()
 
-    suspend fun updateActivity(activity: Activity)  = activityDao.updateActivity(activity)
+    suspend fun getCompletedActivities() = activityDao.getCompletedActivities()
+
+    suspend fun updateActivity(activity: Activity) = activityDao.updateActivity(activity)
 }

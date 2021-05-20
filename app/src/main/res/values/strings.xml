@@ -66,4 +66,12 @@
 
 
     <string name="selected_language" translatable="false">Selected Language</string>
+    <string name="sample_activity_title">Sample activity title</string>
+    <string name="sample_form_title_text">Part 1 - Form</string>
+    <string name="sample_duration">5 MINS</string>
+    <string name="start_text">START</string>
+    <string name="sample_activity_code">Activity Code</string>
+    <string name="placeholder_dashes">___</string>
+    <string name="text_completed">COMPLETED</string>
+    <string name="text_edit">EDIT</string>
 </resources>

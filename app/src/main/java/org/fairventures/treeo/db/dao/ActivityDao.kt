@@ -13,6 +13,9 @@ interface ActivityDao {
     @Query("SELECT * FROM Activity")
     fun getActivities(): LiveData<List<Activity>>
 
+    @Query("SELECT * FROM Activity WHERE is_complete = 1")
+    suspend fun getCompletedActivities(): List<Activity>
+
     @Query("SELECT * FROM Activity WHERE is_complete = 0 LIMIT 2")
     suspend fun getNextTwoActivities(): List<Activity>
 

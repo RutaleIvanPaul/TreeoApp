@@ -4,17 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_guide.*
 import org.fairventures.treeo.R
-import org.fairventures.treeo.models.Activity
-import org.fairventures.treeo.ui.home.HomeViewModel
+import org.fairventures.treeo.adapters.GuideRecyclerAdapter
+import org.fairventures.treeo.adapters.OnGuideClickListener
+import org.fairventures.treeo.db.models.Activity
+import org.fairventures.treeo.ui.home.GuideViewModel
 
 @AndroidEntryPoint
-class GuideFragment : Fragment() {
+class GuideFragment : Fragment(), OnGuideClickListener {
 
-    private val homeViewModel: HomeViewModel by viewModels()
+    private val guideViewModel: GuideViewModel by viewModels()
+    private var activityList = listOf<Activity>()
+    private val adapter = GuideRecyclerAdapter(this)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,7 +35,9 @@ class GuideFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getCompletedActivities()
         setUpViews()
+        setObservers()
     }
 
     private fun setUpViews() {
@@ -34,35 +45,36 @@ class GuideFragment : Fragment() {
     }
 
     private fun initializeRecycler() {
-//        guideRecyclerView.adapter = GuideRecyclerAdapter(requireContext(), getActivitiesList())
-//        guideRecyclerView.layoutManager = LinearLayoutManager(
-//            context,
-//            LinearLayoutManager.VERTICAL,
-//            false
-//        )
+        guideRecyclerView.adapter = adapter
+        guideRecyclerView.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
     }
 
-    private fun getActivitiesList(): List<Activity> {
-        return listOf(
-            Activity(
-                "Define Your Land",
-                getString(R.string.lorem_ipsum),
-                "Wed 10th, May",
-                R.drawable.trees_2
-            ),
-            Activity(
-                "Prepare Your Land",
-                getString(R.string.lorem_ipsum),
-                "Thur 10th, June",
-                R.drawable.trees_1
-            ),
-            Activity(
-                "Plant Your Seeds",
-                getString(R.string.lorem_ipsum),
-                "Tue 10th, July",
-                R.drawable.trees_3
-            ),
-        )
+    private fun getCompletedActivities() {
+        guideViewModel.getCompleteActivities()
+    }
+
+    private fun setObservers() {
+        guideViewModel.completedActivities.observe(viewLifecycleOwner, Observer {
+            activityList = it
+            updateRecyclerview()
+        })
+    }
+
+    private fun updateRecyclerview() {
+        adapter.submitList(activityList)
+    }
+
+
+    override fun onClick(activity: Activity) {
+        findNavController()
+            .navigate(
+                R.id.action_guideFragment_to_activityDetailsFragment,
+                bundleOf("activity" to activity)
+            )
     }
 
     companion object {
