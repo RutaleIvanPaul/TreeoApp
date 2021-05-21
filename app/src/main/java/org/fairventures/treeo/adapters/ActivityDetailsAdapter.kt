@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.fairventures.treeo.R
 import org.fairventures.treeo.db.models.Activity
+import org.fairventures.treeo.models.ActivityDetail
 
 
 class ActivityDetailsAdapter(
@@ -17,8 +18,10 @@ class ActivityDetailsAdapter(
     private val listener: HelperActivityListener
 ) :
     RecyclerView.Adapter<ActivityDetailsAdapter.ActivityDetailsHolder>() {
-    var list: List<Activity> = listOf()
-    var answerList: List<String> = listOf()
+    //    var list: List<Activity> = listOf()
+    var list: List<ActivityDetail> = listOf()
+
+    //    var answerMap: Map<String, String?> = mapOf()
     var language = ""
 
     class ActivityDetailsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -55,14 +58,14 @@ class ActivityDetailsAdapter(
     override fun onBindViewHolder(holder: ActivityDetailsHolder, position: Int) {
         holder.apply {
             itemView.setOnClickListener {
-                listener.onActivityClick(list[position])
+                listener.onActivityClick(list[position].activity)
             }
 
-            val cardHeader = "Part " + (position + 1) + "- " + list[position].title
+            val cardHeader = "Part " + (position + 1) + "- " + list[position].activity.title
             titleTextview.text = cardHeader
-            val pages = list[position].questionnaire!!.pages.toList()
+            val pages = list[position].activity.questionnaire!!.pages.toList()
 
-            if (list[position].is_complete) {
+            if (list[position].activity.is_complete) {
                 editButton.visibility = View.VISIBLE
                 startButton.visibility = View.GONE
                 completeLayout.visibility = View.VISIBLE
@@ -72,7 +75,7 @@ class ActivityDetailsAdapter(
                     summaryContainer.addView(
                         inflateCompleteLayout(
                             it.header[language]!!,
-                            ""
+                            list[position].questionAnswer[it.questionCode]
                         )
                     )
                 }
@@ -106,7 +109,7 @@ class ActivityDetailsAdapter(
         return view
     }
 
-    private fun inflateCompleteLayout(header: String, answers: String): View {
+    private fun inflateCompleteLayout(header: String, answer: String?): View {
         val inflater = context
             .applicationContext
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -114,24 +117,32 @@ class ActivityDetailsAdapter(
         val actionTextView: TextView = view.findViewById(R.id.activitySummaryCompleteTextview)
         val resultTextView: TextView = view.findViewById(R.id.activityAnswerCompleteTextview)
         actionTextView.text = header
-        resultTextView.text = answers
+        resultTextView.text = answer
 
         return view
     }
 
-    fun submitList(activities: List<Activity>, selectedLanguage: String) {
+//    fun submitList(activities: List<Activity>, selectedLanguage: String) {
+//        list = activities
+//        language = selectedLanguage
+//        notifyDataSetChanged()
+//    }
+
+    fun submitList(activities: List<ActivityDetail>, selectedLanguage: String) {
         list = activities
         language = selectedLanguage
         notifyDataSetChanged()
     }
 
-    fun submitAnswerList(answers: List<String>) {
-        answerList = answers
-        notifyDataSetChanged()
-    }
+//    fun submitAnswerMap(answers: Map<String, String?>) {
+//        answerMap = answers
+//        notifyDataSetChanged()
+//    }
 
 }
 
 interface HelperActivityListener {
     fun onActivityClick(activity: Activity)
 }
+
+

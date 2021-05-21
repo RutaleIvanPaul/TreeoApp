@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -17,11 +18,13 @@ import org.fairventures.treeo.adapters.GuideRecyclerAdapter
 import org.fairventures.treeo.adapters.OnGuideClickListener
 import org.fairventures.treeo.db.models.Activity
 import org.fairventures.treeo.ui.home.GuideViewModel
+import org.fairventures.treeo.ui.questionnaire.ActivityDetailsViewModel
 
 @AndroidEntryPoint
 class GuideFragment : Fragment(), OnGuideClickListener {
 
     private val guideViewModel: GuideViewModel by viewModels()
+
     private var activityList = listOf<Activity>()
     private val adapter = GuideRecyclerAdapter(this)
 

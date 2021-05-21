@@ -25,7 +25,7 @@ class QuestionnaireViewModel @ViewModelInject constructor(
         }
     }
 
-    fun getAnsweredQuestion(questionnaire_id_from_remote: Long, questionCode: String) =
+    suspend fun getAnsweredQuestion(questionnaire_id_from_remote: Long, questionCode: String) =
         dbMainRepository.getAnsweredQuestion(questionnaire_id_from_remote, questionCode)
 
     fun completeActivity(activity: Activity) {

@@ -15,13 +15,17 @@ interface QuestionnaireAnswerDao {
 
     @Query(
         "SELECT * FROM QuestionnaireAnswer " +
-                "WHERE questionnaire_id_from_remote = :questionnaire_id_from_remote")
+                "WHERE questionnaire_id_from_remote = :questionnaire_id_from_remote"
+    )
     fun getActivities(questionnaire_id_from_remote: Long): LiveData<List<QuestionnaireAnswer>>
 
     @Query(
         "SELECT * FROM QuestionnaireAnswer " +
                 "WHERE questionnaire_id_from_remote = :questionnaire_id_from_remote " +
-                "AND questionCode = :questionCode")
-    fun getAnsweredQuestion(
-        questionnaire_id_from_remote: Long, questionCode: String):LiveData<QuestionnaireAnswer>
+                "AND questionCode = :questionCode"
+    )
+    suspend fun getAnsweredQuestion(
+        questionnaire_id_from_remote: Long,
+        questionCode: String
+    ): QuestionnaireAnswer
 }
