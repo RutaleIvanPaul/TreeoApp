@@ -30,15 +30,15 @@ class UserPhoneFragment : Fragment() {
     private val viewModel: RegistrationViewModel by activityViewModels()
 
     val countryCode = MutableLiveData<String>()
-    val phoneNumber = MutableLiveData<String>()
+    val phoneNumber = MutableLiveData("")
     var country = ""
     private var gdprConsent = MutableLiveData<Boolean>()
+    private var phoneNumberExists = false
 
     private val TAG = "UserPhoneFragment"
 
     @Inject
     lateinit var sharedPref: SharedPreferences
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -167,11 +167,13 @@ class UserPhoneFragment : Fragment() {
                 viewModel.validatePhoneNumberRegistration(
                     phoneNumber.value?.removePrefix("+").toString()
                 )
+            } else {
+                disableView(userPhoneContinueButton)
             }
         })
 
         gdprConsent.observe(viewLifecycleOwner, Observer {
-            if (it != false && phoneNumber.value != null) {
+            if (it != false && phoneNumber.value != null && phoneNumber.value!!.length == 13 && !phoneNumberExists) {
                 enableView(userPhoneContinueButton)
             } else {
                 disableView(userPhoneContinueButton)
@@ -180,10 +182,14 @@ class UserPhoneFragment : Fragment() {
 
         viewModel.phoneNumberValidationResponseRegistration.observe(viewLifecycleOwner, Observer {
             hideView(userPhoneProgressBar)
-            if (it != null) {
+            if (it != null && it.valid) {
+                phoneNumberExists = true
                 showView(userPhoneLoginLink)
+                disableView(userPhoneContinueButton)
             } else {
+                phoneNumberExists = false
                 hideView(userPhoneLoginLink)
+                enableView(userPhoneContinueButton)
                 Toast.makeText(context, errors.value, Toast.LENGTH_LONG).show()
             }
         })
@@ -202,3 +208,4 @@ class UserPhoneFragment : Fragment() {
         fun newInstance() = UserPhoneFragment()
     }
 }
+

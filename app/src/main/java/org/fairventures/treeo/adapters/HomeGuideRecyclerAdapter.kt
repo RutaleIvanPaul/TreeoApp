@@ -5,19 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.fairventures.treeo.R
-import org.fairventures.treeo.db.models.Activity
+import org.fairventures.treeo.models.Activity
 import java.text.SimpleDateFormat
 import java.util.*
 
-class HomeGuideRecyclerAdapter(private val context: Fragment) :
+class HomeGuideRecyclerAdapter(
+    private val listener: HomeGuideListener
+) :
     RecyclerView.Adapter<HomeGuideRecyclerAdapter.GuideViewHolder>() {
 
     var list: List<Activity> = listOf()
@@ -42,23 +38,17 @@ class HomeGuideRecyclerAdapter(private val context: Fragment) :
     }
 
     override fun onBindViewHolder(holder: GuideViewHolder, position: Int) {
-        CoroutineScope(Dispatchers.Main).launch {
-            holder.apply {
-//                Glide.with(context)
-//                    .load(list[position].image)
-//                    .into(imageView)
-                dateTextView.text = list[position].due_date
-                titleTextView.text = list[position].title
-                detailsTextView.text = list[position].description
-            }
+        holder.apply {
+//            Glide.with(context)
+//                .load(list[position].dueDate)
+//                .into(imageView)
+//            dateTextView.text = convertLongToTime(list[position].dueDate)
+            titleTextView.text = list[position].title
+            detailsTextView.text = list[position].description
+        }
 
-            holder.itemView.setOnClickListener {
-                context.findNavController()
-                    .navigate(
-                        R.id.action_homeFragment_to_questionnaireFragment,
-                        bundleOf("activity" to list[position])
-                    )
-            }
+        holder.itemView.setOnClickListener {
+            listener.onHomeGuideClick(list[position])
         }
     }
 
@@ -66,14 +56,18 @@ class HomeGuideRecyclerAdapter(private val context: Fragment) :
         return list.size
     }
 
-    private fun convertLongToTime(time: Long): String {
+    private fun convertLongToTime(time: String): String {
         val simpleDateFormat = SimpleDateFormat("dd.LLL.yyyy", Locale.getDefault())
         return simpleDateFormat.format(time).toString()
     }
 
-    fun submitList(newList: List<Activity>){
+    fun submitList(newList: List<Activity>) {
         list = newList
         notifyDataSetChanged()
     }
-
 }
+
+interface HomeGuideListener {
+    fun onHomeGuideClick(activity: Activity)
+}
+

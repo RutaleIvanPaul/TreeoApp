@@ -1,7 +1,8 @@
-package org.fairventures.treeo.repository
+package org.fairventures.treeo.repositories
 
 import org.fairventures.treeo.models.*
 import org.fairventures.treeo.services.RequestManager
+import org.fairventures.treeo.services.models.ActivityDTO
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -36,6 +37,6 @@ class MainRepository @Inject constructor(
     override suspend fun loginWithOTP(loginWithOTP: LoginWithOTP): SmsLoginResponse? =
         requestManager.loginWithOTP(loginWithOTP)
 
-    override suspend fun retrievePlannedActivities(userToken: String): UserActivities? =
+    override suspend fun retrievePlannedActivities(userToken: String): List<ActivityDTO> =
         requestManager.retrievePlannedActivities(userToken)
 }

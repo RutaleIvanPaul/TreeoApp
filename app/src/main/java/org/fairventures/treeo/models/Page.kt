@@ -1,9 +1,14 @@
 package org.fairventures.treeo.models
 
-data class Page (
-    val header: Map<String, String>,
-    val options: List<Option>,
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class Page(
+    val pageId: Long,
     val pageType: String,
+    val questionCode: String,
+    val header: Map<String, String>,
     val description: Map<String, String>,
-    val questionCode: String
-)
+    var options: List<Option>?
+) : Parcelable

@@ -9,7 +9,7 @@ import org.fairventures.treeo.models.LoginDetails
 import org.fairventures.treeo.models.LoginWithOTP
 import org.fairventures.treeo.models.LogoutResponse
 import org.fairventures.treeo.models.RequestOTP
-import org.fairventures.treeo.repository.FakeMainRepository
+import org.fairventures.treeo.repositories.FakeMainRepository
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

@@ -8,24 +8,27 @@ import android.content.SharedPreferences
 import android.hardware.SensorManager
 import android.hardware.camera2.CameraManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.fairventures.treeo.R
+import org.fairventures.treeo.adapters.HomeGuideListener
 import org.fairventures.treeo.adapters.HomeGuideRecyclerAdapter
 import org.fairventures.treeo.adapters.WhatsNewRecyclerAdapter
-import org.fairventures.treeo.db.models.*
-import org.fairventures.treeo.models.UserActivities
+import org.fairventures.treeo.models.Activity
 import org.fairventures.treeo.models.WhatsNew
 import org.fairventures.treeo.ui.authentication.LoginLogoutViewModel
 import org.fairventures.treeo.ui.home.HomeViewModel
@@ -34,11 +37,10 @@ import org.fairventures.treeo.util.IDispatcherProvider
 import org.fairventures.treeo.util.errors
 import javax.inject.Inject
 
-//typealias LumaListener = (luma: Double) -> Unit
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), HomeGuideListener {
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -71,6 +73,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpViews()
         setObservers()
+//        deleteUserDetailsFromSharePref()
     }
 
 
@@ -82,7 +85,7 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         getPlannedActivities()
-        homeViewModel.getNextTwoActivities()
+//        homeViewModel.getNextTwoActivities()
     }
 
     private fun setUpViews() {
@@ -130,102 +133,21 @@ class HomeFragment : Fragment() {
     }
 
     private fun setObservers() {
-        loginLogoutViewModel.logoutResponse.observe(
-            viewLifecycleOwner,
-            Observer { logoutResponse ->
-                if (logoutResponse != null) {
-//                    deleteUserDetailsFromSharePref()
-                    backToMain()
-                } else {
-                    Log.d("Logout", "Logout Response is null")
-                }
-            }
-        )
-
-//        homeViewModel.getAllActivities().observe(
-//            viewLifecycleOwner,
-//            Observer { activities ->
-//                setUpHomeGuideRecycler(activities)
-//            }
-//        )
-
         homeViewModel.nextTwoActivities.observe(viewLifecycleOwner, Observer { activities ->
-            homeGuideRecyclerAdapter.submitList(activities)
+            if (activities != null) {
+                homeGuideRecyclerAdapter.submitList(activities)
+            } else {
+                Toast.makeText(context, errors.value, Toast.LENGTH_LONG).show()
+            }
         })
 
-        homeViewModel.plannedActivities.observe(
-            viewLifecycleOwner,
-            Observer { userActivities ->
-                if (userActivities != null) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        if (insertActivitiesFromApi(userActivities)) {
-                            homeViewModel.getNextTwoActivities()
-                        }
-                    }
-                } else {
-                    Log.d("Planned Activities", "Response is null")
-                    Toast.makeText(context, errors.value, Toast.LENGTH_LONG).show()
-                }
+        homeViewModel.plannedActivities.observe(viewLifecycleOwner, Observer { activities ->
+            if (activities != null) {
+                homeViewModel.insertActivity(activities)
+            } else {
+                Toast.makeText(context, errors.value, Toast.LENGTH_LONG).show()
             }
-        )
-
-    }
-
-    private suspend fun insertActivitiesFromApi(userActivities: UserActivities) =
-        CoroutineScope(Dispatchers.IO).async {
-            val plannedActivityIds = mutableListOf<Long>()
-            userActivities.plannedActivites.forEach { plannedActivity ->
-                homeViewModel.insertActivity(
-                    Activity(
-                        type = plannedActivity.activityTemplate?.activityType!!,
-                        due_date = plannedActivity.dueDate,
-                        title = plannedActivity.title,
-                        description = plannedActivity.description,
-                        plot = plannedActivity.plot.toString(),
-                        activity_id_from_remoteDB = plannedActivity.id,
-                        activity_code = plannedActivity.activityTemplate.code.toString(),
-                        questionnaire = Questionnaire(
-                            activity_id_from_remoteDB = plannedActivity.id,
-                            questionnaire_id_from_remote = plannedActivity.activityTemplate.questionnaire.id,
-                            questionnaire_title = plannedActivity.activityTemplate.questionnaire.configuration.title,
-                            pages = getPages(plannedActivity.activityTemplate.questionnaire.configuration.pages)
-                        )
-                    )
-                )
-                plannedActivityIds.add(plannedActivity.id)
-            }
-            return@async true
-        }.await()
-
-
-    private fun getPages(pages: List<org.fairventures.treeo.models.Page>): Array<Page> {
-        val pagesList: MutableList<Page> = mutableListOf()
-        pages.forEach { page ->
-            pagesList.add(
-                Page(
-                    pageType = page.pageType,
-                    questionCode = page.questionCode,
-                    header = page.header,
-                    description = page.description,
-                    options = getOptions(page.options)
-                )
-            )
-        }
-        return pagesList.toTypedArray()
-    }
-
-    private fun getOptions(options: List<org.fairventures.treeo.models.Option>): Array<Option> {
-        val optionsList = mutableListOf<Option>()
-        Log.d("Options", options.toString())
-        options.forEach { option ->
-            optionsList.add(
-                Option(
-                    option_title = option.title,
-                    option_code = option.code
-                )
-            )
-        }
-        return optionsList.toTypedArray()
+        })
     }
 
     private fun getDeviceInformation() {
@@ -242,40 +164,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun logoutUser() {
-        val loginManager = sharedPref.getString(getString(R.string.loginManager), "")
-        when {
-            loginManager.equals(getString(R.string.google)) -> {
-            }
-            loginManager.equals(getString(R.string.facebook)) -> {
-                logoutFromBackend()
-            }
-            else -> {
-                logoutFromBackend()
-            }
-        }
-    }
-
-    private fun backToMain() {
-//        this.findNavController()
-//            .navigate(R.id.action_homeFragment_to_registrationFragment)
-    }
-
-    private fun logoutFromBackend() {
-        with(sharedPref.edit()) {
-            val token = sharedPref.getString(getString(R.string.user_token), null)
-            val mobile_username = sharedPref.getString(getString(R.string.mobile_username), null)
-            if (!token.isNullOrEmpty()) {
-                loginLogoutViewModel.logout(token)
-            } else if (!mobile_username.isNullOrEmpty()) {
-                with(sharedPref.edit()) {
-                    remove(getString(R.string.mobile_username))
-                    apply()
-                }
-                backToMain()
-            }
-        }
-    }
 
     private fun getUserToken(): String {
         with(sharedPref.edit()) {
@@ -286,14 +174,6 @@ class HomeFragment : Fragment() {
             apply()
         }
         return ""
-    }
-
-    private fun deleteUserDetailsFromSharePref() {
-        with(sharedPref.edit()) {
-            remove(getString(R.string.user_token))
-            remove(getString(R.string.loginManager))
-            apply()
-        }
     }
 
     private fun getUserId(): Int {
@@ -308,12 +188,19 @@ class HomeFragment : Fragment() {
         return 0
     }
 
+    private fun getPlannedActivities() {
+        homeViewModel.getPlannedActivities(getUserToken())
+    }
+
+    override fun onHomeGuideClick(activity: Activity) {
+        findNavController().navigate(
+            R.id.action_homeFragment_to_activityDetailsFragment,
+            bundleOf("activity" to activity)
+        )
+    }
+
     companion object {
         @JvmStatic
         fun newInstance() = HomeFragment()
-    }
-
-    private fun getPlannedActivities() {
-        homeViewModel.getPlannedActivities(getUserToken())
     }
 }

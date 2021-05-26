@@ -1,6 +1,5 @@
 package org.fairventures.treeo.adapters
 
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,22 +7,20 @@ import android.widget.RadioButton
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox
 import org.fairventures.treeo.R
-import org.fairventures.treeo.db.models.Option
-import javax.inject.Inject
+import org.fairventures.treeo.models.Option
 
 private const val ITEM_VIEW_TYPE_CHECKBOX = 1
 private const val ITEM_VIEW_TYPE_RADIO = 2
 
-class QuestionnaireRecyclerAdapter(var selectedLanguage: String) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class OptionRecyclerAdapter(
+    var selectedLanguage: String,
+    private val checkListener: OptionCheckedListener
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private lateinit var list: List<Option>
-    private lateinit var questionType: String
-    private var lastSelectedPosition = -1
-
-    companion object {
-        val currentAnswers: MutableList<String> = mutableListOf()
-    }
+    private var list = mutableListOf<Option>()
+    private var questionType = ""
+    private var lastRadioSelection: Option? = null
+    private var lastCheckedRadio: RadioButton? = null
 
     class CheckBoxViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val checkBox: MaterialCheckBox = itemView.findViewById(R.id.questionnaireCheckBox)
@@ -60,42 +57,49 @@ class QuestionnaireRecyclerAdapter(var selectedLanguage: String) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CheckBoxViewHolder -> {
+                holder.setIsRecyclable(false)
                 holder.apply {
-                    holder.checkBox.text = list[position].option_title[selectedLanguage]
-                    holder.checkBox.isChecked = false
-                    holder.checkBox.setOnClickListener {
-                        manageAnswers(position)
+                    checkBox.text = list[position].title[selectedLanguage]
+                    if (list[position].isSelected) {
+                        checkBox.isChecked = true
+                    }
 
+                    checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+                        if (buttonView.isChecked) {
+                            checkListener.onOptionCheck(list[position].optionId, true)
+                        } else {
+                            checkListener.onOptionCheck(list[position].optionId, false)
+                        }
                     }
                 }
             }
             is RadioButtonViewHolder -> {
+                holder.setIsRecyclable(false)
                 holder.apply {
-                    radioButton.text = list[position].option_title[selectedLanguage]
-                    holder.radioButton.isChecked = lastSelectedPosition == position
+                    radioButton.text = list[position].title[selectedLanguage]
+                    if (list[position].isSelected) {
+                        radioButton.isChecked = true
+                        lastRadioSelection = list[position]
+                        lastCheckedRadio = radioButton
+                    }
+
                     radioButton.setOnClickListener {
-                        manageRadioButtonAnswers(position)
-                        lastSelectedPosition = adapterPosition;
-                        notifyDataSetChanged();
+
+                        if (lastCheckedRadio != null && lastCheckedRadio != radioButton) {
+                            lastCheckedRadio!!.isChecked = false
+                        }
+                        lastCheckedRadio = radioButton
+
+                        checkListener.onOptionCheck(list[position].optionId, true)
+                        if (lastRadioSelection != null) {
+                            checkListener.onOptionCheck(lastRadioSelection!!.optionId, false)
+                        }
+
+                        lastRadioSelection = list[position]
                     }
                 }
             }
         }
-    }
-
-    private fun manageAnswers(position: Int) {
-        val option_code = list[position].option_code
-        if (currentAnswers.contains(option_code)) {
-            currentAnswers.remove(option_code)
-        } else {
-            currentAnswers.add(option_code)
-        }
-    }
-
-    private fun manageRadioButtonAnswers(position: Int) {
-        val option_code = list[position].option_code
-        currentAnswers.clear()
-        currentAnswers.add(option_code)
     }
 
     override fun getItemCount(): Int {
@@ -115,10 +119,14 @@ class QuestionnaireRecyclerAdapter(var selectedLanguage: String) :
     }
 
     fun submitList(options: List<Option>, flag: String) {
-        list = options
+        list.clear()
+        list = options.toMutableList()
         questionType = flag
-        currentAnswers.clear()
         notifyDataSetChanged()
     }
-
 }
+
+interface OptionCheckedListener {
+    fun onOptionCheck(id: Long, isSelected: Boolean)
+}
+

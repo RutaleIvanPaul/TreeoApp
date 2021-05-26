@@ -9,7 +9,7 @@ import org.fairventures.treeo.models.NewRegisteredUser
 import org.fairventures.treeo.models.RegisterMobileUser
 import org.fairventures.treeo.models.RegisterUser
 import org.fairventures.treeo.models.ValidateOTPRegistration
-import org.fairventures.treeo.repository.FakeMainRepository
+import org.fairventures.treeo.repositories.FakeMainRepository
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

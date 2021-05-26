@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.fairventures.treeo.models.*
-import org.fairventures.treeo.repository.IMainRepository
+import org.fairventures.treeo.repositories.IMainRepository
 import org.fairventures.treeo.util.IDispatcherProvider
 
 class LoginLogoutViewModel @ViewModelInject constructor(

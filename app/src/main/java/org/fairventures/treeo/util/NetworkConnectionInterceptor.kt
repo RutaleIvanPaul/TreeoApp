@@ -25,6 +25,7 @@ class NetworkConnectionInterceptor @Inject constructor(var context: Context) : I
                 result = when {
                     hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
                     hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+                    hasTransport(NetworkCapabilities.TRANSPORT_VPN) -> true
                     else -> false
                 }
             }
