@@ -1,5 +1,6 @@
 package org.fairventures.treeo.ui.questionnaire
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,35 +18,42 @@ import org.fairventures.treeo.util.mappers.ModelEntityMapper
 class ActivitySummaryViewModel @ViewModelInject constructor(
     private val dbMainRepository: DBMainRepository,
     private val dispatcher: IDispatcherProvider,
-    private val entityMapper: ModelEntityMapper
+    private val mapper: ModelEntityMapper
 ) : ViewModel() {
 
     private val _activitySummaryItems = MutableLiveData<List<ActivitySummaryItem>>()
     val activitySummaryItems: LiveData<List<ActivitySummaryItem>> get() = _activitySummaryItems
 
-    fun getActivitySummaryItems(activity: Activity) {
+    fun getActivitySummaryItems(activityId: Long) {
         viewModelScope.launch {
+            val activityResult = withContext(dispatcher.io()) {
+                getActivity(activityId)
+            }
+
             val pagesResult = withContext(dispatcher.io()) {
-                getSummaryPages(activity.id)
+                getSummaryPages(activityResult.id)
             }
 
             val listResult = withContext(dispatcher.io()) {
-                addSummaryItemToList(activity, pagesResult)
+                addSummaryItemToList(activityResult, pagesResult)
             }
 
             _activitySummaryItems.postValue(listResult)
         }
     }
 
+    private suspend fun getActivity(activityId: Long): Activity {
+        return mapper.getActivityFromEntity(dbMainRepository.getActivity(activityId))
+    }
+
     private suspend fun getSummaryPages(activityId: Long): List<Page> {
         val result = dbMainRepository.getQuestionnairePages(activityId)
-        val pages = entityMapper.getListOfPageFromEntities(result.pages)
+        val pages = mapper.getListOfPageFromEntities(result.pages)
 
         pages.forEach { page ->
             val options = dbMainRepository.getPageOptions(page.pageId)
-            page.options = entityMapper.getListOfOptionsFromEntities(options)
+            page.options = mapper.getListOfOptionsFromEntities(options)
         }
-
         return pages
     }
 

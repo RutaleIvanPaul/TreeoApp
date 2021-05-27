@@ -29,6 +29,9 @@ interface ActivityDao {
     @Query("SELECT * FROM Activity WHERE isComplete = 0 LIMIT 2")
     fun getNextTwoActivities(): Flow<List<ActivityEntity>>
 
+    @Query("SELECT * FROM Activity WHERE activityId = :activityId")
+    suspend fun getActivity(activityId: Long): ActivityEntity
+
     @Query("SELECT * FROM Questionnaire WHERE activityId=:id")
     suspend fun getQuestionnairePages(id: Long): QuestionnaireWithPages
 
@@ -47,7 +50,7 @@ interface ActivityDao {
     @Query("SELECT * FROM Option WHERE isSelected=1 AND pageId = :pageId")
     suspend fun getSelectedOptions(pageId: Long): List<OptionEntity>
 
-    @Query("UPDATE Activity SET isComplete = 1 WHERE activityId = :id")
-    suspend fun markActivityAsCompleted(id: Long)
+    @Query("UPDATE Activity SET isComplete = :isCompleted WHERE activityId = :id")
+    suspend fun markActivityAsCompleted(id: Long, isCompleted: Boolean)
 
 }

@@ -2,7 +2,6 @@ package org.fairventures.treeo.ui.questionnaire
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,10 +49,11 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
     override fun onResume() {
         super.onResume()
         getSummaryItems(plannedActivity!!)
+
     }
 
     private fun getSummaryItems(activity: Activity) {
-        activitySummaryViewModel.getActivitySummaryItems(activity)
+        activitySummaryViewModel.getActivitySummaryItems(activity.id)
     }
 
     private fun initializeViews() {
@@ -101,4 +101,3 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
         fun newInstance() = ActivitySummaryFragment()
     }
 }
-

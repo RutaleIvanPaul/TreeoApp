@@ -52,6 +52,10 @@ class DBMainRepository @Inject constructor(
         return activityDao.getNextTwoActivities()
     }
 
+    suspend fun getActivity(activityId: Long): ActivityEntity {
+        return activityDao.getActivity(activityId)
+    }
+
     suspend fun getQuestionnairePages(activityId: Long): QuestionnaireWithPages {
         return activityDao.getQuestionnairePages(activityId)
     }
@@ -72,8 +76,8 @@ class DBMainRepository @Inject constructor(
         return activityDao.getCompletedActivities()
     }
 
-    suspend fun markActivityAsCompleted(id: Long) {
-        activityDao.markActivityAsCompleted(id)
+    suspend fun markActivityAsCompleted(id: Long, isCompleted: Boolean) {
+        activityDao.markActivityAsCompleted(id, isCompleted)
     }
 
 //    suspend fun updateActivity(activity: Activity)  = activityDao.updateActivity(activity)

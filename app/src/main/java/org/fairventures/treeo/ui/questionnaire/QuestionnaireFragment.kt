@@ -17,6 +17,8 @@ import org.fairventures.treeo.adapters.OptionCheckedListener
 import org.fairventures.treeo.adapters.OptionRecyclerAdapter
 import org.fairventures.treeo.models.ActivitySummaryItem
 import org.fairventures.treeo.models.Page
+import org.fairventures.treeo.util.disableView
+import org.fairventures.treeo.util.enableView
 import javax.inject.Inject
 
 
@@ -28,6 +30,7 @@ class QuestionnaireFragment : Fragment(), OptionCheckedListener {
     private val questionnaireViewModel: QuestionnaireViewModel by activityViewModels()
     private var summaryItem: ActivitySummaryItem? = null
     private var currentPage: Int = 0
+    private var selectionSum = 0
     private var pageList = listOf<Page>()
     private lateinit var questionAdapter: OptionRecyclerAdapter
 
@@ -84,6 +87,8 @@ class QuestionnaireFragment : Fragment(), OptionCheckedListener {
         questionnaireContinueButton.setOnClickListener {
             if (currentPage < pageList.size - 1) {
                 currentPage += 1
+                selectionSum = 0
+                disableView(questionnaireContinueButton)
                 updateStepView()
                 updateTextViews()
                 updateRecyclerView()
@@ -118,18 +123,41 @@ class QuestionnaireFragment : Fragment(), OptionCheckedListener {
     }
 
     private fun completeActivity(id: Long) {
-        questionnaireViewModel.markActivityAsCompleted(id)
+        questionnaireViewModel.markActivityAsCompleted(id, true)
     }
 
     override fun onOptionCheck(id: Long, isSelected: Boolean) {
         questionnaireViewModel.updateOption(id, isSelected)
     }
 
-    companion object {
+    override fun incrementSelectionSum(flag: String?) {
+        if (flag != null && flag == "radio" && selectionSum == 0) {
+            selectionSum += 1
+            enableView(questionnaireContinueButton)
+        } else {
+            selectionSum += 1
+            if (selectionSum > 0) {
+                enableView(questionnaireContinueButton)
+            } else {
+                disableView(questionnaireContinueButton)
+            }
+        }
+    }
 
+    override fun decrementSelectionSum() {
+        if (selectionSum > 0) {
+            selectionSum -= 1
+        }
+        if (selectionSum <= 0) {
+            disableView(questionnaireContinueButton)
+        } else {
+            enableView(questionnaireContinueButton)
+        }
+    }
+
+    companion object {
         @JvmStatic
         fun newInstance() = QuestionnaireFragment()
     }
 }
-
 
