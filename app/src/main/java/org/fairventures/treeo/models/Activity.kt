@@ -9,7 +9,7 @@ class Activity(
     val remoteId: Long,
     val dueDate: String,
     val isCompleted: Boolean,
-    val title: String,
+    var title: String,
     val description: String,
     val plot: String? = null,
     val template: ActivityTemplate
@@ -18,7 +18,7 @@ class Activity(
 @Parcelize
 data class ActivityTemplate(
     val templateRemoteId: Long,
-    val activityType: String,
+    var activityType: String,
     val code: Long,
     val preQuestionnaireId: Long?,
     val postQuestionnaireId: Long?

@@ -32,6 +32,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.google.android.gms.location.*
 import com.vmadalin.easypermissions.EasyPermissions
 import com.vmadalin.easypermissions.dialogs.DEFAULT_SETTINGS_REQ_CODE
@@ -40,6 +41,7 @@ import com.vmadalin.easypermissions.models.PermissionRequest
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_camera.*
 import org.fairventures.treeo.R
+import org.fairventures.treeo.db.models.LandSurvey
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -67,6 +69,8 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks, SensorEv
     private var picture_taken_before: Boolean = false
     private var currentSteps: Float = 0f
     private var previousSteps: Float =0f
+
+    private val cameraViewModel: CameraViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,6 +181,14 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks, SensorEv
                             val msg = "Photo capture succeeded: $savedUri"
                             Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                             Log.d(TAG, msg)
+
+                            cameraViewModel.insertLandSurveyItem(
+                                LandSurvey(
+                                    null,
+                                    savedUri.toString(),
+                                    "mainCamera"
+                                )
+                            )
 
                             if (!picture_taken_before){
                                 picture_taken_before = true

@@ -8,7 +8,7 @@ data class Page(
     val pageId: Long,
     val pageType: String,
     val questionCode: String,
-    val header: Map<String, String>,
+    var header: Map<String, String>,
     val description: Map<String, String>,
     var options: List<Option>?
 ) : Parcelable

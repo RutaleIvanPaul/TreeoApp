@@ -20,9 +20,9 @@ class QuestionnaireViewModel @ViewModelInject constructor(
         }
     }
 
-    fun markActivityAsCompleted(id: Long) {
+    fun markActivityAsCompleted(id: Long, isCompleted: Boolean) {
         viewModelScope.launch(dispatcher.io()) {
-            dbMainRepository.markActivityAsCompleted(id)
+            dbMainRepository.markActivityAsCompleted(id, isCompleted)
         }
     }
 

@@ -63,6 +63,7 @@ class ActivitySummaryAdapter(
                 summaryListener.onActivityClick(list[position])
             }
 
+
             val cardHeader = "Part " + (position + 1) + "- " + list[position].activity.title
             titleTextview.text = cardHeader
 
@@ -144,5 +145,4 @@ class ActivitySummaryAdapter(
 interface ActivitySummaryListener {
     fun onActivityClick(activity: ActivitySummaryItem)
 }
-
 

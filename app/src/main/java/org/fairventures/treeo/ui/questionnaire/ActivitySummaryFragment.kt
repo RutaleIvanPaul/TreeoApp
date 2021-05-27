@@ -2,10 +2,10 @@ package org.fairventures.treeo.ui.questionnaire
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -50,10 +50,11 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
     override fun onResume() {
         super.onResume()
         getSummaryItems(plannedActivity!!)
+
     }
 
     private fun getSummaryItems(activity: Activity) {
-        activitySummaryViewModel.getActivitySummaryItems(activity)
+        activitySummaryViewModel.getActivitySummaryItems(activity.id)
     }
 
     private fun initializeViews() {
@@ -89,11 +90,15 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
     }
 
     override fun onActivityClick(activity: ActivitySummaryItem) {
-        findNavController()
-            .navigate(
-                R.id.action_activitySummaryFragment_to_questionnaireFragment,
-                bundleOf("summaryItem" to activity)
-            )
+        if (activity.activity.template.activityType =="land-survey-part-2"){
+            Toast.makeText(requireContext(),"Part 2",Toast.LENGTH_LONG).show()
+        }else {
+            findNavController()
+                .navigate(
+                    R.id.action_activitySummaryFragment_to_questionnaireFragment,
+                    bundleOf("summaryItem" to activity)
+                )
+        }
     }
 
     companion object {
@@ -101,4 +106,3 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
         fun newInstance() = ActivitySummaryFragment()
     }
 }
-

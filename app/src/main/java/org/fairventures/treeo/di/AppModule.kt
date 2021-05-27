@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.fairventures.treeo.db.TreeoDatabase
 import org.fairventures.treeo.db.dao.ActivityDao
+import org.fairventures.treeo.db.dao.LandSurveyDao
 import org.fairventures.treeo.db.models.mappers.ActivityDtoToEntityMapper
 import org.fairventures.treeo.models.mappers.QuestionnaireWithPagesMapper
 import org.fairventures.treeo.repositories.DBMainRepository
@@ -101,6 +102,11 @@ object AppModule {
     fun providesActivityDao(database: TreeoDatabase) =
         database.getActivityDao()
 
+    @Singleton
+    @Provides
+    fun providesLandSurveyDao(database: TreeoDatabase) =
+        database.getLandSurveyDao()
+
 //    @Singleton
 //    @Provides
 //    fun providesQuestionnaireAnswerDao(database: TreeoDatabase) =
@@ -108,8 +114,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesDBMainRepository(activityDao: ActivityDao, mapper: ActivityDtoToEntityMapper) =
-        DBMainRepository(activityDao, mapper)
+    fun providesDBMainRepository(activityDao: ActivityDao,landSurveyDao: LandSurveyDao, mapper: ActivityDtoToEntityMapper) =
+        DBMainRepository(activityDao,landSurveyDao, mapper)
 
     @Singleton
     @Provides
