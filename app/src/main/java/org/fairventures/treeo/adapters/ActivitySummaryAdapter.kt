@@ -145,4 +145,3 @@ interface ActivitySummaryListener {
     fun onActivityClick(activity: ActivitySummaryItem)
 }
 
-

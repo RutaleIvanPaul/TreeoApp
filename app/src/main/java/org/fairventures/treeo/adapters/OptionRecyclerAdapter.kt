@@ -62,13 +62,16 @@ class OptionRecyclerAdapter(
                     checkBox.text = list[position].title[selectedLanguage]
                     if (list[position].isSelected) {
                         checkBox.isChecked = true
+                        checkListener.incrementSelectionSum(null)
                     }
 
                     checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
                         if (buttonView.isChecked) {
                             checkListener.onOptionCheck(list[position].optionId, true)
+                            checkListener.incrementSelectionSum(null)
                         } else {
                             checkListener.onOptionCheck(list[position].optionId, false)
+                            checkListener.decrementSelectionSum()
                         }
                     }
                 }
@@ -79,11 +82,13 @@ class OptionRecyclerAdapter(
                     radioButton.text = list[position].title[selectedLanguage]
                     if (list[position].isSelected) {
                         radioButton.isChecked = true
+                        checkListener.incrementSelectionSum("radio")
                         lastRadioSelection = list[position]
                         lastCheckedRadio = radioButton
                     }
 
                     radioButton.setOnClickListener {
+                        checkListener.incrementSelectionSum("radio")
 
                         if (lastCheckedRadio != null && lastCheckedRadio != radioButton) {
                             lastCheckedRadio!!.isChecked = false
@@ -128,5 +133,7 @@ class OptionRecyclerAdapter(
 
 interface OptionCheckedListener {
     fun onOptionCheck(id: Long, isSelected: Boolean)
+    fun incrementSelectionSum(flag: String?)
+    fun decrementSelectionSum()
 }
 
