@@ -149,5 +149,95 @@
                 android:name="summaryItem"
                 app:argType="org.fairventures.treeo.models.ActivitySummaryItem" />
         </action>
+        <action
+            android:id="@+id/action_activitySummaryFragment_to_requestCameraFragment"
+            app:destination="@id/requestCameraFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestCameraFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.RequestCameraFragment"
+        android:label="RequestCameraFragment" >
+        <action
+            android:id="@+id/action_requestCameraFragment_to_activitySummaryFragment"
+            app:destination="@id/activitySummaryFragment" />
+        <action
+            android:id="@+id/action_requestCameraFragment_to_landSurveyPrepFragment"
+            app:destination="@id/landSurveyPrepFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landSurveyPrepFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.LandSurveyPrepFragment"
+        android:label="LandSurveyPrepFragment" >
+        <action
+            android:id="@+id/action_landSurveyPrepFragment_to_requestCameraFragment"
+            app:destination="@id/requestCameraFragment" />
+        <action
+            android:id="@+id/action_landSurveyPrepFragment_to_landPhotosFragment"
+            app:destination="@id/landPhotosFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landPhotosFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.LandPhotosFragment"
+        android:label="LandPhotosFragment" >
+        <action
+            android:id="@+id/action_landPhotosFragment_to_landSurveyPrepFragment"
+            app:destination="@id/landSurveyPrepFragment" />
+        <action
+            android:id="@+id/action_landPhotosFragment_to_landCornersFragment"
+            app:destination="@id/landCornersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landCornersFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.LandCornersFragment"
+        android:label="LandCornersFragment" >
+        <action
+            android:id="@+id/action_landCornersFragment_to_landPhotosFragment"
+            app:destination="@id/landPhotosFragment" />
+        <action
+            android:id="@+id/action_landCornersFragment_to_takeLandPhotos2"
+            app:destination="@id/takeLandPhotos2" />
+    </fragment>
+    <fragment
+        android:id="@+id/soilPhotosFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.SoilPhotosFragment"
+        android:label="SoilPhotosFragment" >
+        <action
+            android:id="@+id/action_soilPhotosFragment_to_takeSoilPhotoFragment"
+            app:destination="@id/takeSoilPhotoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/takeSoilPhotoFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.TakeSoilPhotoFragment"
+        android:label="TakeSoilPhotoFragment" >
+        <action
+            android:id="@+id/action_takeSoilPhotoFragment_to_soilPhotosFragment"
+            app:destination="@id/soilPhotosFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/takeLandPhotos2"
+        android:name="org.fairventures.treeo.ui.questionnaire.TakeLandPhotos"
+        android:label="TakeLandPhotos" >
+        <action
+            android:id="@+id/action_takeLandPhotos2_to_landCornersFragment"
+            app:destination="@id/landCornersFragment" />
+        <action
+            android:id="@+id/action_takeLandPhotos2_to_displayPhotoFragment"
+            app:destination="@id/displayPhotoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayPhotoFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.DisplayPhotoFragment"
+        android:label="DisplayPhotoFragment" >
+        <action
+            android:id="@+id/action_displayPhotoFragment_to_takeLandPhotos2"
+            app:destination="@id/takeLandPhotos2" />
+    </fragment>
+    <fragment
+        android:id="@+id/displaySoilPhotoFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.DisplaySoilPhotoFragment"
+        android:label="DisplaySoilPhotoFragment" >
+        <action
+            android:id="@+id/action_displaySoilPhotoFragment_to_takeSoilPhotoFragment"
+            app:destination="@id/takeSoilPhotoFragment" />
     </fragment>
 </navigation>
