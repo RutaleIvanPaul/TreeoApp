@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#00802B</color>
     <color name="gray">#646567</color>
+    <color name="gray_20">#282621</color>
     <color name="button_disabled">#50F2C94C</color>
     <color name="app_green">#00802B</color>
     <color name="app_green_darker">#013712</color>

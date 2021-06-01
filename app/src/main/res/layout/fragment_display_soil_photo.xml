@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextAppearance="@style/TitleTheme"
+        app:titleTextColor="@color/app_green">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/orange_bg"
+            android:padding="10dp"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
+            android:text="@string/land_photo_1_3"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/checkbox_state_list"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="1dp"
+        app:cardMaxElevation="0.5dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="0dp"
+        app:contentPaddingBottom="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <ImageView
+            android:layout_width="500dp"
+            android:layout_height="300dp"
+            android:contentDescription="@string/photo"
+            android:scaleType="centerCrop"
+            android:src="@drawable/soil_photo" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/appCompatTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        android:maxWidth="280dp"
+        android:text="@string/is_this_soil_photo_clear"
+        android:textAppearance="@style/HeadlineTheme"
+        android:textColor="@color/app_green"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/cardview"
+        app:layout_constraintTop_toBottomOf="@+id/cardview" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/instructions_text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:lines="3"
+        android:maxWidth="140dp"
+        android:maxLines="4"
+        android:paddingBottom="5dp"
+        android:text="@string/instruction_check_photo"
+        android:textAppearance="@style/TextTheme"
+        android:textColor="@color/gray_20"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@id/appCompatTextView"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="28dp"
+        android:drawableStart="@drawable/ic_arrow_back_16"
+        android:drawablePadding="10dp"
+        android:maxWidth="280dp"
+        android:text="@string/retake_photo"
+        android:textAppearance="@style/HeadlineTheme"
+        android:textColor="@color/app_green"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.widget.Button
+        android:id="@+id/btn_continue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_state_list"
+        android:drawableEnd="@drawable/ic_arrow_forward_16"
+        android:drawablePadding="10dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/finish_land_specification"
+        android:textAppearance="@style/TextThemeButton"
+        android:textColor="@color/text_color_state_list"
+        app:layout_constraintBottom_toTopOf="@+id/btn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

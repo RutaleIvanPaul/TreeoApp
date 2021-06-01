@@ -10,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +28,7 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
     lateinit var sharedPref: SharedPreferences
     private val activitySummaryViewModel: ActivitySummaryViewModel by activityViewModels()
 
-    private var selectedLanguage = "en"
+    private var selectedLanguage: String? = null
     private var plannedActivity: Activity? = null
     private lateinit var adapter: ActivitySummaryAdapter
 
@@ -42,6 +43,7 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         plannedActivity = arguments?.getParcelable("activity")
+        selectedLanguage = sharedPref.getString("Selected Language", "en")
         getSummaryItems(plannedActivity!!)
         initializeViews()
         setObservers()
@@ -60,6 +62,7 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
     private fun initializeViews() {
         initializeTextViews()
         initializeRecycler()
+        initializeButtons()
     }
 
     private fun initializeTextViews() {
@@ -77,10 +80,17 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
         )
     }
 
+    private fun initializeButtons(){
+        btn_continue_to_photos.setOnClickListener {
+            view?.findNavController()
+                ?.navigate(R.id.action_activitySummaryFragment_to_requestCameraFragment)
+        }
+    }
+
     private fun setObservers() {
         activitySummaryViewModel.activitySummaryItems.observe(viewLifecycleOwner, Observer {
             if (it != null) {
-                updateRecyclerview(it, selectedLanguage)
+                updateRecyclerview(it, selectedLanguage!!)
             }
         })
     }

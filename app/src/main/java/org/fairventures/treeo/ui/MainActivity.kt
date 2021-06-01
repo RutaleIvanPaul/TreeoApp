@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
