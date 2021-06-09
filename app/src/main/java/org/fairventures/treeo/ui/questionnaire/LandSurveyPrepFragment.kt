@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import kotlinx.android.synthetic.main.fragment_land_survey_prep.*
 import kotlinx.android.synthetic.main.fragment_request_camera_use.*
 import kotlinx.android.synthetic.main.fragment_request_camera_use.view.*
 import org.fairventures.treeo.R
