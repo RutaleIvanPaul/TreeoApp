@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class LandSurvey(
     @PrimaryKey(autoGenerate = true)
     val landsurveyID: Long?,
+    val sequenceNumber: Int,
     val imagePath: String,
     val imageType: String
 )

@@ -32,7 +32,7 @@ class LandPhotosFragment: Fragment() {
     }
 
     private fun initializeButton(){
-        btn.setOnClickListener {
+        btn_retake.setOnClickListener {
             view?.findNavController()
                 ?.navigate(R.id.action_landPhotosFragment_to_landCornersFragment)
         }

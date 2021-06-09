@@ -101,7 +101,8 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
 
     override fun onActivityClick(activity: ActivitySummaryItem) {
         if (activity.activity.template.activityType =="land-survey-part-2"){
-            Toast.makeText(requireContext(),"Part 2",Toast.LENGTH_LONG).show()
+            findNavController()
+                .navigate(R.id.action_activitySummaryFragment_to_requestCameraFragment)
         }else {
             findNavController()
                 .navigate(

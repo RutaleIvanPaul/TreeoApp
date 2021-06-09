@@ -17,6 +17,7 @@
         app:titleTextColor="@color/app_green">
 
         <TextView
+            android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -34,31 +35,23 @@
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="407dp"
+        android:layout_height="582dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-        <ImageView
+        <androidx.camera.view.PreviewView
+            android:id="@+id/landSoilPhoto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/land_photo2" />
+            android:scaleType="centerCrop" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="46dp"
-            android:gravity="center_horizontal"
-            android:text="Take the first photo of the land"
-            android:textAppearance="@style/TextTheme"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+
     </FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/camera_bottom_bar_background"

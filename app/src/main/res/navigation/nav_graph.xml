@@ -204,6 +204,9 @@
         <action
             android:id="@+id/action_soilPhotosFragment_to_takeSoilPhotoFragment"
             app:destination="@id/takeSoilPhotoFragment" />
+        <action
+            android:id="@+id/action_soilPhotosFragment_to_takeLandPhotos2"
+            app:destination="@id/takeLandPhotos2" />
     </fragment>
     <fragment
         android:id="@+id/takeSoilPhotoFragment"
@@ -223,6 +226,9 @@
         <action
             android:id="@+id/action_takeLandPhotos2_to_displayPhotoFragment"
             app:destination="@id/displayPhotoFragment" />
+        <action
+            android:id="@+id/action_takeLandPhotos2_to_displayPhotoFragment2"
+            app:destination="@id/displayPhotoFragment" />
     </fragment>
     <fragment
         android:id="@+id/displayPhotoFragment"
@@ -231,6 +237,9 @@
         <action
             android:id="@+id/action_displayPhotoFragment_to_takeLandPhotos2"
             app:destination="@id/takeLandPhotos2" />
+        <action
+            android:id="@+id/action_displayPhotoFragment_to_soilPhotosFragment"
+            app:destination="@id/soilPhotosFragment" />
     </fragment>
     <fragment
         android:id="@+id/displaySoilPhotoFragment"

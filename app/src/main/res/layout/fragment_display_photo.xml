@@ -16,6 +16,7 @@
         app:titleTextColor="@color/app_green">
 
         <TextView
+            android:id="@+id/title_text_clear_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -52,6 +53,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <ImageView
+            android:id="@+id/imageViewClear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/photo"
@@ -94,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appCompatTextView" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/btn"
+        android:id="@+id/btn_retake"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -126,7 +128,7 @@
         android:textAppearance="@style/TextThemeButton"
         android:textColor="@color/text_color_state_list"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/btn"
+        app:layout_constraintBottom_toTopOf="@+id/btn_retake"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />

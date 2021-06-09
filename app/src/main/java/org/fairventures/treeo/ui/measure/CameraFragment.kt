@@ -70,7 +70,6 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks, SensorEv
     private var currentSteps: Float = 0f
     private var previousSteps: Float =0f
 
-    private val cameraViewModel: CameraViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -181,14 +180,6 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks, SensorEv
                             val msg = "Photo capture succeeded: $savedUri"
                             Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                             Log.d(TAG, msg)
-
-                            cameraViewModel.insertLandSurveyItem(
-                                LandSurvey(
-                                    null,
-                                    savedUri.toString(),
-                                    "mainCamera"
-                                )
-                            )
 
                             if (!picture_taken_before){
                                 picture_taken_before = true
