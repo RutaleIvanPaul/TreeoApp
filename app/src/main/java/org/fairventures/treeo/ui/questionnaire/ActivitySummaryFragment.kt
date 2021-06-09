@@ -100,11 +100,16 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
     }
 
     override fun onActivityClick(activity: ActivitySummaryItem) {
-        findNavController()
-            .navigate(
-                R.id.action_activitySummaryFragment_to_questionnaireFragment,
-                bundleOf("summaryItem" to activity)
-            )
+        if (activity.activity.template.activityType =="land-survey-part-2"){
+            findNavController()
+                .navigate(R.id.action_activitySummaryFragment_to_requestCameraFragment)
+        }else {
+            findNavController()
+                .navigate(
+                    R.id.action_activitySummaryFragment_to_questionnaireFragment,
+                    bundleOf("summaryItem" to activity)
+                )
+        }
     }
 
     companion object {

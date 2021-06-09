@@ -74,7 +74,7 @@
             android:layout_height="match_parent">
 
             <RadioButton
-                android:id="@+id/questionnaireOptionTextView"
+                android:id="@+id/questionnaireOptionTextView3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/radio_state_list"
@@ -112,7 +112,7 @@
             android:layout_height="match_parent">
 
             <RadioButton
-                android:id="@+id/questionnaireOptionTextView2"
+                android:id="@+id/questionnaireOptionTextView4"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/radio_state_list"
@@ -150,7 +150,7 @@
             android:layout_height="match_parent">
 
             <RadioButton
-                android:id="@+id/questionnaireOptionTextView3"
+                android:id="@+id/questionnaireOptionTextView5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/radio_state_list"
@@ -188,7 +188,7 @@
             android:layout_height="match_parent">
 
             <RadioButton
-                android:id="@+id/questionnaireOptionTextView4"
+                android:id="@+id/questionnaireOptionTextView6"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/radio_state_list"
@@ -226,7 +226,7 @@
             android:layout_height="match_parent">
 
             <RadioButton
-                android:id="@+id/questionnaireOptionTextView5"
+                android:id="@+id/questionnaireOptionTextView6andmore"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/radio_state_list"
@@ -240,15 +240,17 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
 
     <android.widget.Button
-        android:id="@+id/btn"
+        android:id="@+id/corners_btn_continue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"

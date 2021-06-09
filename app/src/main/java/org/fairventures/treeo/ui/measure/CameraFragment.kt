@@ -68,6 +68,7 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks, SensorEv
     private var currentSteps: Float = 0f
     private var previousSteps: Float =0f
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

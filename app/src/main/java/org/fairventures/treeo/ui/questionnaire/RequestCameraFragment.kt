@@ -1,11 +1,9 @@
 package org.fairventures.treeo.ui.questionnaire
 
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import kotlinx.android.synthetic.main.fragment_activity_summary.*
 import kotlinx.android.synthetic.main.fragment_request_camera_use.*
 import kotlinx.android.synthetic.main.fragment_request_camera_use.view.*
 import org.fairventures.treeo.R
@@ -31,7 +29,7 @@ class RequestCameraFragment: Fragment() {
     }
 
     private fun initializeButton(){
-        btn.setOnClickListener {
+        btn_retake.setOnClickListener {
             view?.findNavController()
                 ?.navigate(R.id.action_requestCameraFragment_to_landSurveyPrepFragment)
         }

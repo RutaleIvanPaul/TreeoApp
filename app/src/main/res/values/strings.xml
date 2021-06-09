@@ -76,7 +76,7 @@
     <string name="text_edit">EDIT</string>
     <string name="retake_photo">RETAKE PHOTO</string>
     <string name="check_photo_txt">If the photo is blurry or simply unclear\n, you can retake. Otherwise you can Continue to Photo2</string>
-    <string name="check_photo_validity">Is this 1st photo clear?</string>
+    <string name="check_photo_validity">Is this photo clear?</string>
     <string name="photo">photo</string>
     <string name="take_photo">Take a picture of your land from each of its corners</string>
     <string name="continue_txt">Continue</string>
