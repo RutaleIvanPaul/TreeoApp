@@ -20,4 +20,10 @@
     <color name="app_orange">#DF4F1E</color>
     <color name="app_orange_20">#FCEDE8</color>
     <color name="app_background_color">#FFFDF9</color>
+    <color name="red_90">#FFD6D7</color>
+    <color name="red">#A9001E</color>
+    <color name="black_2">#282621</color>
+    <color name="yellow_80">#FCF4DB</color>
+    <color name="yellow_50">#856E00</color>
+    <color name="black_3">#565249</color>
 </resources>

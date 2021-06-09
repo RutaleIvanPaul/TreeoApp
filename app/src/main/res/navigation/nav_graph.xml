@@ -240,6 +240,9 @@
         <action
             android:id="@+id/action_displayPhotoFragment_to_soilPhotosFragment"
             app:destination="@id/soilPhotosFragment" />
+        <action
+            android:id="@+id/action_displayPhotoFragment_to_landSpecificationFragment"
+            app:destination="@id/landSpecificationFragment" />
     </fragment>
     <fragment
         android:id="@+id/displaySoilPhotoFragment"
@@ -248,5 +251,19 @@
         <action
             android:id="@+id/action_displaySoilPhotoFragment_to_takeSoilPhotoFragment"
             app:destination="@id/takeSoilPhotoFragment" />
+        <action
+            android:id="@+id/action_displaySoilPhotoFragment_to_landSpecificationFragment"
+            app:destination="@id/landSpecificationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landSpecificationFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.LandSpecificationFragment"
+        android:label="LandSpecificationFragment" >
+        <action
+            android:id="@+id/action_landSpecificationFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_landSpecificationFragment_to_displaySoilPhotoFragment"
+            app:destination="@id/displaySoilPhotoFragment" />
     </fragment>
 </navigation>

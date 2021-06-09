@@ -86,7 +86,8 @@ class DisplayPhotoFragment: Fragment() {
                     ?.navigate(R.id.action_displayPhotoFragment_to_soilPhotosFragment)
             }
             else if(soilPhoto){
-                Toast.makeText(requireContext(),"Finished Soil Photo",Toast.LENGTH_LONG).show()
+                view?.findNavController()
+                    ?.navigate(R.id.action_displayPhotoFragment_to_landSpecificationFragment)
             }
             else{
                 view?.findNavController()

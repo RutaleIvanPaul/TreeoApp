@@ -81,8 +81,8 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
 
     private fun initializeButtons(){
         btn_continue_to_photos.setOnClickListener {
-            view?.findNavController()
-                ?.navigate(R.id.action_activitySummaryFragment_to_requestCameraFragment)
+//            view?.findNavController()
+//                ?.navigate(R.id.action_activitySummaryFragment_to_requestCameraFragment)
         }
     }
 
@@ -102,7 +102,10 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
     override fun onActivityClick(activity: ActivitySummaryItem) {
         if (activity.activity.template.activityType =="land-survey-part-2"){
             findNavController()
-                .navigate(R.id.action_activitySummaryFragment_to_requestCameraFragment)
+                .navigate(
+                    R.id.action_activitySummaryFragment_to_requestCameraFragment,
+                    bundleOf("activity" to plannedActivity)
+                )
         }else {
             findNavController()
                 .navigate(

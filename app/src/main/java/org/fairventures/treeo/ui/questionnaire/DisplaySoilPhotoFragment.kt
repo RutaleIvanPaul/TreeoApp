@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import kotlinx.android.synthetic.main.fragment_display_soil_photo.*
+import kotlinx.android.synthetic.main.fragment_request_camera_use.*
 import kotlinx.android.synthetic.main.fragment_request_camera_use.view.*
 import org.fairventures.treeo.R
 
@@ -25,6 +27,14 @@ class DisplaySoilPhotoFragment: Fragment() {
         view.toolbar.setNavigationOnClickListener {
             view.findNavController()
                 .navigate(R.id.action_displaySoilPhotoFragment_to_takeSoilPhotoFragment)
+        }
+        initializeButton()
+    }
+
+    private fun initializeButton(){
+        btn_continue.setOnClickListener {
+            view?.findNavController()
+                ?.navigate(R.id.action_displaySoilPhotoFragment_to_landSpecificationFragment)
         }
     }
 }

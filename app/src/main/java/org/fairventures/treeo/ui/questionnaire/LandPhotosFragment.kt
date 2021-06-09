@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import kotlinx.android.synthetic.main.fragment_land_photos.*
 import kotlinx.android.synthetic.main.fragment_request_camera_use.*
 import kotlinx.android.synthetic.main.fragment_request_camera_use.view.*
 import org.fairventures.treeo.R
@@ -26,13 +27,13 @@ class LandPhotosFragment: Fragment() {
         view.toolbar.inflateMenu(R.menu.main_menu)
         view.toolbar.setNavigationOnClickListener {
             view.findNavController()
-                .navigate(R.id.action_landSurveyPrepFragment_to_requestCameraFragment)
+                .navigate(R.id.action_landPhotosFragment_to_landSurveyPrepFragment)
         }
         initializeButton()
     }
 
     private fun initializeButton(){
-        btn_retake.setOnClickListener {
+        btn_continue.setOnClickListener {
             view?.findNavController()
                 ?.navigate(R.id.action_landPhotosFragment_to_landCornersFragment)
         }
