@@ -119,6 +119,7 @@ class TakeLandPhotos: Fragment(), EasyPermissions.PermissionCallbacks, SensorEve
         }
         else{
             setUpUI(numberOfCorners)
+
         }
         checkAndRequestCameraPermissions()
     }
@@ -495,6 +496,7 @@ class TakeLandPhotos: Fragment(), EasyPermissions.PermissionCallbacks, SensorEve
             }
         }
     }
+
 
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
         Toast.makeText(requireContext(), "Permissions Granted", Toast.LENGTH_LONG).show()

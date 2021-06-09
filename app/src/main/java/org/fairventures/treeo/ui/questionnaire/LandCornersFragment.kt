@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import kotlinx.android.synthetic.main.fragment_land_corners.*
 import kotlinx.android.synthetic.main.fragment_request_camera_use.view.*
 import org.fairventures.treeo.R
+import org.fairventures.treeo.util.enableView
 
 class LandCornersFragment: Fragment() {
     private var numberOfCorners = 0
@@ -68,7 +69,8 @@ class LandCornersFragment: Fragment() {
                 radioButton.isChecked = false
             }
         }
+        enableView(corners_btn_continue)
         numberOfCorners = Integer.valueOf(questionnaireOptionTextView?.text.toString().split(" ")[0])
-    }
 
+    }
 }
