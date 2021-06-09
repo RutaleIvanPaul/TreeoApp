@@ -485,3 +485,4 @@ class CameraFragment : Fragment(), EasyPermissions.PermissionCallbacks, SensorEv
     }
 }
 
+

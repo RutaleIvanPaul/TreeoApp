@@ -23,12 +23,12 @@ class LandSpecificationFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        view.toolbar.setNavigationIcon(R.drawable.ic_back_arrow)
-//        view.toolbar.inflateMenu(R.menu.main_menu)
-//        view.toolbar.setNavigationOnClickListener {
-//            view.findNavController()
-//                .navigate(R.id.action_landSpecificationFragment_to_displaySoilPhotoFragment)
-//        }
+        view.toolbar.setNavigationIcon(R.drawable.ic_back_arrow)
+        view.toolbar.inflateMenu(R.menu.main_menu)
+        view.toolbar.setNavigationOnClickListener {
+            view.findNavController()
+                .navigate(R.id.action_landSpecificationFragment_to_displaySoilPhotoFragment)
+        }
         initializeButton()
         setUpUploadStatusView()
 
