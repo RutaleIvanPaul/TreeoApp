@@ -90,6 +90,7 @@ class ActivitySummaryFragment : Fragment(), ActivitySummaryListener {
     private fun setObservers() {
         activitySummaryViewModel.activitySummaryItems.observe(viewLifecycleOwner, Observer {
             if (it != null) {
+                selectedLanguage = sharedPref.getString("Selected Language", "en")!!
                 updateRecyclerview(it, selectedLanguage!!)
             }
         })
