@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#00802B</color>
     <color name="gray">#646567</color>
+    <color name="gray_20">#282621</color>
     <color name="button_disabled">#50F2C94C</color>
     <color name="app_green">#00802B</color>
     <color name="app_green_darker">#013712</color>
@@ -19,4 +20,10 @@
     <color name="app_orange">#DF4F1E</color>
     <color name="app_orange_20">#FCEDE8</color>
     <color name="app_background_color">#FFFDF9</color>
+    <color name="red_90">#FFD6D7</color>
+    <color name="red">#A9001E</color>
+    <color name="black_2">#282621</color>
+    <color name="yellow_80">#FCF4DB</color>
+    <color name="yellow_50">#856E00</color>
+    <color name="black_3">#565249</color>
 </resources>

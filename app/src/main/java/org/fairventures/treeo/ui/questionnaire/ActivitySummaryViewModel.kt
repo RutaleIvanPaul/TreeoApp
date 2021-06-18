@@ -1,6 +1,5 @@
 package org.fairventures.treeo.ui.questionnaire
 
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,10 +9,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.fairventures.treeo.models.Activity
 import org.fairventures.treeo.models.ActivitySummaryItem
+import org.fairventures.treeo.models.ActivityTemplate
 import org.fairventures.treeo.models.Page
 import org.fairventures.treeo.repositories.DBMainRepository
 import org.fairventures.treeo.util.IDispatcherProvider
 import org.fairventures.treeo.util.mappers.ModelEntityMapper
+
 
 class ActivitySummaryViewModel @ViewModelInject constructor(
     private val dbMainRepository: DBMainRepository,
@@ -63,6 +64,41 @@ class ActivitySummaryViewModel @ViewModelInject constructor(
     ): List<ActivitySummaryItem> {
         val summaryList = mutableListOf<ActivitySummaryItem>()
         summaryList.add(ActivitySummaryItem(activity, pages))
+        val activity2 = Activity(
+            activity.id,
+            activity.remoteId,
+            activity.dueDate,
+            activity.isCompleted,
+            "Photos",
+            activity.description,
+            activity.plot,
+            ActivityTemplate(
+                templateRemoteId = activity.template.templateRemoteId,
+                activityType = "land-survey",
+                code = activity.template.code,
+                preQuestionnaireId = activity.template.preQuestionnaireId,
+                postQuestionnaireId = activity.template.postQuestionnaireId
+            )
+        )
+        val page1 = Page(
+            pages[0].pageId,
+            pages[0].pageType,
+            pages[0].questionCode,
+            mapOf("en" to "Land Photos", "in" to "Gambar"),
+            pages[0].description,
+            pages[0].options
+        )
+        val page2 = Page(
+            pages[0].pageId,
+            pages[0].pageType,
+            pages[0].questionCode,
+            mapOf("en" to "Soil Photos", "in" to "Gambar"),
+            pages[0].description,
+            pages[0].options
+        )
+        val pages2 = listOf(page1, page2)
+        summaryList.add(ActivitySummaryItem(activity2, pages2))
+
         return summaryList
     }
 }

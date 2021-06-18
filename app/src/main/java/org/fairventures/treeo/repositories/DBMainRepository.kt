@@ -2,7 +2,9 @@ package org.fairventures.treeo.repositories
 
 import kotlinx.coroutines.flow.Flow
 import org.fairventures.treeo.db.dao.ActivityDao
+import org.fairventures.treeo.db.dao.LandSurveyDao
 import org.fairventures.treeo.db.models.ActivityEntity
+import org.fairventures.treeo.db.models.LandSurvey
 import org.fairventures.treeo.db.models.OptionEntity
 import org.fairventures.treeo.db.models.mappers.ActivityDtoToEntityMapper
 import org.fairventures.treeo.db.models.relations.QuestionnaireWithPages
@@ -14,6 +16,7 @@ import javax.inject.Inject
 
 class DBMainRepository @Inject constructor(
     private val activityDao: ActivityDao,
+    private val landSurveyDao: LandSurveyDao,
     private val mapper: ActivityDtoToEntityMapper
 ) {
     suspend fun insertActivity(activities: List<ActivityDTO>) {
@@ -81,4 +84,9 @@ class DBMainRepository @Inject constructor(
     }
 
 //    suspend fun updateActivity(activity: Activity)  = activityDao.updateActivity(activity)
+
+
+    suspend fun insertLandSurvey(landSurvey: LandSurvey){
+        landSurveyDao.insertLandSurveyItem(landSurvey)
+    }
 }
