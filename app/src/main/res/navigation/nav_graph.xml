@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/onBoardingHostFragment"
+        android:name="org.fairventures.treeo.ui.authentication.onboarding.OnBoardingHostFragment"
+        android:label="OnBoarding"
+        tools:layout="@layout/fragment_on_boarding_host">
+        <action
+            android:id="@+id/action_onBoardingHostFragment_to_onBoardingLandingPage"
+            app:destination="@id/onBoardingLandingPage"
+            app:popUpTo="@id/onBoardingLandingPage" />
+        <action
+            android:id="@+id/action_onBoardingHostFragment_to_motivationsFragment"
+            app:destination="@id/motivationsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/onBoardingLandingPage"
+        android:name="org.fairventures.treeo.ui.authentication.onboarding.screens.OnBoardingLandingPage"
+        android:label="fragment_on_boarding_landing_page"
+        tools:layout="@layout/fragment_on_boarding_landing_page">
+        <action
+            android:id="@+id/action_onBoardingLandingPage_to_onBoardingHostFragment"
+            app:destination="@id/onBoardingHostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chooseLangFragment"
+        android:name="org.fairventures.treeo.ui.authentication.onboarding.screens.ChooseLangFragment"
+        android:label="ChooseLangFragment">
+        <action
+            android:id="@+id/action_chooseLangFragment_to_onBoardingScreen1"
+            app:destination="@id/onBoardingLandingPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="org.fairventures.treeo.ui.home.screens.HomeFragment"
+        android:label="HomeFragment">
+        <action
+            android:id="@+id/action_homeFragment_to_chooseLangFragment"
+            app:destination="@id/chooseLangFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_phoneAuthHostFragment"
+            app:destination="@id/phoneAuthHostFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_questionnaireFragment"
+            app:destination="@id/questionnaireFragment">
+            <argument
+                android:name="activity"
+                app:argType="org.fairventures.treeo.models.Activity" />
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_activityDetailsFragment"
+            app:destination="@id/activitySummaryFragment">
+            <argument
+                android:name="activity"
+                app:argType="org.fairventures.treeo.models.Activity" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/guideFragment"
+        android:name="org.fairventures.treeo.ui.home.screens.GuideFragment"
+        android:label="fragment_guide"
+        tools:layout="@layout/fragment_guide">
+        <action
+            android:id="@+id/action_guideFragment_to_questionnaireFragment"
+            app:destination="@id/questionnaireFragment" />
+        <action
+            android:id="@+id/action_guideFragment_to_activityDetailsFragment"
+            app:destination="@id/activitySummaryFragment">
+            <argument
+                android:name="activity"
+                app:argType="org.fairventures.treeo.models.Activity" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/learnFragment"
+        android:name="org.fairventures.treeo.ui.home.screens.LearnFragment"
+        android:label="fragment_learn"
+        tools:layout="@layout/fragment_learn" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="org.fairventures.treeo.ui.home.screens.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/phoneAuthHostFragment"
+        android:name="org.fairventures.treeo.ui.authentication.login.PhoneAuthHostFragment"
+        android:label="fragment_phone_auth_host"
+        tools:layout="@layout/fragment_phone_auth_host">
+        <action
+            android:id="@+id/action_phoneAuthHostFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="org.fairventures.treeo.ui.measure.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" />
+    <fragment
+        android:id="@+id/registrationHostFragment"
+        android:name="org.fairventures.treeo.ui.authentication.registration.RegistrationHostFragment"
+        android:label="fragment_registration_host"
+        tools:layout="@layout/fragment_registration_host">
+        <action
+            android:id="@+id/action_registrationHostFragment_to_motivationsFragment"
+            app:destination="@id/motivationsFragment" />
+        <action
+            android:id="@+id/action_registrationHostFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_registrationHostFragment_to_phoneAuthHostFragment"
+            app:destination="@id/phoneAuthHostFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/motivationsFragment"
+        android:name="org.fairventures.treeo.ui.authentication.onboarding.screens.MotivationsFragment"
+        android:label="fragment_motivations"
+        tools:layout="@layout/fragment_motivations">
+        <action
+            android:id="@+id/action_motivationsFragment_to_registrationHostFragment"
+            app:destination="@id/registrationHostFragment" />
+        <action
+            android:id="@+id/action_motivationsFragment_to_onBoardingHostFragment"
+            app:destination="@id/onBoardingHostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/questionnaireFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.QuestionnaireFragment"
+        android:label="fragment_questionnaire"
+        tools:layout="@layout/fragment_questionnaire">
+        <action
+            android:id="@+id/action_questionnaireFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/activitySummaryFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.ActivitySummaryFragment"
+        android:label="Summary Fragment"
+        tools:layout="@layout/fragment_activity_summary">
+        <action
+            android:id="@+id/action_activitySummaryFragment_to_questionnaireFragment"
+            app:destination="@id/questionnaireFragment">
+            <argument
+                android:name="summaryItem"
+                app:argType="org.fairventures.treeo.models.ActivitySummaryItem" />
+        </action>
+        <action
+            android:id="@+id/action_activitySummaryFragment_to_requestCameraFragment"
+            app:destination="@id/requestCameraFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestCameraFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.RequestCameraFragment"
+        android:label="RequestCameraFragment" >
+        <action
+            android:id="@+id/action_requestCameraFragment_to_activitySummaryFragment"
+            app:destination="@id/activitySummaryFragment" />
+        <action
+            android:id="@+id/action_requestCameraFragment_to_landSurveyPrepFragment"
+            app:destination="@id/landSurveyPrepFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landSurveyPrepFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.LandSurveyPrepFragment"
+        android:label="LandSurveyPrepFragment" >
+        <action
+            android:id="@+id/action_landSurveyPrepFragment_to_requestCameraFragment"
+            app:destination="@id/requestCameraFragment" />
+        <action
+            android:id="@+id/action_landSurveyPrepFragment_to_landPhotosFragment"
+            app:destination="@id/landPhotosFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landPhotosFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.LandPhotosFragment"
+        android:label="LandPhotosFragment" >
+        <action
+            android:id="@+id/action_landPhotosFragment_to_landSurveyPrepFragment"
+            app:destination="@id/landSurveyPrepFragment" />
+        <action
+            android:id="@+id/action_landPhotosFragment_to_landCornersFragment"
+            app:destination="@id/landCornersFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landCornersFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.LandCornersFragment"
+        android:label="LandCornersFragment" >
+        <action
+            android:id="@+id/action_landCornersFragment_to_landPhotosFragment"
+            app:destination="@id/landPhotosFragment" />
+        <action
+            android:id="@+id/action_landCornersFragment_to_takeLandPhotos2"
+            app:destination="@id/takeLandPhotos2" />
+    </fragment>
+    <fragment
+        android:id="@+id/soilPhotosFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.SoilPhotosFragment"
+        android:label="SoilPhotosFragment" >
+        <action
+            android:id="@+id/action_soilPhotosFragment_to_takeSoilPhotoFragment"
+            app:destination="@id/takeSoilPhotoFragment" />
+        <action
+            android:id="@+id/action_soilPhotosFragment_to_takeLandPhotos2"
+            app:destination="@id/takeLandPhotos2" />
+    </fragment>
+    <fragment
+        android:id="@+id/takeSoilPhotoFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.TakeSoilPhotoFragment"
+        android:label="TakeSoilPhotoFragment" >
+        <action
+            android:id="@+id/action_takeSoilPhotoFragment_to_soilPhotosFragment"
+            app:destination="@id/soilPhotosFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/takeLandPhotos2"
+        android:name="org.fairventures.treeo.ui.questionnaire.TakeLandPhotos"
+        android:label="TakeLandPhotos" >
+        <action
+            android:id="@+id/action_takeLandPhotos2_to_landCornersFragment"
+            app:destination="@id/landCornersFragment" />
+        <action
+            android:id="@+id/action_takeLandPhotos2_to_displayPhotoFragment"
+            app:destination="@id/displayPhotoFragment" />
+        <action
+            android:id="@+id/action_takeLandPhotos2_to_displayPhotoFragment2"
+            app:destination="@id/displayPhotoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displayPhotoFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.DisplayPhotoFragment"
+        android:label="DisplayPhotoFragment" >
+        <action
+            android:id="@+id/action_displayPhotoFragment_to_takeLandPhotos2"
+            app:destination="@id/takeLandPhotos2" />
+        <action
+            android:id="@+id/action_displayPhotoFragment_to_soilPhotosFragment"
+            app:destination="@id/soilPhotosFragment" />
+        <action
+            android:id="@+id/action_displayPhotoFragment_to_landSpecificationFragment"
+            app:destination="@id/landSpecificationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/displaySoilPhotoFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.DisplaySoilPhotoFragment"
+        android:label="DisplaySoilPhotoFragment" >
+        <action
+            android:id="@+id/action_displaySoilPhotoFragment_to_takeSoilPhotoFragment"
+            app:destination="@id/takeSoilPhotoFragment" />
+        <action
+            android:id="@+id/action_displaySoilPhotoFragment_to_landSpecificationFragment"
+            app:destination="@id/landSpecificationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/landSpecificationFragment"
+        android:name="org.fairventures.treeo.ui.questionnaire.LandSpecificationFragment"
+        android:label="LandSpecificationFragment" >
+        <action
+            android:id="@+id/action_landSpecificationFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_landSpecificationFragment_to_displaySoilPhotoFragment"
+            app:destination="@id/displaySoilPhotoFragment" />
+    </fragment>
+</navigation>

@@ -1,0 +1,107 @@
+<resources>
+    <string name="app_name">Treeo</string>
+    <string name="facebook_app_id" translatable="false">915429019225102</string>
+    <string name="already_account_login">Already Have an Account? Log In</string>
+    <string name="no_account_sign_up" translatable="false">No Account? Sign Up</string>
+    <string name="login_button_text">Log In</string>
+    <string name="logout_button_text">Log Out</string>
+    <string name="user_token" translatable="false">User Token</string>
+    <string name="user_id" translatable="false">User Id</string>
+    <string name="mobile_username" translatable="false">Username</string>
+    <string name="google" translatable="false">Google</string>
+    <string name="facebook" translatable="false">Facebook</string>
+    <string name="email_password" translatable="false">Email_password</string>
+    <string name="loginManager" translatable="false">Login Manager</string>
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="select_lang">Choose a language</string>
+    <string name="language">English</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="country">Country</string>
+    <string name="username">Username</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="continue_with_phonenumber">Continue with phonenumber</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="activate_account">Activate Account</string>
+    <string name="otp_code" translatable="false">OTP Code</string>
+    <string name="phone_number_256_499595994">Phone Number(+256 499595994)</string>
+    <string name="helloworld">Hello World!</string>
+    <string name="text_choose_language">Choose Your Language First</string>
+    <string name="hint_choose_language">Choose the TREEO APP language. You can always change it in settings.</string>
+    <string name="english" translatable="false">English</string>
+    <string name="luganda" translatable="false">Luganda</string>
+    <string name="bahasa" translatable="false">Bahasa</string>
+    <string name="spanish" translatable="false">Spanish</string>
+    <string name="settings">settings</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="first_time_user" translatable="false">first_time_user</string>
+    <string name="your_phone_number">Type your phone number</string>
+    <string name="pick_your_country">Pick your country</string>
+    <string name="text_continue">CONTINUE</string>
+    <string name="resend_the_passcode">RESEND THE PASSCODE</string>
+    <string name="passcode_delay_text">It might take a couple of minutes to receive the password</string>
+    <string name="camera_button_description" translatable="false">This is the camera button</string>
+    <string name="title_home">Home</string>
+    <string name="title_guide">Guide</string>
+    <string name="title_learn">Learn</string>
+    <string name="title_profile">Profile</string>
+    <string name="lorem_ipsum" translatable="false">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s</string>
+    <string name="text_back">BACK</string>
+    <string name="phone_helper_text">Type your phone number to receive a 1 time password</string>
+    <string name="otp_pass_code_message">Confirm the passcode sent to</string>
+    <string name="get_started">GET STARTED</string>
+    <string name="text_first_name">First name</string>
+    <string name="text_second_name">Second name</string>
+    <string name="text_username">Username</string>
+    <string name="text_last_name">Last name</string>
+    <string name="text_country">Country</string>
+    <string name="text_create_a_better_income">Create A Better Income By Tree Planting</string>
+    <string name="text_treeo_goal">We provide seedlings, educate and help farmers to create a sustainable income by planting trees.</string>
+
+    <string name="gdpr_conditions" translatable="true">GDPR Conditions</string>
+
+
+    <string name="selected_language" translatable="false">Selected Language</string>
+    <string name="sample_activity_title">Sample activity title</string>
+    <string name="sample_form_title_text">Part 1 - Form</string>
+    <string name="sample_duration">5 MINS</string>
+    <string name="start_text">START</string>
+    <string name="sample_activity_code">Activity Code</string>
+    <string name="placeholder_dashes">___</string>
+    <string name="text_completed">COMPLETED</string>
+    <string name="text_edit">EDIT</string>
+    <string name="retake_photo">RETAKE PHOTO</string>
+    <string name="check_photo_txt">If the photo is blurry or simply unclear, you can retake. Otherwise you can Continue to Photo2</string>
+    <string name="check_photo_validity">Is this photo clear?</string>
+    <string name="photo">photo</string>
+    <string name="take_photo">Take a picture of your land from each of its corners</string>
+    <string name="continue_txt">Continue</string>
+    <string name="close">close</string>
+    <string name="allow_treeo_app_to_use_your_camera">Allow TREEO app to use your camera</string>
+    <string name="specify_your_land_by_using_a_camera">Specify your land by using a camera</string>
+    <string name="have_all_your_field_in_order">Have all your field in order</string>
+    <string name="capture_your_trees_including_the_gps">Capture your trees including the GPS</string>
+    <string name="turn_on_camera">Turn on Camera</string>
+    <string name="before_you_start_prepare_those_3_things">Before you start prepare those 3 things:</string>
+    <string name="instructions_preview">You should have these things with you to avoid having to come back from the field</string>
+    <string name="_1_full_phone_battery">1. Full phone battery</string>
+    <string name="to_be_prepared_for_any_case">To be prepared for any case</string>
+    <string name="_2_a_digging_tool">2. A digging tool</string>
+    <string name="to_photograph_the_ground_soil">To photograph the ground soil</string>
+    <string name="_3_around_25_minutes">3. Around 25 minutes</string>
+    <string name="according_to_your_land_size">According to your land size</string>
+    <string name="start_land_photos">Start land photos</string>
+    <string name="step_1_land_photos">Step 1: Land Photos</string>
+    <string name="to_determine_how_many_pictures_you_will_take">To determine how many pictures you will take.</string>
+    <string name="land_photo_1_3">Land Photo 1/3</string>
+    <string name="step_2_soil_photo">Step 2: Soil Photo</string>
+    <string name="dig_instructions_text">Now dig a hole in the ground and take a photo of your soil</string>
+    <string name="finish_land_specification">Finish land specification</string>
+    <string name="instruction_check_photo">If the photo is blurry or simply unclear, you can retake it. Otherwise you can finish the land specification</string>
+    <string name="is_this_soil_photo_clear">Is this soil photo clear?</string>
+    <string name="how_many_corners_does_your_land_have">How many corners does your land have?</string>
+</resources>

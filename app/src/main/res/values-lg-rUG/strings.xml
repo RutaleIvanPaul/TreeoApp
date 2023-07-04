@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Treeo</string>
+    <string name="select_lang">Kyusa olulimi</string>
+    <string name="first_name">Erinya Elisooka</string>
+    <string name="last_name">Erinya Elisembayo</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="country">Egwanga</string>
+    <string name="username">Erinya</string>
+    <string name="phone_number">Ennamba Yesimu</string>
+    <string name="sign_up">Wewandise</string>
+    <string name="continue_with_phonenumber">Weyongereyo ne nnamba yesimu</string>
+    <string name="take_picture">Kuba ekifannanyi</string>
+    <string name="activate_account">Gulawo Accounta</string>
+    <string name="phone_number_256_499595994">Ennamba Yesimu(+256 499595994)</string>
+    <string name="login_button_text">Yingira</string>
+    <string name="logout_button_text">Fuluma</string>
+    <string name="language">Olimini</string>
+    <string name="helloworld">Mbalamusiza  Abayeyo</string>
+    <string name="already_account_login">Woba Olina accounta, yingirira wano</string>
+    <string name="text_continue">Ewaddako</string>
+    <string name="settings">settings</string>
+    <string name="hint_choose_language" translatable="false">Londa olulima lwoyagala mu TREEO APP. Osobola okulukyusa mu setingizi oluvanyuma</string>
+    <string name="text_choose_language">Sooka Olonde Olulimi</string>
+    <string name="get_started">ENTANDIKWA</string>
+    <string name="text_treeo_goal">Tugaba ensiggo, tusomesa no\'kuyamba abalimi okukola enfuna empangaazi no\'kusimba emitti</string>
+    <string name="text_create_a_better_income">Kola Enfuna Enunji Mu Kusimba Emitti</string>
+    <string name="text_country">Engwanga</string>
+    <string name="text_last_name">Erinya elisemba</string>
+    <string name="text_second_name">Erinya elyo\'kubiri</string>
+    <string name="text_first_name">Erinya eli\'sooka</string>
+    <string name="text_username">Uzaneemu</string>
+    <string name="title_home">Ewaka</string>
+    <string name="title_learn">Yiga</string>
+    <string name="title_profile">Ebibyo</string>
+    <string name="title_guide">Gayiddi</string>
+    <string name="text_back">DDAYO</string>
+    <string name="your_phone_number">Wandiika essimu yo</string>
+    <string name="pick_your_country">Londa eggwanga lyo</string>
+    <string name="resend_the_passcode">PASSCODE BADDEMU OKUJISINDIKA</string>
+    <string name="passcode_delay_text">Kiyinza okutwala edakiika okufuna passcode</string>
+    <string name="phone_helper_text">Wandiika essimu yo okufuna passcode</string>
+    <string name="otp_pass_code_message">Kakasa passcode esindikibwa ku numba eno</string>
+    <string name="gdpr_conditions">GDPR Conditions</string>
+</resources>

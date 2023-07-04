@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Treeo</string>
+    <string name="select_lang">Pilih bahasa</string>
+    <string name="first_name">Nama Depan</string>
+    <string name="last_name">Nama Keluarga</string>
+    <string name="email">Surel</string>
+    <string name="password">Kata Sandi</string>
+    <string name="country">Negara</string>
+    <string name="username">Nama pengguna</string>
+    <string name="phone_number">Nomor telepon</string>
+    <string name="sign_up">Daftar</string>
+    <string name="continue_with_phonenumber">Lanjutkan dengan nomor telepon</string>
+    <string name="take_picture">Mengambil gambar</string>
+    <string name="activate_account">Akun aktif</string>
+    <string name="phone_number_256_499595994">Nomor telepon(+62 499595994)</string>
+    <string name="login_button_text">Gabung</string>
+    <string name="logout_button_text">keluar</string>
+    <string name="language">Bahasa</string>
+    <string name="helloworld">Halo Dunia</string>
+    <string name="already_account_login">Sudah memiliki akun? Gabung</string>
+    <string name="text_continue">Terus</string>
+    <string name="settings">pengaturan</string>
+    <string name="text_treeo_goal">Kami menyediakan bibit, mendidik dan membantu petani untuk menciptakan pendapatan yang berkelanjutan dengan menanam pohon.</string>
+    <string name="text_create_a_better_income">Ciptakan Penghasilan Lebih Baik Dengan Menanam Pohon</string>
+    <string name="get_started">MEMULAI</string>
+    <string name="text_first_name">Nama depan</string>
+    <string name="text_second_name">Nama kedua</string>
+    <string name="text_username">Nama pengguna</string>
+    <string name="text_last_name">Nama keluarga</string>
+    <string name="text_country">Negara</string>
+    <string name="text_choose_language">Pilih Bahasa Anda Terlebih Dahulu</string>
+    <string name="title_guide">Panduan</string>
+    <string name="title_profile">Profil</string>
+    <string name="title_learn">Belajar</string>
+    <string name="title_home">Rumah</string>
+    <string name="text_back">KEMBALI</string>
+    <string name="hint_choose_language">Pilih bahasa TREEO APP. Anda selalu dapat mengubahnya di pengaturan.</string>
+    <string name="your_phone_number">Ketik nomor telepon Anda</string>
+    <string name="pick_your_country">Pilih negara Anda</string>
+    <string name="resend_the_passcode">KIRIM ULANG KODE SANDI</string>
+    <string name="passcode_delay_text">Mungkin perlu beberapa menit untuk menerima kode sandi</string>
+    <string name="phone_helper_text">Ketik nomor telepon Anda untuk menerima kode akses 1 kali</string>
+    <string name="otp_pass_code_message">Konfirmasikan kode sandi yang dikirim ke</string>
+    <string name="gdpr_conditions">GDPR Conditions</string>
+</resources>
