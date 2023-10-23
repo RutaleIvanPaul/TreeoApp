@@ -1,5 +1,5 @@
 # Treeo Mobile App
-An Application to monitor trees.
+An Application to monitor trees. More details [here](https://treeo.one/en/treeo-app)
 ## Set up and Run
 
 ###### Application
